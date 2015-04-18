@@ -14,7 +14,7 @@ public class TransitionFunctionTest {
 	public void shouldReturnInputStateIfNoRelevantTransitionExists() {
 		TransitionFunction trans = new TransitionFunction();
 		State inputState = new State("inputState", true);
-		Character symbol = 'a';
+		char symbol = 'a';
 
 		State newState = trans.getNewState(inputState, symbol);
 		assertEquals(inputState, newState);
@@ -27,12 +27,12 @@ public class TransitionFunctionTest {
 	 */
 	@Test
 	public void shouldReturnPredefinedOutputStateIfRelevantTransitionExists() {
-		// TransitionFunction trans = new TransitionFunction();
-		// State inputState = new State("inputState", true);
-		// State outputState = new State("outputState", false);
-		// Character symbol = 'a';
-		//
-		// trans.defineTransition(inputState, symbol, outputState);
-		// assertEquals(outputState,)
+		 TransitionFunction trans = new TransitionFunction();
+		 State inputState = new State("inputState", true);
+		 State outputState = new State("outputState", false);
+		 char symbol = 'a';
+		
+		 trans.defineTransition(inputState, symbol, outputState);
+		 assertEquals(outputState,trans.getNewState(inputState, symbol));
 	}
 }
