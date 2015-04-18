@@ -68,7 +68,7 @@ public class DeterministicFiniteAutomaton {
 	}
 
 	/**
-	 * Evaluate a certain input to the automaton according to its innate logic.
+	 * Evaluates a certain input to the automaton according to its innate logic.
 	 * 
 	 * @param input
 	 *            A String to be evaluated by the automaton
@@ -84,6 +84,12 @@ public class DeterministicFiniteAutomaton {
 		}
 	}
 
+	/**
+	 * Adds a transition rule to the transition function of the automaton.
+	 * @param inputStateIdentifier The identifier of the state prior to the transition
+	 * @param symbol The symbol effecting the transition
+	 * @param outputStateIdentifier The identifier of the state subsequent to the transition
+	 */
 	public void addTransition(String inputStateIdentifier, char symbol, String outputStateIdentifier) {
 		if (states.containsKey(inputStateIdentifier) && states.containsKey(outputStateIdentifier)) {
 			

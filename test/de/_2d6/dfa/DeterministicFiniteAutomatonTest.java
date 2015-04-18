@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 public class DeterministicFiniteAutomatonTest {
-
+	
 	/**
 	 * The current state of the automaton may be identified via name
 	 */
@@ -92,4 +92,5 @@ public class DeterministicFiniteAutomatonTest {
 			dfa.evaluateInput(input);
 			assertEquals("S2", dfa.getCurrentStateIdentifier());
 	 }
+	
 }
