@@ -52,8 +52,6 @@ public class DeterministicFiniteAutomaton {
 	 *            The identifier of the state to be added
 	 * @param isAccepting
 	 *            True if the identifier to be added is accepting
-	 * @return True if the state was added to the automaton, false if the
-	 *         automaton already contained a state with the same identifier
 	 */
 	public void addState(String identifier, boolean isAccepting) {
 		State state = new State(identifier, isAccepting);

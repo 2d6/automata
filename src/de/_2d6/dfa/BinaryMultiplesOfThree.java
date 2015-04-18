@@ -1,5 +1,12 @@
 package de._2d6.dfa;
 
+/**
+ * Implements a Deterministic Finite Automaton that accepts multiples of 3 in
+ * binary representation
+ * 
+ * @author 2d6
+ *
+ */
 public class BinaryMultiplesOfThree extends DeterministicFiniteAutomaton {
 
 	public BinaryMultiplesOfThree() {
