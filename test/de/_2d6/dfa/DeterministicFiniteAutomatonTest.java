@@ -9,28 +9,6 @@ import org.junit.Test;
 public class DeterministicFiniteAutomatonTest {
 
 	/**
-	 * States may be added to the automaton
-	 */
-	@Test
-	public void statesMayBeAdded() {
-		DeterministicFiniteAutomaton dfa = new DeterministicFiniteAutomaton();
-		assertTrue(dfa.addState("State", true));
-	}
-
-	/**
-	 * A state must not be added to the automaton if it already contains a State
-	 * with the same identifier. In other words: the States of the machine are
-	 * unique.
-	 */
-	@Test
-	public void noDuplicateStatesMayBeAdded() {
-		DeterministicFiniteAutomaton dfa = new DeterministicFiniteAutomaton();
-		dfa.addState("State", true);
-		assertFalse(dfa.addState("State", true));
-		assertFalse(dfa.addState("State", false));
-	}
-
-	/**
 	 * The current state of the automaton may be identified via name
 	 */
 	@Test
@@ -96,10 +74,22 @@ public class DeterministicFiniteAutomatonTest {
 				dfa.getCurrentStateIdentifier());
 	}
 
-	// /**
-	// * The state of the automaton should change, if a transition corresponding
-	// to an element of the input list exists for the current state
-	// */
-	// @Test
-	// public void stateChangesIfRelevantTransitionIsDefined()
+	 /**
+	 * The state of the automaton should change, according to the transition function.
+	 to an element of the input list exists for the current state
+	 */
+	 @Test
+	 public void stateChangesIfRelevantTransitionIsDefined() {
+		 DeterministicFiniteAutomaton dfa = new DeterministicFiniteAutomaton();
+			dfa.addState("S1", true); // As this is the first state to be added, it
+										// is the starting state
+			dfa.addState("S2", false);
+
+			String input = "A";
+			
+			dfa.addTransition("S1",'A',"S2");
+
+			dfa.evaluateInput(input);
+			assertEquals("S2", dfa.getCurrentStateIdentifier());
+	 }
 }

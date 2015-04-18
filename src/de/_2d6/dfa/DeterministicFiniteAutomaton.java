@@ -1,6 +1,6 @@
 package de._2d6.dfa;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 /**
  * @author 2d6 Implements a deterministic finite automaton. For further
@@ -9,23 +9,17 @@ import java.util.LinkedList;
  */
 public class DeterministicFiniteAutomaton {
 
-	/*
-	 * TODO: A LinkedList does not exclude duplicate entries by default. It
-	 * would be better to use a set. However, in order to do that, one needs to
-	 * override the equals() and hashCode() methods of the State object. At this
-	 * stage, this would add a lot of complexity without significantly altering
-	 * the behavior of the automaton. For the time being, the states are checked
-	 * for equality in the addState() method.
-	 */
-	private LinkedList<State> states;
+	private HashMap<String,State> states;
 	private State currentState;
 	private State startingState;
+	private TransitionFunction transitionFunction;
 
 	/**
 	 * Creates a Deterministic Finite Automaton instance
 	 */
 	public DeterministicFiniteAutomaton() {
-		this.states = new LinkedList<State>();
+		this.states = new HashMap<String,State>();
+		this.transitionFunction = new TransitionFunction();
 	}
 
 	/**
@@ -50,8 +44,8 @@ public class DeterministicFiniteAutomaton {
 	}
 
 	/**
-	 * Adds a state to the automaton if it does not already possess a state with
-	 * identical identifier. If this is the first state to be added to the
+	 * Adds a state to the automaton. If the automaton already possesses a state with
+	 * identical identifier, the existing state is overwritten. If this is the first state to be added to the
 	 * automaton, it is set as the starting state.
 	 * 
 	 * @param identifier
@@ -61,22 +55,16 @@ public class DeterministicFiniteAutomaton {
 	 * @return True if the state was added to the automaton, false if the
 	 *         automaton already contained a state with the same identifier
 	 */
-	public boolean addState(String identifier, boolean isAccepting) {
-		for (State state : states) {
-			if (state.getIdentifier() == identifier) {
-				return false;
-			}
-		}
-
+	public void addState(String identifier, boolean isAccepting) {
 		State state = new State(identifier, isAccepting);
+		
+		states.put(identifier, state);
 		if (currentState == null) {
 			this.currentState = state;
 		}
 		if (startingState == null) {
 			this.startingState = state;
 		}
-		states.add(state);
-		return true;
 	}
 
 	/**
@@ -86,8 +74,22 @@ public class DeterministicFiniteAutomaton {
 	 *            A String to be evaluated by the automaton
 	 */
 	public void evaluateInput(String input) {
+		// Always start evaluation from starting state
 		if ((this.startingState != null) && input != null) {
 			currentState = startingState;
+		}
+		
+		for (char symbol : input.toCharArray()) {
+			this.currentState = transitionFunction.getNewState(currentState, symbol);
+		}
+	}
+
+	public void addTransition(String inputStateIdentifier, char symbol, String outputStateIdentifier) {
+		if (states.containsKey(inputStateIdentifier) && states.containsKey(outputStateIdentifier)) {
+			
+			State inputState = states.get(inputStateIdentifier);
+			State outputState = states.get(outputStateIdentifier);
+			this.transitionFunction.defineTransition(inputState, symbol, outputState);		
 		}
 	}
 
