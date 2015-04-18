@@ -1,0 +1,13 @@
+User Stories
+
++I want to create a Deterministic Finite Automaton (DFA) containing a start state.
++I want to be able to add states to the DFA in order to set all possible states of the automaton.
+I want to be able to create transitions between the elements to create the logic of the automaton
++I want to be able to input an list of symbols to the automaton
+	+I want the DFA to stay in the starting state if the input list was empty
++I want to know whether the machine is in accepting state after processing the input
++I want the DFA to always start in the same state before processing any input so that each input results in the same state after processing
++I want to be able to determine the name of the current state of the DFA
++I want to be able to determine whether the current state of the DFA is accepting
+
++I want to be able to unambiguously identify states so that duplicate states within an automaton may be prevented
