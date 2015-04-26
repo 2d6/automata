@@ -10,11 +10,11 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @author 2d6
  */
-public class DeterministicFiniteAutomaton {
+public class DeterministicFiniteAutomaton<T> {
 
 	private HashMap<String, State> states;
 	private State startingState;
-	private TransitionFunction transitionFunction;
+	private TransitionFunction<T> transitionFunction;
 
 	/**
 	 * Creates a new automaton with a starting state.
@@ -25,14 +25,14 @@ public class DeterministicFiniteAutomaton {
 	 *            Acceptance status of the starting state. True if the starting
 	 *            state is accepting.
 	 */
-	public DeterministicFiniteAutomaton(String identifier, boolean isAccepting) {
+	public DeterministicFiniteAutomaton(String identifier, boolean isAccepting, TransitionFunction<T> transitionFunction) {
 		states = new HashMap<>();
 		startingState = new State(identifier, isAccepting);
 		states.put(identifier, startingState);
 
-		transitionFunction = new SimpleTransitionFunction();
+		this.transitionFunction = transitionFunction;
 	}
-
+	
 	/**
 	 * @return The starting state of the automaton
 	 */
@@ -66,7 +66,7 @@ public class DeterministicFiniteAutomaton {
 	 *            accepting.
 	 */
 	public void addState(String identifier, boolean isAccepting) {
-		if (StringUtils.isBlank(identifier)) {
+		if (StringUtils.isBlank(identifier) || identifier.matches("\0*")) {
 			throw new IllegalArgumentException("The identifier may not be blank");
 		}
 		else if (states.containsKey(identifier)) {
@@ -92,7 +92,7 @@ public class DeterministicFiniteAutomaton {
 	 *            The symbol, i.e. trigger of the transition
 	 */
 	public void addTransition(String initialStateIdentifier,
-			String targetStateIdentifier, char symbol) {
+			String targetStateIdentifier, T symbol) {
 		State initialState = getState(initialStateIdentifier);
 		State targetState = getState(targetStateIdentifier);
 		transitionFunction.add(initialState, targetState, symbol);
@@ -109,9 +109,9 @@ public class DeterministicFiniteAutomaton {
 	 * @return The state the automaton was in after evaluating the last symbol
 	 *         of the input.
 	 */
-	public State evaluate(String input) {
+	public State evaluate(T[] input) {
 		State currentState = this.startingState;
-		for (char symbol : input.toCharArray()) {
+		for (T symbol : input) {
 			currentState = evaluate(currentState, symbol);
 		}
 		return currentState;
@@ -128,7 +128,7 @@ public class DeterministicFiniteAutomaton {
 	 *            The symbol under evaluation
 	 * @return The state the automaton is in after evaluation
 	 */
-	private State evaluate(State currentState, char symbol) {
+	private State evaluate(State currentState, T symbol) {
 		return transitionFunction.get(currentState, symbol);
 	}
 }

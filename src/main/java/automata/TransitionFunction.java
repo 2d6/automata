@@ -3,15 +3,25 @@ package automata;
 import automata.State;
 
 /**
- * A Transition function for char symbols
+ * A Transition function for arbitrary symbols
  * 
  * @author 2d6
  *
  */
-public interface TransitionFunction {
+public interface TransitionFunction<T> {
 
 	/**
-	 * Adds a new transition to the transition function
+	 * Defines the alphabet of the transition function, i.e. the valid symbols.
+	 * This should only be possible to call once and must be called before
+	 * setting or getting the first transition.
+	 * 
+	 * @param alphabet
+	 *            An Alphabet of the valid symbols
+	 */
+	public void setAlphabet(Alphabet<T> alphabet);
+
+	/**
+	 * Adds a new transition to the transition function.
 	 * 
 	 * @param initialState
 	 *            The initial state
@@ -20,11 +30,12 @@ public interface TransitionFunction {
 	 * @param symbol
 	 *            The symbol triggering the transition
 	 */
-	public void add(State initialState, State targetState, char symbol);
+	public void add(State initialState, State targetState, T symbol);
 
 	/**
 	 * Gets the output of the transition function. Should return null if no
-	 * transition has been defined for the current state and symbol.
+	 * transition has been defined for the current state and symbol or if the
+	 * alphabet does not contain the symbol
 	 * 
 	 * @param currentState
 	 *            The current state
@@ -32,5 +43,5 @@ public interface TransitionFunction {
 	 *            The symbol being evaluated during the current state
 	 * @return The target state of transition
 	 */
-	public State get(State currentState, char symbol);
+	public State get(State currentState, T symbol);
 }

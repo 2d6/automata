@@ -46,13 +46,4 @@ public class TransitionTest {
 		new Transition(new State("S1", true), new State("S2", false), symbol);
 	}
 	
-	@Test
-	public void equalityWorksCorrectly() {
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		char symbol = '1';
-		Transition transition = new Transition(initialState, targetState, symbol);
-		Transition otherTransition = new Transition(initialState, targetState, symbol);
-		assertEquals(transition, otherTransition);
-	}
 }
