@@ -51,4 +51,18 @@ public class CharAlphabet implements Alphabet<Character>, Cloneable {
 	public boolean isValid(Character symbol) {
 		return symbols.contains(symbol);
 	}
+	
+	@Override
+	public Object clone() {
+		CharAlphabet clonedAlphabet =  new CharAlphabet();
+		clonedAlphabet.addAll(getSymbols());
+		return clonedAlphabet;
+	}
+	
+	 /*
+	  * Necessary for cloning
+	  */
+	private List<Character> getSymbols() {
+		return symbols;
+	}
 }

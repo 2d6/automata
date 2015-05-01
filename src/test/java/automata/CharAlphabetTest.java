@@ -1,7 +1,6 @@
 package automata;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 import java.util.ArrayList;
 
@@ -42,5 +41,45 @@ public class CharAlphabetTest {
 	public void noEmptyListOfSymbolsMayBeAdded() {
 		CharAlphabet charAlphabet = new CharAlphabet();
 		charAlphabet.addAll(null);
+	}
+	
+	/*
+	 * Cloning
+	 */
+
+	/**
+	 * This checks whether the clone() method works as per the documentation of
+	 * theObject.clone() method given here:
+	 * https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#clone%28%29
+	 */
+	@Test
+	public void cloningFulfilsCriteria() {
+		CharAlphabet alphabet = new CharAlphabet();
+		
+		assertTrue(alphabet != alphabet.clone());
+		assertEquals(alphabet.getClass(), alphabet.clone().getClass());
+	}
+	
+	@Test
+	public void clonedAlphabetAttributesAreEqual() {
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add('a');
+		
+		CharAlphabet clone = (CharAlphabet) alphabet.clone();
+		
+		assertEquals(alphabet.isValid('a'), clone.isValid('a'));
+		assertEquals(alphabet.isValid('b'), clone.isValid('b'));
+	}
+	
+	@Test
+	public void clonedAlphabetDoesNotChangeWithOriginal() {
+		CharAlphabet alphabet = new CharAlphabet();
+		
+		alphabet.add('a');
+		CharAlphabet clone = (CharAlphabet) alphabet.clone();
+		alphabet.add('b');
+		
+		assertEquals(alphabet.isValid('a'), clone.isValid('a'));
+		assertNotEquals(alphabet.isValid('b'), clone.isValid('b'));
 	}
 }
