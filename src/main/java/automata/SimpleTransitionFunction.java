@@ -39,6 +39,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	 * @see automata.TransitionFunction#add(automata.State, automata.State,
 	 * char)
 	 */
+	@Override
 	public void add(State initialState, State targetState, Character symbol) {
 
 		boolean exists = false;
@@ -68,8 +69,14 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	 * 
 	 * @see automata.TransitionFunction#get(automata.State, char)
 	 */
+	@Override
 	public State get(State currentState, Character symbol) {
 		State state = null;
+
+		if (!alphabet.isValid(symbol)) {
+			throw new IllegalArgumentException(
+					"Symbol was not defined in the alphabet");
+		}
 
 		for (Transition transition : transitions) {
 			if (transition.getInitialState() == currentState
