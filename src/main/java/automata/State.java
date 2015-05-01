@@ -4,7 +4,7 @@ package automata;
  * A state in a deterministic fininte automaton
  * @author 2d6
  */
-public class State {
+public class State implements Cloneable {
 	private final boolean isAccepting;
 	private final String identifier;
 	
@@ -25,5 +25,11 @@ public class State {
 	public String getIdentifier() {
 		return this.identifier;
 	}	
+	
+	@Override
+	public Object clone()
+	{
+		return new State(identifier, isAccepting);
+	}
 	
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * @author 2d6
  *
  */
-public class CharAlphabet implements Alphabet<Character> {
+public class CharAlphabet implements Alphabet<Character>, Cloneable {
 
 	private List<Character> symbols;
 	
