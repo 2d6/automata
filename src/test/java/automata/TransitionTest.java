@@ -17,20 +17,12 @@ public class TransitionTest {
 		};
 	}
 	
-	@DataProvider(name = "emptySymbols")
-	public static Object[][] invalidSymbols() {
-		return new Object[][] {
-				{'\0'},
-				{' '},
-		};
-	}
-	
 	@Test
 	public void transitionMayBeCreated() {
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		char symbol = '1';
-		Transition transition = new Transition(initialState, targetState, symbol);
+		Character symbol = '1';
+		Transition<Character> transition = new Transition<>(initialState, targetState, symbol);
 		assertEquals(transition.getTargetState(), targetState);
 		assertEquals(transition.getInitialState(), initialState);
 		assertEquals(transition.getSymbol(), symbol);
@@ -38,12 +30,12 @@ public class TransitionTest {
 	
 	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
 	public void nullStatesAreNotAccepted(State initialState, State targetState) {
-		new Transition(initialState, targetState, '1');
+		new Transition<Character>(initialState, targetState, '1');
 	}
 	
-	@Test(dataProvider = "emptySymbols", expectedExceptions = IllegalArgumentException.class)
-	public void emptySymbolsAreNotAccepted(char symbol) {
-		new Transition(new State("S1", true), new State("S2", false), symbol);
+	@Test(expectedExceptions = NullPointerException.class)
+	public void emptySymbolsAreNotAccepted() {
+		new Transition<Object>(new State("S1", true), new State("S2", false), null);
 	}
 	
 }

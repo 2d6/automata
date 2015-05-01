@@ -6,11 +6,11 @@ package automata;
  * @author 2d6
  *
  */
-public class Transition {
+public class Transition<T> {
 
 	private final State initialState;
 	private final State targetState;
-	private final char symbol;
+	private final T symbol;
 
 	public State getInitialState() {
 		return initialState;
@@ -20,7 +20,7 @@ public class Transition {
 		return targetState;
 	}
 
-	public char getSymbol() {
+	public T getSymbol() {
 		return symbol;
 	}
 
@@ -30,15 +30,15 @@ public class Transition {
 	 * @param targetState The target state of the transition
 	 * @param symbol The triggering symbol of the transition
 	 */
-	public Transition(State initialState, State targetState, char symbol) {
+	public Transition(State initialState, State targetState, T symbol) {
 		if (initialState == null) {
 			throw new NullPointerException("Initial state may not be null");
 		}
 		else if (targetState == null) {
 			throw new NullPointerException("Target state may not be null");
 		}
-		else if (Character.isWhitespace(symbol) || symbol == '\0') {
-			throw new IllegalArgumentException("Symbol may not be whitespace character or empty ('\0')");
+		else if (symbol == null) {
+			throw new NullPointerException("Symbol may not be null");
 		}
 		
 		this.initialState = initialState;
