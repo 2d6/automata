@@ -14,16 +14,6 @@ public class CharDfaTest {
 		return new CharDfa(identifier, isAccepting, transitionFunction);
 	}
 
-	@DataProvider(name = "sampleStates")
-	public static Object[][] identifiersAndStates() {
-		return new Object[][] { { "S1", true }, { "S2", false }, };
-	}
-
-	@DataProvider(name = "whitespaceOrEmptyIdentifiers")
-	public static Object[][] whitespaceOrEmptyIdentifiers() {
-		return new Object[][] { { "" }, { " " }, { "  " }, { "\0" }, { "\0\0" } };
-	}
-
 	@DataProvider(name = "nonexistantStates")
 	public static Object[][] nonexistantStates() {
 		return new Object[][] { { null, "secondState" },
@@ -56,6 +46,11 @@ public class CharDfaTest {
 		assertEquals(isAccepting, state.isAccepting());
 	}
 
+	@DataProvider(name = "sampleStates")
+	public static Object[][] identifiersAndStates() {
+		return new Object[][] { { "S1", true }, { "S2", false }, };
+	}
+	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateStatesMayNotBeAdded() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
@@ -77,12 +72,6 @@ public class CharDfaTest {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
-	}
-
-	@Test(dataProvider = "whitespaceOrEmptyIdentifiers", expectedExceptions = IllegalArgumentException.class)
-	public void whitespaceOrEmptyIdentifiersAreNotAllowed(String identifier) {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState(identifier, true);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
