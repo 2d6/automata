@@ -1,8 +1,7 @@
 package automata;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -25,15 +24,18 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 	 *            Acceptance status of the starting state. True if the starting
 	 *            state is accepting.
 	 */
-	public CharDfa(String identifier, boolean isAccepting, TransitionFunction<Character> transitionFunction) {
+	public CharDfa(String identifier, boolean isAccepting,
+			TransitionFunction<Character> transitionFunction) {
 		states = new HashMap<>();
 		startingState = new State(identifier, isAccepting);
 		states.put(identifier, startingState);
 
 		this.transitionFunction = transitionFunction;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see automata.DeterministicFiniteAutomaton#getStartingState()
 	 */
 	@Override
@@ -41,7 +43,9 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		return startingState;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see automata.DeterministicFiniteAutomaton#getState(java.lang.String)
 	 */
 	@Override
@@ -49,8 +53,11 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		return states.get(identifier);
 	}
 
-	/* (non-Javadoc)
-	 * @see automata.DeterministicFiniteAutomaton#addState(java.lang.String, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see automata.DeterministicFiniteAutomaton#addState(java.lang.String,
+	 * boolean)
 	 */
 	@Override
 	public void addState(String identifier, boolean isAccepting) {
@@ -61,8 +68,12 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		states.put(identifier, new State(identifier, isAccepting));
 	}
 
-	/* (non-Javadoc)
-	 * @see automata.DeterministicFiniteAutomaton#addTransition(java.lang.String, java.lang.String, T)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * automata.DeterministicFiniteAutomaton#addTransition(java.lang.String,
+	 * java.lang.String, T)
 	 */
 	@Override
 	public void addTransition(String initialStateIdentifier,
@@ -72,11 +83,13 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		transitionFunction.add(initialState, targetState, symbol);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see automata.DeterministicFiniteAutomaton#evaluate(T[])
 	 */
 	@Override
-	public State evaluate(Character[] input) {
+	public State evaluate(Iterable<Character> input) {
 		State currentState = this.startingState;
 		State nextState;
 		for (Character symbol : input) {
@@ -85,14 +98,22 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		}
 		return currentState;
 	}
-	
+
 	/**
-	 * Workaround method necessary because autoboxing of arrays is not possible
-	 * @param input char Array of symbols
-	 * @return the State of the automaton after evaluation of the input symbols
+	 * Evaluates the characters in a String according to the internal logic of
+	 * the automaton.
+	 * 
+	 * @param input
+	 *            String of characters to be evaluated
+	 * @return The state the automaton was in after evaluating the last
+	 *         character in the string
 	 */
-	public State evaluate(char[] input) {
-		return evaluate(ArrayUtils.toObject(input));
+	public State evaluate(String input) {
+		ArrayList<Character> charList = new ArrayList<>();
+		for (char ch : input.toCharArray()) {
+			charList.add(ch);
+		}
+		return evaluate(charList);
 	}
 
 	/**

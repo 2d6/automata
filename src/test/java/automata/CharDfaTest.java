@@ -2,23 +2,12 @@ package automata;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
+
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CharDfaTest {
-
-	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
-		CharAlphabet alphabet = new CharAlphabet(new Character[] { '0', '1' });
-		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
-				alphabet);
-		return new CharDfa(identifier, isAccepting, transitionFunction);
-	}
-
-	@DataProvider(name = "nonexistantStates")
-	public static Object[][] nonexistantStates() {
-		return new Object[][] { { null, "secondState" },
-				{ "startingState", null }, { null, null } };
-	}
 	
 	@Test(dataProvider = "sampleStates")
 	public void dfaContainsStartingState(String identifier, boolean isAccepting) {
@@ -62,8 +51,26 @@ public class CharDfaTest {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition("startingState", "secondState", '0');
-		assertEquals(dfa.evaluate(new Character[] { '0' }),
+		ArrayList<Character> symbolList = new ArrayList<>();
+		symbolList.add('0');
+		assertEquals(dfa.evaluate(symbolList),
 				dfa.getState("secondState"));
+	}
+	
+	@Test
+	public void stringsMayBeEvaluated() {
+		CharDfa dfa = newBoolCharDfa("startingState", true);
+		dfa.addState("secondState", false);
+		dfa.addTransition("startingState", "secondState", '0');
+		assertEquals(dfa.evaluate("110"),
+				dfa.getState("secondState"));
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void inputContainingIllegalCharactersMayNotBeEvaluated() {
+		CharDfa dfa = newBoolCharDfa("startingState", true);
+		String inputString = "102";
+		dfa.evaluate(inputString);
 	}
 
 	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
@@ -74,11 +81,17 @@ public class CharDfaTest {
 		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
 	}
 	
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void inputContainingIllegalCharactersMayNotBeParsed() {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		String inputString = "102";
-		dfa.evaluate(inputString.toCharArray());
+	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
+		CharAlphabet alphabet = new CharAlphabet(new Character[] { '0', '1' });
+		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
+				alphabet);
+		return new CharDfa(identifier, isAccepting, transitionFunction);
+	}
+	
+	@DataProvider(name = "nonexistantStates")
+	public static Object[][] nonexistantStates() {
+		return new Object[][] { { null, "secondState" },
+				{ "startingState", null }, { null, null } };
 	}
 
 }

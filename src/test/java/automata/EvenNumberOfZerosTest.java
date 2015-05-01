@@ -29,20 +29,20 @@ public class EvenNumberOfZerosTest {
 	@Test(dataProvider = "evenZeros")
 	public void evenNumberOfZerosInInputShouldEvaluateAccepting(String input) {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input.toCharArray());
+		State finalState = automaton.evaluate(input);
 		assertTrue(finalState.isAccepting());
 	}
 	
 	@Test(dataProvider = "unevenZeros")
 	public void unevenNumberOfZerosInInputShouldEvaluateNotAccepting(String input) {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input.toCharArray());
+		State finalState = automaton.evaluate(input);
 		assertFalse(finalState.isAccepting());
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void nonZeroNonOneInputShouldRaiseException() {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		automaton.evaluate(new Character[]{'2'});
+		automaton.evaluate("2");
 	}
 }

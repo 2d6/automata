@@ -1,7 +1,9 @@
 package automata;
 
+
 /**
  * A Deterministic Finite Automaton with an alphabet of type T
+ * 
  * @author 2d6
  *
  * @param <T>
@@ -56,16 +58,16 @@ public interface DeterministicFiniteAutomaton<T> {
 			String targetStateIdentifier, T symbol);
 
 	/**
-	 * Evaluates a string according to the logic of the automaton given by its
-	 * states and transition function. Returns the state the automaton was in
-	 * after evaluating the last symbol of the input. Each evaluation begins
-	 * with the automaton in its starting state.
+	 * Evaluates a List of symbols according to the logic of the automaton given
+	 * by its states and transition function. Returns the state the automaton
+	 * was in after evaluating the last symbol of the input. Each evaluation
+	 * begins with the automaton in its starting state.
 	 * 
 	 * @param input
-	 *            String to be evaluated
+	 *            list of symbols to be evaluated
 	 * @return The state the automaton was in after evaluating the last symbol
 	 *         of the input.
 	 */
-	public abstract State evaluate(T[] input);
+	public abstract State evaluate(Iterable<T> input);
 
 }
