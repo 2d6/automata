@@ -49,4 +49,24 @@ public class SimpleTransitionFunctionTest {
 		function.setAlphabet(new CharAlphabet(new Character[]{'1'}));
 		function.add(initialState, targetState, '0');
 	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void alphabetMayOnlyBeSetOnce() {
+		SimpleTransitionFunction function = newSingleCharTransitionFunction('x');
+		function.setAlphabet(new CharAlphabet(new Character[]{'y'}));
+	}
+	
+	@Test(expectedExceptions = NullPointerException.class)
+	public void alphabetMayNotBeNull() {
+		SimpleTransitionFunction function = new SimpleTransitionFunction();
+		function.setAlphabet(null);
+	}
+	
+	@Test(expectedExceptions = NullPointerException.class)
+	public void alphabetMustBeSetBeforeAddingTransitions() {
+		SimpleTransitionFunction function = new SimpleTransitionFunction();
+		State initialState = new State("initialState", true);
+		State targetState = new State("targetState", false);
+		function.add(initialState, targetState, '0');
+	}
 }
