@@ -9,7 +9,8 @@ import org.testng.annotations.Test;
 public class SimpleTransitionFunctionTest {
 	
 	private SimpleTransitionFunction newSingleCharTransitionFunction(Character symbol) {
-		CharAlphabet alphabet = new CharAlphabet(new Character[]{symbol});
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add(symbol);
 		return new SimpleTransitionFunction(alphabet);
 	}
 	
@@ -46,14 +47,17 @@ public class SimpleTransitionFunctionTest {
 		SimpleTransitionFunction function = new SimpleTransitionFunction();
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		function.setAlphabet(new CharAlphabet(new Character[]{'1'}));
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add('1');
+		function.setAlphabet(alphabet);
 		function.add(initialState, targetState, '0');
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void alphabetMayOnlyBeSetOnce() {
 		SimpleTransitionFunction function = newSingleCharTransitionFunction('x');
-		function.setAlphabet(new CharAlphabet(new Character[]{'y'}));
+		CharAlphabet otherAlphabet = new CharAlphabet();
+		function.setAlphabet(otherAlphabet);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)

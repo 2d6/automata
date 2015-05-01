@@ -14,45 +14,41 @@ public class CharAlphabet implements Alphabet<Character> {
 	private List<Character> symbols;
 	
 	/**
-	 * Creates a new CharAlphabet with the given symbols
-	 * @param symbolArray Array of symbols in the alphabet
-	 */
-	public CharAlphabet(Character[] symbolArray) {
-		set(symbolArray);
-	}
-	
-	/**
 	 * Creates a new CharAlphabet
 	 */
 	public CharAlphabet() {
+		symbols = new ArrayList<Character>();
 	}
 
+	/**
+	 * Creates a new CharAlphabet with the given symbols
+	 * @param symbolArray Array of symbols in the alphabet
+	 */
+	public CharAlphabet(List<Character> symbols) {
+		this();
+		addAll(symbols);
+	}
+	
 	@Override
-	public void set(Character[] symbolArray) {
-		if (this.symbols == null && symbolArray != null) {
-
-			this.symbols = new ArrayList<Character>();
-			for (Character symbol : symbolArray) {
-				if (Character.isLetterOrDigit(symbol)) {
-					this.symbols.add(symbol);
-				}
-			}
-		} else if (symbolArray == null) {
-			throw new NullPointerException(
-					"Alphabet symbol array may not be null");
-		} else {
-			throw new IllegalArgumentException(
-					"Alphabet symbols are already defined");
+	public void addAll(List<Character> symbols) {
+		if (symbols == null) {
+			throw new NullPointerException("List of symbol characters may not be null");
 		}
+		for (Character symbol : symbols) {
+			this.symbols.add(symbol);
+		}
+	}
+	
+	@Override
+	public void add(Character symbol) {
+		if (symbol == null) {
+			throw new NullPointerException("Symbol character may not be null");
+		}
+		symbols.add(symbol);
 	}
 
 	@Override
 	public boolean isValid(Character symbol) {
-		if (symbols != null) {
-			return symbols.contains(symbol);
-		} else {
-			throw new NullPointerException(
-					"No alphabet symbols have been defined");
-		}
+		return symbols.contains(symbol);
 	}
 }

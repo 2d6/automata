@@ -4,7 +4,10 @@ public class EvenNumberOfZeros extends CharDfa {
 
 	public EvenNumberOfZeros() {
 		super("S1", true, new SimpleTransitionFunction());
-		CharAlphabet alphabet = new CharAlphabet(new Character[]{'0','1'});
+		
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add('0');
+		alphabet.add('1');
 		transitionFunction.setAlphabet(alphabet);
 		
 		addState("S2", false);

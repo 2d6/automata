@@ -1,53 +1,46 @@
 package automata;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-import static org.testng.Assert.*;
+import java.util.ArrayList;
+
+import org.testng.annotations.Test;
 
 public class CharAlphabetTest {
 	
 	@Test
-	public void alphabetMayBeSet() {
+	public void symbolsMayBeAdded() {
 		CharAlphabet charAlphabet = new CharAlphabet();
-		charAlphabet.set(new Character[]{'0','1','ü'});
+		charAlphabet.add('0');
+		charAlphabet.add('1');
+		charAlphabet.add('ü');
 		assertTrue(charAlphabet.isValid('1'));
 		assertTrue(charAlphabet.isValid('ü'));
 		assertFalse(charAlphabet.isValid('e'));
 	}
 	
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void alphabetMayOnlyBeSetOnce() {
-		CharAlphabet charAlphabet = new CharAlphabet();
-		charAlphabet.set(new Character[]{'0','1'});
-		charAlphabet.set(new Character[]{'1','2'});
-	}
-	
-	@Test(expectedExceptions = NullPointerException.class)
-	public void noEmptyAlphabetMayBeSet() {
-		CharAlphabet charAlphabet = new CharAlphabet();
-		charAlphabet.set(null);
-	}
-	
-	@Test(expectedExceptions = NullPointerException.class)
-	public void alphabetMustBeSetBeforeQueryingValidity() {
-		CharAlphabet charAlphabet = new CharAlphabet();
+	@Test
+	public void listOfSymbolsMayBeAdded() {
+		ArrayList<Character> symbols = new ArrayList<>();
+		symbols.add('0');
+		symbols.add('1');
+		symbols.add('ü');
+		CharAlphabet charAlphabet = new CharAlphabet(symbols);
 		assertTrue(charAlphabet.isValid('1'));
+		assertTrue(charAlphabet.isValid('ü'));
+		assertFalse(charAlphabet.isValid('e'));
 	}
 	
-	@DataProvider(name = "nonLetterNonDigitSymbols")
-	public Object[][] invalidSymbols() {
-		return new Object[][] {
-				{' '},
-				{'\0'},
-				{'%'}
-		};
-	}
-	
-	@Test(dataProvider = "nonLetterNonDigitSymbols")
-	public void nonDigitNonLetterCharactersAreIgnored(Character symbol) {
+	@Test(expectedExceptions = NullPointerException.class)
+	public void noEmptySymbolMayBeAdded() {
 		CharAlphabet charAlphabet = new CharAlphabet();
-		charAlphabet.set(new Character[]{symbol});
-		assertFalse(charAlphabet.isValid(symbol));
+		charAlphabet.add(null);
+	}
+	
+	@Test(expectedExceptions = NullPointerException.class)
+	public void noEmptyListOfSymbolsMayBeAdded() {
+		CharAlphabet charAlphabet = new CharAlphabet();
+		charAlphabet.addAll(null);
 	}
 }

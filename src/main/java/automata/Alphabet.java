@@ -1,5 +1,7 @@
 package automata;
 
+import java.util.List;
+
 /**
  * An alphabet of symbols
  * @author 2d6
@@ -9,10 +11,16 @@ package automata;
 public interface Alphabet<T> {
 	
 	/**
-	 * Defines the alphabet symbols. This should only be possible once. 
-	 * @param alphabet Array of symbols contained in the alphabet
+	 * Adds a symbol to the alphabet.
+	 * @param alphabet Symbol to be added
 	 */
-	public void set(T[] symbolArray);
+	public void add(T symbol);
+	
+	/**
+	 * Adds all symbols from a list to the alphabet.
+	 * @param symbols
+	 */
+	public void addAll(List<T> symbols);
 	
 	/**
 	 * Determines whether a given symbol is contained in the alphabet

@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 public class CharDfaTest {
 	
 	@Test(dataProvider = "sampleStates")
-	public void dfaContainsStartingState(String identifier, boolean isAccepting) {
+	public void startingStateExists(String identifier, boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getStartingState();
 		assertEquals(identifier, startingState.getIdentifier());
@@ -35,11 +35,6 @@ public class CharDfaTest {
 		assertEquals(isAccepting, state.isAccepting());
 	}
 
-	@DataProvider(name = "sampleStates")
-	public static Object[][] identifiersAndStates() {
-		return new Object[][] { { "S1", true }, { "S2", false }, };
-	}
-	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateStatesMayNotBeAdded() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
@@ -47,7 +42,7 @@ public class CharDfaTest {
 	}
 
 	@Test
-	public void CharactersMayBeEvaluated() {
+	public void charactersMayBeEvaluated() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition("startingState", "secondState", '0');
@@ -74,7 +69,7 @@ public class CharDfaTest {
 	}
 
 	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
-	public void transitionsToAndFromNonexistantStatesAreForbidden(
+	public void transitionsContainingNonexistantStatesAreForbidden(
 			String startingStateIdentifier, String secondStateIdentifier) {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
@@ -82,12 +77,19 @@ public class CharDfaTest {
 	}
 	
 	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
-		CharAlphabet alphabet = new CharAlphabet(new Character[] { '0', '1' });
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add('0');
+		alphabet.add('1');
 		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
 				alphabet);
 		return new CharDfa(identifier, isAccepting, transitionFunction);
 	}
 	
+	@DataProvider(name = "sampleStates")
+	public static Object[][] identifiersAndStates() {
+		return new Object[][] { { "S1", true }, { "S2", false }, };
+	}
+
 	@DataProvider(name = "nonexistantStates")
 	public static Object[][] nonexistantStates() {
 		return new Object[][] { { null, "secondState" },
