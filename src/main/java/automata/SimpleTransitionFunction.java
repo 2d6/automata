@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class SimpleTransitionFunction implements TransitionFunction<Character> {
 
-	private List<Transition<Character>> transitions;
+	private List<Transition> transitions;
 	private Alphabet<Character> alphabet;
 
 	/**
@@ -30,7 +30,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	 * @param alphabet
 	 */
 	public SimpleTransitionFunction() {
-		this.transitions = new ArrayList<Transition<Character>>();
+		this.transitions = new ArrayList<Transition>();
 	}
 
 	/*
@@ -43,7 +43,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	public void add(State initialState, State targetState, Character symbol) {
 
 		boolean exists = false;
-		for (Transition<Character> existingTransition : transitions) {
+		for (Transition existingTransition : transitions) {
 			if (existingTransition.getInitialState() == initialState
 					&& existingTransition.getSymbol() == symbol) {
 				exists = true;
@@ -61,7 +61,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 					"Symbol was not defined in the alphabet");
 		}
 
-		transitions.add(new Transition<Character>(initialState, targetState, symbol));
+		transitions.add(new Transition(initialState, targetState, symbol));
 	}
 
 	/*
@@ -78,7 +78,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 					"Symbol was not defined in the alphabet");
 		}
 
-		for (Transition<Character> transition : transitions) {
+		for (Transition transition : transitions) {
 			if (transition.getInitialState() == currentState
 					&& transition.getSymbol() == symbol) {
 				state = transition.getTargetState();
