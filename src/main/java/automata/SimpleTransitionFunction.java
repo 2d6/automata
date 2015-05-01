@@ -30,7 +30,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	 * @param alphabet
 	 */
 	public SimpleTransitionFunction() {
-		this.transitions = new ArrayList<Transition<Character>>();
+		this.transitions = new ArrayList<>();
 	}
 
 	/*
@@ -61,7 +61,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 					"Symbol was not defined in the alphabet");
 		}
 
-		transitions.add(new Transition<Character>(initialState, targetState, symbol));
+		transitions.add(new Transition<>(initialState, targetState, symbol));
 	}
 
 	/*
@@ -80,7 +80,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 
 		for (Transition<Character> transition : transitions) {
 			if (transition.getInitialState() == currentState
-					&& transition.getSymbol() == symbol) {
+					&& transition.getSymbol().equals(symbol)) {
 				state = transition.getTargetState();
 				break;
 			}

@@ -8,6 +8,27 @@ import org.testng.annotations.Test;
 
 public class TransitionTest {
 	
+	@Test
+	public void transitionMayBeCreated() {
+		State initialState = new State("initialState", true);
+		State targetState = new State("targetState", false);
+		Character symbol = '1';
+		Transition<Character> transition = new Transition<>(initialState, targetState, symbol);
+		assertEquals(transition.getTargetState(), targetState);
+		assertEquals(transition.getInitialState(), initialState);
+		assertEquals(transition.getSymbol(), symbol);
+	}
+	
+	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
+	public void nullStatesAreNotAccepted(State initialState, State targetState) {
+		new Transition<>(initialState, targetState, '1');
+	}
+	
+	@Test(expectedExceptions = NullPointerException.class)
+	public void nullSymbolsAreNotAccepted() {
+		new Transition<Character>(new State("S1", true), new State("S2", false), null);
+	}
+	
 	@DataProvider(name = "nullStates")
 	public static Object[][] nullStates() {
 		return new Object[][] {
@@ -24,26 +45,4 @@ public class TransitionTest {
 				{' '},
 		};
 	}
-	
-	@Test
-	public void transitionMayBeCreated() {
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		Character symbol = '1';
-		Transition<Character> transition = new Transition<>(initialState, targetState, symbol);
-		assertEquals(transition.getTargetState(), targetState);
-		assertEquals(transition.getInitialState(), initialState);
-		assertEquals(transition.getSymbol(), symbol);
-	}
-	
-	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
-	public void nullStatesAreNotAccepted(State initialState, State targetState) {
-		new Transition<Character>(initialState, targetState, '1');
-	}
-	
-	@Test(expectedExceptions = NullPointerException.class)
-	public void nullSymbolsAreNotAccepted() {
-		new Transition<Character>(new State("S1", true), new State("S2", false), null);
-	}
-	
 }

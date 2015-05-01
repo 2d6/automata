@@ -17,7 +17,7 @@ public class CharAlphabet implements Alphabet<Character>, Cloneable {
 	 * Creates a new CharAlphabet
 	 */
 	public CharAlphabet() {
-		symbols = new ArrayList<Character>();
+		symbols = new ArrayList<>();
 	}
 
 	/**
