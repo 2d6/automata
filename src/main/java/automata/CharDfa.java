@@ -3,6 +3,7 @@ package automata;
 import java.util.HashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -54,7 +55,10 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 	 */
 	@Override
 	public void addState(String identifier, boolean isAccepting) {
-		if (states.containsKey(identifier)) {
+		if (StringUtils.isBlank(identifier) || identifier.matches("\0*")) {
+			throw new IllegalArgumentException("The identifier may not be blank");
+		}
+		else if (states.containsKey(identifier)) {
 			throw new IllegalArgumentException(
 					"The automaton already contained a state with the given identifier");
 		}

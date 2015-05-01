@@ -30,7 +30,8 @@ public interface DeterministicFiniteAutomaton<T> {
 	 * identifier, an IllegalArgumentException is thrown.
 	 * 
 	 * @param identifier
-	 *            The identifier of the new state.
+	 *            The identifier of the new state. Must not be blank (e.g.
+	 *            whitespaces) or empty.
 	 * @param isAccepting
 	 *            The acceptance status of the new state. True if the state is
 	 *            accepting.
