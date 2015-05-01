@@ -13,7 +13,7 @@ public interface DeterministicFiniteAutomaton<T> {
 	/**
 	 * @return The starting state of the automaton
 	 */
-	public abstract State getStartingState();
+	public State getStartingState();
 
 	/**
 	 * Returns the state corresponding to a given identifier, if the automaton
@@ -24,7 +24,7 @@ public interface DeterministicFiniteAutomaton<T> {
 	 * @return The state corresponding to the identifier, or null if it does not
 	 *         exist.
 	 */
-	public abstract State getState(String identifier);
+	public State getState(String identifier);
 
 	/**
 	 * Adds a state with the given identifier and acceptance state to the
@@ -37,7 +37,7 @@ public interface DeterministicFiniteAutomaton<T> {
 	 *            The acceptance status of the new state. True if the state is
 	 *            accepting.
 	 */
-	public abstract void addState(String identifier, boolean isAccepting);
+	public void addState(String identifier, boolean isAccepting);
 
 	/**
 	 * Adds a transition from a state with a given identifier to a target state.
@@ -54,7 +54,7 @@ public interface DeterministicFiniteAutomaton<T> {
 	 * @param symbol
 	 *            The symbol, i.e. trigger of the transition
 	 */
-	public abstract void addTransition(String initialStateIdentifier,
+	public void addTransition(String initialStateIdentifier,
 			String targetStateIdentifier, T symbol);
 
 	/**
@@ -68,6 +68,6 @@ public interface DeterministicFiniteAutomaton<T> {
 	 * @return The state the automaton was in after evaluating the last symbol
 	 *         of the input.
 	 */
-	public abstract State evaluate(Iterable<T> input);
+	public State evaluate(Iterable<T> input);
 
 }

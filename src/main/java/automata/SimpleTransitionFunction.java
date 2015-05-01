@@ -82,6 +82,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 			if (transition.getInitialState() == currentState
 					&& transition.getSymbol() == symbol) {
 				state = transition.getTargetState();
+				break;
 			}
 		}
 
