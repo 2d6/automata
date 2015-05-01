@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
 
 public class SimpleTransitionFunctionTest {
 	
-	private SimpleTransitionFunction newSingleCharTransitionFunction(char symbol) {
+	private SimpleTransitionFunction newSingleCharTransitionFunction(Character symbol) {
 		CharAlphabet alphabet = new CharAlphabet(new Character[]{symbol});
 		return new SimpleTransitionFunction(alphabet);
 	}
@@ -23,7 +23,7 @@ public class SimpleTransitionFunctionTest {
 	}
 	
 	@Test(dataProvider = "testSymbols")
-	public void transitionsMayBeAddedAndRetrieved(char symbol) {
+	public void transitionsMayBeAddedAndRetrieved(Character symbol) {
 		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
@@ -33,7 +33,7 @@ public class SimpleTransitionFunctionTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateTransitionsAreNotAllowed() {
-		char symbol = '0';
+		Character symbol = '0';
 		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
