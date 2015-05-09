@@ -40,7 +40,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	 * char)
 	 */
 	@Override
-	public void add(State initialState, State targetState, Character symbol) {
+	public void addTransition(State initialState, State targetState, Character symbol) {
 
 		boolean exists = false;
 		for (Transition<Character> existingTransition : transitions) {
@@ -70,7 +70,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	 * @see automata.TransitionFunction#get(automata.State, char)
 	 */
 	@Override
-	public State get(State currentState, Character symbol) {
+	public State getNextState(State currentState, Character symbol) {
 		State state = null;
 
 		if (!alphabet.isValid(symbol)) {

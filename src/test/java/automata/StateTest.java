@@ -15,7 +15,7 @@ public class StateTest {
 	}
 	
 	@Test
-	public void identifierMayBeSet() {
+	public void stateIdentifierMayBeSet() {
 		State state = new State("Identifier", true);
 		assertEquals("Identifier", state.getIdentifier());
 	}

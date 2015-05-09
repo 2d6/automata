@@ -38,7 +38,7 @@ public interface TransitionFunction<T> {
 	 * @param symbol
 	 *            The symbol triggering the transition
 	 */
-	public void add(State initialState, State targetState, T symbol);
+	public void addTransition(State initialState, State targetState, T symbol);
 
 	/**
 	 * Gets the output of the transition function. Should return null if no
@@ -51,5 +51,5 @@ public interface TransitionFunction<T> {
 	 *            The symbol being evaluated during the current state
 	 * @return The target state of transition
 	 */
-	public State get(State currentState, T symbol);
+	public State getNextState(State currentState, T symbol);
 }

@@ -31,8 +31,8 @@ public class SimpleTransitionFunctionTest {
 		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		function.add(initialState, targetState, symbol);
-		assertEquals(function.get(initialState, symbol), targetState);
+		function.addTransition(initialState, targetState, symbol);
+		assertEquals(function.getNextState(initialState, symbol), targetState);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -41,8 +41,8 @@ public class SimpleTransitionFunctionTest {
 		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		function.add(initialState, targetState, symbol);
-		function.add(initialState, targetState, symbol);
+		function.addTransition(initialState, targetState, symbol);
+		function.addTransition(initialState, targetState, symbol);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -53,7 +53,7 @@ public class SimpleTransitionFunctionTest {
 		List<Character> symbols = new ArrayList<>();
 		symbols.add('1');
 		function.setSymbols(symbols);
-		function.add(initialState, targetState, '0');
+		function.addTransition(initialState, targetState, '0');
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -74,6 +74,6 @@ public class SimpleTransitionFunctionTest {
 		SimpleTransitionFunction function = new SimpleTransitionFunction();
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		function.add(initialState, targetState, '0');
+		function.addTransition(initialState, targetState, '0');
 	}
 }

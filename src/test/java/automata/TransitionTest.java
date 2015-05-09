@@ -8,22 +8,6 @@ import org.testng.annotations.Test;
 
 public class TransitionTest {
 	
-	@DataProvider(name = "nullStates")
-	public static Object[][] nullStates() {
-		return new Object[][] {
-				{null, new State("targetState", false)},
-				{new State("initialState", true), null},
-				{null, null}
-		};
-	}
-	
-	@DataProvider(name = "emptySymbols")
-	public static Object[][] invalidSymbols() {
-		return new Object[][] {
-				{'\0'},
-				{' '},
-		};
-	}
 	
 	@Test
 	public void transitionMayBeCreated() {
@@ -37,12 +21,21 @@ public class TransitionTest {
 	}
 	
 	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
-	public void nullStatesAreNotAccepted(State initialState, State targetState) {
+	public void transitionDoesNotAcceptNullStates(State initialState, State targetState) {
 		new Transition<>(initialState, targetState, '1');
 	}
 	
+	@DataProvider(name = "nullStates")
+	public static Object[][] nullStates() {
+		return new Object[][] {
+				{null, new State("targetState", false)},
+				{new State("initialState", true), null},
+				{null, null}
+		};
+	}
+	
 	@Test(expectedExceptions = NullPointerException.class)
-	public void nullSymbolsAreNotAccepted() {
+	public void transitionDoesNotAcceptNullSymbols() {
 		new Transition<Character>(new State("S1", true), new State("S2", false), null);
 	}
 	

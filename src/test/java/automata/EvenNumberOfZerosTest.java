@@ -6,7 +6,14 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 
 public class EvenNumberOfZerosTest {
-
+	
+	@Test(dataProvider = "evenZeros")
+	public void evenNumberOfZerosInInputShouldEvaluateAccepting(String input) {
+		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
+		State finalState = automaton.evaluate(input);
+		assertTrue(finalState.isAccepting());
+	}
+	
 	@DataProvider(name = "evenZeros")
 	public Object[][] evenZeros() {
 		return new Object[][] {
@@ -15,6 +22,13 @@ public class EvenNumberOfZerosTest {
 				{"010"},
 				{"010100"},
 		};
+	}
+	
+	@Test(dataProvider = "unevenZeros")
+	public void unevenNumberOfZerosInInputShouldEvaluateNotAccepting(String input) {
+		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
+		State finalState = automaton.evaluate(input);
+		assertFalse(finalState.isAccepting());
 	}
 	
 	@DataProvider(name = "unevenZeros")
@@ -26,22 +40,8 @@ public class EvenNumberOfZerosTest {
 		};
 	}
 	
-	@Test(dataProvider = "evenZeros")
-	public void evenNumberOfZerosInInputShouldEvaluateAccepting(String input) {
-		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input);
-		assertTrue(finalState.isAccepting());
-	}
-	
-	@Test(dataProvider = "unevenZeros")
-	public void unevenNumberOfZerosInInputShouldEvaluateNotAccepting(String input) {
-		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input);
-		assertFalse(finalState.isAccepting());
-	}
-	
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void nonZeroNonOneInputShouldRaiseException() {
+	public void AutomatonThrowsIllegalArgumentExceptionIfNonZeroNonOneInput() {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
 		automaton.evaluate("2");
 	}

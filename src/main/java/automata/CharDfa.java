@@ -56,7 +56,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		// Create transitions for all State/symbol combinations which had transitions in the original DFA
 		for (State originalState : originalStates) {
 			for (Character symbol : symbols) {
-				State targetState = originalDfa.transitionFunction.get(originalState, symbol);
+				State targetState = originalDfa.transitionFunction.getNextState(originalState, symbol);
 				if (targetState != null) {
 					this.addTransition(originalState.getIdentifier(), targetState.getIdentifier(), symbol);
 				}
@@ -111,7 +111,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 			String targetStateIdentifier, Character symbol) {
 		State initialState = getState(initialStateIdentifier);
 		State targetState = getState(targetStateIdentifier);
-		transitionFunction.add(initialState, targetState, symbol);
+		transitionFunction.addTransition(initialState, targetState, symbol);
 	}
 
 	/*
@@ -159,7 +159,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 	 * @return The state the automaton is in after evaluation
 	 */
 	protected State evaluate(State currentState, Character symbol) {
-		return transitionFunction.get(currentState, symbol);
+		return transitionFunction.getNextState(currentState, symbol);
 	}
 	
 	/**

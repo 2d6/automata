@@ -11,8 +11,12 @@ public class CharDfaTest {
 	
 	private static final State NULL_STATE = null;
 	
+	/*
+	 * STATES
+	 */
+	
 	@Test(dataProvider = "sampleStates")
-	public void startingStateExists(String identifier, boolean isAccepting) {
+	public void charDfaHasStartingState(String identifier, boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getStartingState();
 		assertEquals(identifier, startingState.getIdentifier());
@@ -20,7 +24,7 @@ public class CharDfaTest {
 	}
 
 	@Test(dataProvider = "sampleStates")
-	public void statesMayBeQueriedByIdentifier(String identifier,
+	public void charDfaReturnsStatesByTheirIdentifier(String identifier,
 			boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getState(identifier);
@@ -29,7 +33,7 @@ public class CharDfaTest {
 	}
 
 	@Test(dataProvider = "sampleStates")
-	public void statesMayBeAdded(String identifier, boolean isAccepting) {
+	public void statesMayBeAddedToCharDfa(String identifier, boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState(identifier, isAccepting);
 		State state = dfa.getState(identifier);
@@ -38,13 +42,29 @@ public class CharDfaTest {
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void duplicateStatesMayNotBeAdded() {
+	public void duplicateStatesMayNotBeAddedToCharDfa() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("startingState", false);
 	}
+	
+	/*
+	 * TRANSITIONS
+	 */
 
+	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
+	public void transitionsContainingNonexistantStatesAreForbidden(
+			String startingStateIdentifier, String secondStateIdentifier) {
+		CharDfa dfa = newBoolCharDfa("startingState", true);
+		dfa.addState("secondState", false);
+		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
+	}
+	
+	/*
+	 * EVALUATION
+	 */
+	
 	@Test
-	public void charactersMayBeEvaluated() {
+	public void charDfaEvaluatesCharacters() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition("startingState", "secondState", '0');
@@ -55,36 +75,19 @@ public class CharDfaTest {
 	}
 	
 	@Test
-	public void stringsMayBeEvaluated() {
+	public void charDfaEvaluatesStrings() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition("startingState", "secondState", '0');
 		assertEquals(dfa.evaluate("110"),
 				dfa.getState("secondState"));
 	}
-
+	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		String inputString = "102";
 		dfa.evaluate(inputString);
-	}
-
-	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
-	public void transitionsContainingNonexistantStatesAreForbidden(
-			String startingStateIdentifier, String secondStateIdentifier) {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState("secondState", false);
-		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
-	}
-	
-	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
-		CharAlphabet alphabet = new CharAlphabet();
-		alphabet.add('0');
-		alphabet.add('1');
-		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
-				alphabet);
-		return new CharDfa(identifier, isAccepting, transitionFunction);
 	}
 	
 	@DataProvider(name = "sampleStates")
@@ -125,4 +128,16 @@ public class CharDfaTest {
 		};
 	}
 
+	/*
+	 * Helper Methods
+	 */
+	
+	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
+		CharAlphabet alphabet = new CharAlphabet();
+		alphabet.add('0');
+		alphabet.add('1');
+		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
+				alphabet);
+		return new CharDfa(identifier, isAccepting, transitionFunction);
+	}
 }

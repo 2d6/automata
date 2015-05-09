@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 public class CharAlphabetTest {
 	
 	@Test
-	public void symbolsMayBeAdded() {
+	public void symbolsMayBeAddedToAlphabet() {
 		CharAlphabet charAlphabet = new CharAlphabet();
 		charAlphabet.add('0');
 		charAlphabet.add('1');
@@ -21,7 +21,7 @@ public class CharAlphabetTest {
 	}
 	
 	@Test
-	public void listOfSymbolsMayBeAdded() {
+	public void listOfSymbolsMayBeAddedtoAlphabet() {
 		ArrayList<Character> symbols = new ArrayList<>();
 		symbols.add('0');
 		symbols.add('1');
@@ -33,13 +33,13 @@ public class CharAlphabetTest {
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
-	public void noEmptySymbolMayBeAdded() {
+	public void noEmptySymbolMayBeAddedtoAlphabet() {
 		CharAlphabet charAlphabet = new CharAlphabet();
 		charAlphabet.add(null);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
-	public void noEmptyListOfSymbolsMayBeAdded() {
+	public void noEmptyListOfSymbolsMayBeAddedtoAlphabet() {
 		CharAlphabet charAlphabet = new CharAlphabet();
 		charAlphabet.addAll(null);
 	}
