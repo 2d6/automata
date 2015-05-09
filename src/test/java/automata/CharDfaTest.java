@@ -4,12 +4,15 @@ import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class CharDfaTest {
 	
 	private static final State NULL_STATE = null;
+	private static final String IDENTIFIER_S1 = "S1";
+	private static final String IDENTIFIER_S2 = "S2";
 	
 	/*
 	 * STATES
@@ -19,8 +22,8 @@ public class CharDfaTest {
 	public void charDfaHasStartingState(String identifier, boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getStartingState();
-		assertEquals(identifier, startingState.getIdentifier());
-		assertEquals(isAccepting, startingState.isAccepting());
+		Assert.assertEquals(identifier, startingState.getIdentifier());
+		Assert.assertEquals(isAccepting, startingState.isAccepting());
 	}
 
 	@Test(dataProvider = "sampleStates")
@@ -28,8 +31,8 @@ public class CharDfaTest {
 			boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getState(identifier);
-		assertEquals(identifier, startingState.getIdentifier());
-		assertEquals(isAccepting, startingState.isAccepting());
+		Assert.assertEquals(identifier, startingState.getIdentifier());
+		Assert.assertEquals(isAccepting, startingState.isAccepting());
 	}
 
 	@Test(dataProvider = "sampleStates")
@@ -37,8 +40,8 @@ public class CharDfaTest {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState(identifier, isAccepting);
 		State state = dfa.getState(identifier);
-		assertEquals(identifier, state.getIdentifier());
-		assertEquals(isAccepting, state.isAccepting());
+		Assert.assertEquals(identifier, state.getIdentifier());
+		Assert.assertEquals(isAccepting, state.isAccepting());
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
@@ -70,7 +73,7 @@ public class CharDfaTest {
 		dfa.addTransition("startingState", "secondState", '0');
 		ArrayList<Character> symbolList = new ArrayList<>();
 		symbolList.add('0');
-		assertEquals(dfa.evaluate(symbolList),
+		Assert.assertEquals(dfa.evaluate(symbolList),
 				dfa.getState("secondState"));
 	}
 	
@@ -79,7 +82,7 @@ public class CharDfaTest {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		dfa.addState("secondState", false);
 		dfa.addTransition("startingState", "secondState", '0');
-		assertEquals(dfa.evaluate("110"),
+		Assert.assertEquals(dfa.evaluate("110"),
 				dfa.getState("secondState"));
 	}
 	
@@ -92,7 +95,7 @@ public class CharDfaTest {
 	
 	@DataProvider(name = "sampleStates")
 	public static Object[][] identifiersAndStates() {
-		return new Object[][] { { "S1", true }, { "S2", false }, };
+		return new Object[][] { { IDENTIFIER_S1, true }, { IDENTIFIER_S2, false }, };
 	}
 
 	@DataProvider(name = "nonexistantStates")
@@ -107,15 +110,15 @@ public class CharDfaTest {
 	
 	@Test(dataProvider = "testStrings")
 	public void copiedDfaEvaluatesSameAsOriginal(String testString) {
-		CharDfa original = newBoolCharDfa("S1", true);
-		original.addState("S2", false);
-		original.addTransition("S1", "S2", '0');
+		CharDfa original = newBoolCharDfa(IDENTIFIER_S1, true);
+		original.addState(IDENTIFIER_S2, false);
+		original.addTransition(IDENTIFIER_S1, IDENTIFIER_S2, '0');
 		
 		CharDfa copy = original.copy();	
 		State originalFinalState = original.evaluate(testString);
 		State copyFinalState = copy.evaluate(testString);
 		
-		assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
+		Assert.assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
 	}
 	
 	@DataProvider(name = "testStrings")
@@ -126,6 +129,15 @@ public class CharDfaTest {
 				{"1010"},
 				{""}
 		};
+	}
+	
+	@Test
+	public void copiedDfaStartingStatesAreNotIdenticalToOriginalStates() {
+		CharDfa original = newBoolCharDfa(IDENTIFIER_S1, true);
+		
+		CharDfa copy = original.copy();	
+		
+		Assert.assertFalse(original.getState(IDENTIFIER_S1) == copy.getState(IDENTIFIER_S1));
 	}
 
 	/*
