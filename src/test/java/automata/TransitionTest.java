@@ -38,7 +38,7 @@ public class TransitionTest {
 	
 	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
 	public void nullStatesAreNotAccepted(State initialState, State targetState) {
-		new Transition<Character>(initialState, targetState, '1');
+		new Transition<>(initialState, targetState, '1');
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)

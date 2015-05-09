@@ -28,4 +28,10 @@ public interface Alphabet<T> {
 	 * @return True if the symbol is contained in the alphabet
 	 */
 	public boolean isValid(T symbol);
+	
+	/**
+	 * Returns the symbols contained in the alphabet
+	 * @return
+	 */
+	public List<T> getSymbols();
 }

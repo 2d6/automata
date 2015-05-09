@@ -1,6 +1,5 @@
 package automata;
 
-
 /**
  * A Deterministic Finite Automaton with an alphabet of type T
  * 
@@ -69,5 +68,13 @@ public interface DeterministicFiniteAutomaton<T> {
 	 *         of the input.
 	 */
 	public State evaluate(Iterable<T> input);
+
+	/**
+	 * Create a semantically identical copy of the automaton. The copy should
+	 * share references to the same symbols as the original automaton.
+	 * 
+	 * @return The copied automaton
+	 */
+	public DeterministicFiniteAutomaton<T> copy();
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * @author 2d6
  *
  */
-public class SimpleTransitionFunction implements TransitionFunction<Character> {
+public class SimpleTransitionFunction implements TransitionFunction<Character>, Cloneable {
 
 	private List<Transition<Character>> transitions;
 	private Alphabet<Character> alphabet;
@@ -30,7 +30,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	 * @param alphabet
 	 */
 	public SimpleTransitionFunction() {
-		this.transitions = new ArrayList<Transition<Character>>();
+		this.transitions = new ArrayList<>();
 	}
 
 	/*
@@ -61,7 +61,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 					"Symbol was not defined in the alphabet");
 		}
 
-		transitions.add(new Transition<Character>(initialState, targetState, symbol));
+		transitions.add(new Transition<>(initialState, targetState, symbol));
 	}
 
 	/*
@@ -90,15 +90,20 @@ public class SimpleTransitionFunction implements TransitionFunction<Character> {
 	}
 
 	@Override
-	public void setAlphabet(Alphabet<Character> alphabet) {
-		if (this.alphabet == null && alphabet != null) {
-			this.alphabet = alphabet;
+	public void setSymbols(List<Character> symbols) {
+		if (this.alphabet == null && symbols != null) {
+			this.alphabet = new CharAlphabet(symbols);
 		} else if (this.alphabet != null) {
 			throw new IllegalArgumentException(
 					"An alphabet has already been defined");
 		} else {
-			throw new NullPointerException("The alphabet must not be null");
+			throw new NullPointerException("The list of symbols must not be null");
 		}
+	}
+	
+	@Override
+	public List<Character> getSymbols() {
+		return this.alphabet.getSymbols();
 	}
 
 }

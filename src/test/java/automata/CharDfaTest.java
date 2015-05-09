@@ -62,7 +62,7 @@ public class CharDfaTest {
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void inputContainingIllegalCharactersMayNotBeEvaluated() {
+	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		CharDfa dfa = newBoolCharDfa("startingState", true);
 		String inputString = "102";
 		dfa.evaluate(inputString);
@@ -94,6 +94,33 @@ public class CharDfaTest {
 	public static Object[][] nonexistantStates() {
 		return new Object[][] { { null, "secondState" },
 				{ "startingState", null }, { null, null } };
+	}
+	
+	/*
+	 * COPYING / CLONING
+	 */
+	
+	@Test(dataProvider = "testStrings")
+	public void copiedDfaEvaluatesSameAsOriginal(String testString) {
+		CharDfa original = newBoolCharDfa("S1", true);
+		original.addState("S2", false);
+		original.addTransition("S1", "S2", '0');
+		
+		CharDfa copy = original.copy();	
+		State originalFinalState = original.evaluate(testString);
+		State copyFinalState = copy.evaluate(testString);
+		
+		assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
+	}
+	
+	@DataProvider(name = "testStrings")
+	private Object[][] getStrings() {
+		return new Object[][] {
+				{"0"},
+				{"1"},
+				{"1010"},
+				{""}
+		};
 	}
 
 }

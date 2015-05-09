@@ -1,7 +1,9 @@
 package automata;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -31,6 +33,35 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		states.put(identifier, startingState);
 
 		this.transitionFunction = transitionFunction;
+	}
+
+	/**
+	 * Copy-constructor; creates a new CharDfa with semantics identical to the supplied originalDfa
+	 * @param originalDfa CharDfa to be used as a blueprint for the new CharDfa
+	 */
+	private CharDfa(CharDfa originalDfa) {
+		// Copy the states
+		this.states = new HashMap<>();
+		Collection<State> originalStates = originalDfa.states.values();	
+		for (State originalState : originalStates) {
+			this.addState(originalState.getIdentifier(), originalState.isAccepting());
+		}
+		this.startingState = this.getState(originalDfa.getStartingState().getIdentifier());
+		
+		// Copy the transition function, using references to the original symbols
+		this.transitionFunction = new SimpleTransitionFunction();
+		List<Character> symbols = originalDfa.transitionFunction.getSymbols();
+		this.transitionFunction.setSymbols(symbols);
+		
+		// Create transitions for all State/symbol combinations which had transitions in the original DFA
+		for (State originalState : originalStates) {
+			for (Character symbol : symbols) {
+				State targetState = originalDfa.transitionFunction.get(originalState, symbol);
+				if (targetState != null) {
+					this.addTransition(originalState.getIdentifier(), targetState.getIdentifier(), symbol);
+				}
+			}
+		}
 	}
 
 	/*
@@ -129,5 +160,14 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 	 */
 	protected State evaluate(State currentState, Character symbol) {
 		return transitionFunction.get(currentState, symbol);
+	}
+	
+	/**
+	 * Creates a new CharDfa semantically identical to the current one
+	 * @return The new CharDfa
+	 */
+	@Override
+	public CharDfa copy() {
+		return new CharDfa(this);
 	}
 }

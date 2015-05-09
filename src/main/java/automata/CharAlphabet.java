@@ -17,7 +17,7 @@ public class CharAlphabet implements Alphabet<Character> {
 	 * Creates a new CharAlphabet
 	 */
 	public CharAlphabet() {
-		symbols = new ArrayList<Character>();
+		symbols = new ArrayList<>();
 	}
 
 	/**
@@ -50,5 +50,13 @@ public class CharAlphabet implements Alphabet<Character> {
 	@Override
 	public boolean isValid(Character symbol) {
 		return symbols.contains(symbol);
+	}
+	
+	 /*
+	  * Necessary for cloning
+	  */
+	@Override
+	public List<Character> getSymbols() {
+		return symbols;
 	}
 }
