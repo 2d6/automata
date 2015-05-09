@@ -9,6 +9,8 @@ import org.testng.annotations.Test;
 
 public class CharDfaTest {
 	
+	private static final State NULL_STATE = null;
+	
 	@Test(dataProvider = "sampleStates")
 	public void startingStateExists(String identifier, boolean isAccepting) {
 		CharDfa dfa = newBoolCharDfa(identifier, isAccepting);
@@ -92,8 +94,8 @@ public class CharDfaTest {
 
 	@DataProvider(name = "nonexistantStates")
 	public static Object[][] nonexistantStates() {
-		return new Object[][] { { null, "secondState" },
-				{ "startingState", null }, { null, null } };
+		return new Object[][] { { NULL_STATE, "secondState" },
+				{ "startingState", NULL_STATE }, { NULL_STATE, NULL_STATE } };
 	}
 	
 	/*
