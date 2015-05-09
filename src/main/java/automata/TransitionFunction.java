@@ -1,5 +1,7 @@
 package automata;
 
+import java.util.List;
+
 import automata.State;
 
 /**
@@ -18,7 +20,13 @@ public interface TransitionFunction<T> {
 	 * @param alphabet
 	 *            An Alphabet of the valid symbols
 	 */
-	public void setAlphabet(Alphabet<T> alphabet);
+	public void setSymbols(List<T> symbols);
+	
+	/**
+	 * Returns all symbols of the transition function
+	 * @return List of the symbols
+	 */
+	public List<T> getSymbols();
 
 	/**
 	 * Adds a new transition to the transition function.

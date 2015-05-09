@@ -62,7 +62,8 @@ public class CharAlphabet implements Alphabet<Character>, Cloneable {
 	 /*
 	  * Necessary for cloning
 	  */
-	private List<Character> getSymbols() {
+	@Override
+	public List<Character> getSymbols() {
 		return symbols;
 	}
 }

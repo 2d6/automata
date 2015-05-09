@@ -2,6 +2,9 @@ package automata;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -47,23 +50,23 @@ public class SimpleTransitionFunctionTest {
 		SimpleTransitionFunction function = new SimpleTransitionFunction();
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
-		CharAlphabet alphabet = new CharAlphabet();
-		alphabet.add('1');
-		function.setAlphabet(alphabet);
+		List<Character> symbols = new ArrayList<>();
+		symbols.add('1');
+		function.setSymbols(symbols);
 		function.add(initialState, targetState, '0');
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void alphabetMayOnlyBeSetOnce() {
+	public void throwsIllegalArgumentExceptionIfSymbolsSetTwice() {
 		SimpleTransitionFunction function = newSingleCharTransitionFunction('x');
-		CharAlphabet otherAlphabet = new CharAlphabet();
-		function.setAlphabet(otherAlphabet);
+		List<Character> symbols = new ArrayList<>();
+		function.setSymbols(symbols);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
-	public void alphabetMayNotBeNull() {
+	public void throwsIllegalArgumentExceptionIfSymbolsAreNull() {
 		SimpleTransitionFunction function = new SimpleTransitionFunction();
-		function.setAlphabet(null);
+		function.setSymbols(null);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
