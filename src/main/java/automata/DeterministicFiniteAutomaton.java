@@ -77,4 +77,14 @@ public interface DeterministicFiniteAutomaton<T> {
 	 */
 	public DeterministicFiniteAutomaton<T> copy();
 
+	/**
+	 * Determines whether two automata are structurally identical, i.e. will
+	 * evaluate identical input to identical output
+	 * 
+	 * @param otherCharDfa
+	 *            CharDfa to compare to
+	 * @return True, if the CharDfa are structurally identical
+	 */
+	boolean isStructurallyEqualTo(CharDfa otherCharDfa);
+
 }
