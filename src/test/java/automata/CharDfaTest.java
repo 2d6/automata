@@ -1,7 +1,5 @@
 package automata;
 
-import static org.testng.Assert.assertEquals;
-
 import java.util.ArrayList;
 
 import org.testng.Assert;

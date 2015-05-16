@@ -1,7 +1,9 @@
 package automata;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implements a simple char-based transition function
@@ -107,8 +109,8 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	}
 
 	@Override
-	public List<Character> getValidSymbols(State currentState) {
-		List<Character> validSymbols = new ArrayList<Character>();
+	public Set<Character> getValidSymbols(State currentState) {
+		Set<Character> validSymbols = new HashSet<>();
 		
 		for (Transition<Character> existingTransition : transitions) {
 			if (existingTransition.getInitialState() == currentState) {

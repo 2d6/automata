@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -13,7 +14,6 @@ import java.util.List;
  */
 public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 
-	private static final int NOT_IN_LIST = -1;
 	protected HashMap<String, State> states;
 	protected State startingState;
 	protected TransitionFunction<Character> transitionFunction;
@@ -198,8 +198,8 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 				visitedStatesOther);
 	}
 
-	private static boolean stateSubGraphIsEqual(CharDfa a, State currentStateA,
-			CharDfa b, State currentStateB, List<State> visitedStatesA,
+	private static boolean stateSubGraphIsEqual(CharDfa dfaA, State currentStateA,
+			CharDfa dfaB, State currentStateB, List<State> visitedStatesA,
 			List<State> visitedStatesB) {
 
 		if (currentStateA.isAccepting() == currentStateB.isAccepting()) {
@@ -214,27 +214,42 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 			
 			visitedStatesA.add(currentStateA);
 			visitedStatesB.add(currentStateB);
+			
+			Set<Character> validSymbolsA = dfaA.getValidSymbols(currentStateA);
+			Set<Character> validSymbolsB = dfaB.getValidSymbols(currentStateB);
 
-			List<Character> validSymbolsA = a.transitionFunction.getValidSymbols(currentStateA);
-			List<Character> validSymbolsB = b.transitionFunction.getValidSymbols(currentStateB);
-
-			if (validSymbolsA.containsAll(validSymbolsB)
-					&& validSymbolsB.containsAll(validSymbolsA)) {
-				boolean subtreeIsIdentical = true;
+			if (validSymbolsA.equals(validSymbolsB)) {
+				
+				/*
+				 * Recursively check all subgraphs of the current State
+				 */
+				boolean subGraphIsIdentical = true;
+				
 				for (Character symbol : validSymbolsA) {
-					State nextStateA = a.transitionFunction.getNextState(
-							currentStateA, symbol);
-					State nextStateB = b.transitionFunction.getNextState(
-							currentStateB, symbol);
-					subtreeIsIdentical = subtreeIsIdentical
-							& stateSubGraphIsEqual(a, nextStateA, b,
+					State nextStateA = dfaA.getNextState(currentStateA, symbol);
+					State nextStateB = dfaB.getNextState(currentStateB, symbol);
+					subGraphIsIdentical = subGraphIsIdentical
+							& stateSubGraphIsEqual(dfaA, nextStateA, dfaB,
 									nextStateB, visitedStatesA, visitedStatesB);
 				}
-				return subtreeIsIdentical;
+				return subGraphIsIdentical;
 			}
 		}
 		return false;
 	}
 	
+	/*
+	 * Wrapper for the homonymous method of the {@link TransitionFunction}
+	 */
+	private State getNextState(State currentState, Character symbol) {
+		return this.transitionFunction.getNextState(currentState, symbol);
+	}
 
+	/*
+	 * Wrapper for the homonymous method of the {@link TransitionFunction}
+	 */
+	private Set<Character> getValidSymbols(State currentState) {
+		return this.transitionFunction.getValidSymbols(currentState);
+	}
+	
 }

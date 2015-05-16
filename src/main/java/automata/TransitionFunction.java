@@ -1,6 +1,7 @@
 package automata;
 
 import java.util.List;
+import java.util.Set;
 
 import automata.State;
 
@@ -42,7 +43,7 @@ public interface TransitionFunction<T> {
 
 	/**
 	 * Gets the output of the transition function. Should return null if no
-	 * transition has been defined for the current state and symbol or if the
+	 * transition has been defined for the current {@link State} and symbol or if the
 	 * alphabet does not contain the symbol
 	 * 
 	 * @param currentState
@@ -54,9 +55,9 @@ public interface TransitionFunction<T> {
 	public State getNextState(State currentState, T symbol);
 	
 	/**
-	 * Gets a list of all symbols which trigger a transition for a given state
-	 * @param currentState The state for which the triggering symbols should be determined
-	 * @return A list of triggering symbols
+	 * Gets a {@link Set} of all symbols which trigger a transition for a given state
+	 * @param currentState The {@link State} for which the triggering symbols should be determined
+	 * @return A Set of triggering symbols
 	 */
-	public List<T> getValidSymbols(State currentState);
+	public Set<T> getValidSymbols(State currentState);
 }
