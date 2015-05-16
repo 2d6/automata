@@ -165,7 +165,7 @@ public class CharDfaTest {
 		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
-		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
+		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
 				alphabet);
 		return new CharDfa(identifier, isAccepting, transitionFunction);
 	}

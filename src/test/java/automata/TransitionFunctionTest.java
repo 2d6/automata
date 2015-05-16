@@ -9,16 +9,16 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 
-public class SimpleTransitionFunctionTest {
+public class TransitionFunctionTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void alphabetMayNotBeNull() {
-		new SimpleTransitionFunction(null);
+		new TransitionFunction<Character>(null);
 	}
 	
 	@Test(dataProvider = "testSymbols")
 	public void transitionsMayBeAddedAndRetrieved(Character symbol) {
-		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
+		TransitionFunction<Character> function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
 		function.addTransition(initialState, targetState, symbol);
@@ -37,7 +37,7 @@ public class SimpleTransitionFunctionTest {
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateTransitionsAreNotAllowed() {
 		Character symbol = '0';
-		SimpleTransitionFunction function = newSingleCharTransitionFunction(symbol);
+		TransitionFunction<Character> function = newSingleCharTransitionFunction(symbol);
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
 		function.addTransition(initialState, targetState, symbol);
@@ -46,7 +46,7 @@ public class SimpleTransitionFunctionTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void transitionsWithSymbolsNotInAlphabetAreRejected() {
-		SimpleTransitionFunction function = new SimpleTransitionFunction();
+		TransitionFunction<Character> function = new TransitionFunction<>();
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
 		Set<Character> symbols = new HashSet<>();
@@ -57,29 +57,29 @@ public class SimpleTransitionFunctionTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void throwsIllegalArgumentExceptionIfSymbolsSetTwice() {
-		SimpleTransitionFunction function = newSingleCharTransitionFunction('x');
+		TransitionFunction<Character> function = newSingleCharTransitionFunction('x');
 		Set<Character> symbols = new HashSet<>();
 		function.setSymbols(symbols);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void throwsIllegalArgumentExceptionIfSymbolsAreNull() {
-		SimpleTransitionFunction function = new SimpleTransitionFunction();
+		TransitionFunction<Character> function = new TransitionFunction<>();
 		function.setSymbols(null);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
 	public void alphabetMustBeSetBeforeAddingTransitions() {
-		SimpleTransitionFunction function = new SimpleTransitionFunction();
+		TransitionFunction<Character> function = new TransitionFunction<>();
 		State initialState = new State("initialState", true);
 		State targetState = new State("targetState", false);
 		function.addTransition(initialState, targetState, '0');
 	}
 	
-	private SimpleTransitionFunction newSingleCharTransitionFunction(Character symbol) {
+	private TransitionFunction<Character> newSingleCharTransitionFunction(Character symbol) {
 		Set<Character> symbols = new HashSet<>();
 		symbols.add(symbol);
-		return new SimpleTransitionFunction(symbols);
+		return new TransitionFunction<>(symbols);
 	}
 }
 

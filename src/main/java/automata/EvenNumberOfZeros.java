@@ -6,7 +6,7 @@ import java.util.Set;
 public class EvenNumberOfZeros extends CharDfa {
 
 	public EvenNumberOfZeros() {
-		super("S1", true, new SimpleTransitionFunction());
+		super("S1", true, new TransitionFunction<Character>());
 		
 		Set<Character> symbols = new HashSet<>();
 		symbols.add('0');

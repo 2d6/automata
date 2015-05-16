@@ -62,7 +62,7 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 
 		// Copy the transition function, using references to the original
 		// symbols
-		this.transitionFunction = new SimpleTransitionFunction();
+		this.transitionFunction = new TransitionFunction<>();
 		Set<Character> symbols = originalDfa.transitionFunction.getSymbols();
 		this.transitionFunction.setSymbols(symbols);
 

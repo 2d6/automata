@@ -14,17 +14,17 @@ import automata.interfaces.ITransitionFunction;
  * @author 2d6
  *
  */
-public class SimpleTransitionFunction implements ITransitionFunction<Character>, Cloneable {
+public class TransitionFunction<T> implements ITransitionFunction<T> {
 
-	private List<Transition<Character>> transitions;
-	private IAlphabet<Character> alphabet;
+	private List<Transition<T>> transitions;
+	private IAlphabet<T> alphabet;
 
 	/**
 	 * Creates a new SimpleTransitionFunction with a given {@link IAlphabet}.
 	 * 
 	 * @param alphabet
 	 */
-	public SimpleTransitionFunction(Set<Character> symbols) {
+	public TransitionFunction(Set<T> symbols) {
 		this();
 		this.setSymbols(symbols);
 	}
@@ -34,7 +34,7 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	 * 
 	 * @param alphabet
 	 */
-	public SimpleTransitionFunction() {
+	public TransitionFunction() {
 		this.transitions = new ArrayList<>();
 		this.alphabet = new Alphabet<>();
 	}
@@ -46,10 +46,10 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	 * char)
 	 */
 	@Override
-	public void addTransition(State initialState, State targetState, Character symbol) {
+	public void addTransition(State initialState, State targetState, T symbol) {
 
 		boolean exists = false;
-		for (Transition<Character> existingTransition : transitions) {
+		for (Transition<T> existingTransition : transitions) {
 			if (existingTransition.getInitialState() == initialState
 					&& existingTransition.getSymbol() == symbol) {
 				exists = true;
@@ -76,7 +76,7 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	 * @see automata.TransitionFunction#get(automata.State, char)
 	 */
 	@Override
-	public State getNextState(State currentState, Character symbol) {
+	public State getNextState(State currentState, T symbol) {
 		State state = null;
 
 		if (!alphabet.isValid(symbol)) {
@@ -84,7 +84,7 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 					"Symbol was not defined in the alphabet");
 		}
 
-		for (Transition<Character> transition : transitions) {
+		for (Transition<T> transition : transitions) {
 			if (transition.getInitialState() == currentState
 					&& transition.getSymbol() == symbol) {
 				state = transition.getTargetState();
@@ -96,7 +96,7 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	}
 
 	@Override
-	public void setSymbols(Set<Character> symbols) {
+	public void setSymbols(Set<T> symbols) {
 		boolean alphabetIsEmpty = this.alphabet.getSymbols().isEmpty();
 		
 		if (alphabetIsEmpty && symbols != null) {
@@ -110,15 +110,15 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	}
 	
 	@Override
-	public Set<Character> getSymbols() {
+	public Set<T> getSymbols() {
 		return this.alphabet.getSymbols();
 	}
 
 	@Override
-	public Set<Character> getValidSymbols(State currentState) {
-		Set<Character> validSymbols = new HashSet<>();
+	public Set<T> getValidSymbols(State currentState) {
+		Set<T> validSymbols = new HashSet<>();
 		
-		for (Transition<Character> existingTransition : transitions) {
+		for (Transition<T> existingTransition : transitions) {
 			if (existingTransition.getInitialState() == currentState) {
 				validSymbols.add(existingTransition.getSymbol());
 			}
