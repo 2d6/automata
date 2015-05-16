@@ -106,4 +106,16 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 		return this.alphabet.getSymbols();
 	}
 
+	@Override
+	public List<Character> getValidSymbols(State currentState) {
+		List<Character> validSymbols = new ArrayList<Character>();
+		
+		for (Transition<Character> existingTransition : transitions) {
+			if (existingTransition.getInitialState() == currentState) {
+				validSymbols.add(existingTransition.getSymbol());
+			}
+		}
+		return validSymbols;
+	}
+
 }

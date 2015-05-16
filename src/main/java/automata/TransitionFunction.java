@@ -52,4 +52,11 @@ public interface TransitionFunction<T> {
 	 * @return The target state of transition
 	 */
 	public State getNextState(State currentState, T symbol);
+	
+	/**
+	 * Gets a list of all symbols which trigger a transition for a given state
+	 * @param currentState The state for which the triggering symbols should be determined
+	 * @return A list of triggering symbols
+	 */
+	public List<T> getValidSymbols(State currentState);
 }
