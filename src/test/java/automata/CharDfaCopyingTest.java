@@ -3,6 +3,9 @@ package automata;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertTrue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.testng.annotations.Test;
 
 public class CharDfaCopyingTest {
@@ -39,8 +42,8 @@ public class CharDfaCopyingTest {
 	@Test
 	public void testAutomataWithDifferentAlphabetsAreStructurallyEqual() {
 		final CharDfa a = newBoolCharDfa(S1, ACCEPTING);
-		final Alphabet<Character> alphabet = new CharAlphabet();
-		final SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(alphabet);
+		final Set<Character> symbols = new HashSet<>();
+		final SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(symbols);
 		final CharDfa b = new CharDfa(T1, ACCEPTING, transitionFunction);
 		assertStructurallyEqual(a, b);
 	}
@@ -85,6 +88,15 @@ public class CharDfaCopyingTest {
 		b.addState(T2, ACCEPTING);
 		b.addTransition(T1, T2, '0');
 		assertNotStructurallyEqual(a, b);
+	}
+	
+	@Test
+	public void testAutomataWithUnconnectedStatesAreEqual() {
+		final CharDfa a = newBoolCharDfa(S1, NOT_ACCEPTING);
+		a.addState(S2, NOT_ACCEPTING);
+		final CharDfa b = newBoolCharDfa(T1, NOT_ACCEPTING);
+		b.addState(T2, ACCEPTING);
+		assertStructurallyEqual(a, b);
 	}
 	
 	@Test
@@ -194,11 +206,11 @@ public class CharDfaCopyingTest {
 	 */
 
 	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
-		CharAlphabet alphabet = new CharAlphabet();
-		alphabet.add('0');
-		alphabet.add('1');
+		Set<Character> symbols = new HashSet<>();
+		symbols.add('0');
+		symbols.add('1');
 		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
-				alphabet);
+				symbols);
 		return new CharDfa(identifier, isAccepting, transitionFunction);
 	}
 }

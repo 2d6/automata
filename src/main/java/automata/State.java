@@ -1,7 +1,7 @@
 package automata;
 
 /**
- * A state in a deterministic fininte automaton
+ * A state in a deterministic finite automaton
  * @author 2d6
  */
 public class State {

@@ -1,14 +1,14 @@
 package automata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EvenNumberOfZeros extends CharDfa {
 
 	public EvenNumberOfZeros() {
 		super("S1", true, new SimpleTransitionFunction());
 		
-		List<Character> symbols = new ArrayList<>();
+		Set<Character> symbols = new HashSet<>();
 		symbols.add('0');
 		symbols.add('1');
 		transitionFunction.setSymbols(symbols);

@@ -1,7 +1,7 @@
 package automata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implements a simple Character-based alphabet
@@ -11,26 +11,26 @@ import java.util.List;
  */
 public class CharAlphabet implements Alphabet<Character> {
 
-	private List<Character> symbols;
+	private Set<Character> symbols;
 	
 	/**
 	 * Creates a new CharAlphabet
 	 */
 	public CharAlphabet() {
-		symbols = new ArrayList<>();
+		symbols = new HashSet<>();
 	}
 
 	/**
 	 * Creates a new CharAlphabet with the given symbols
-	 * @param symbolArray Array of symbols in the alphabet
+	 * @param symbols Set of symbols in the alphabet
 	 */
-	public CharAlphabet(List<Character> symbols) {
+	public CharAlphabet(Set<Character> symbols) {
 		this();
 		addAll(symbols);
 	}
 	
 	@Override
-	public void addAll(List<Character> symbols) {
+	public void addAll(Set<Character> symbols) {
 		if (symbols == null) {
 			throw new NullPointerException("List of symbol characters may not be null");
 		}
@@ -56,7 +56,7 @@ public class CharAlphabet implements Alphabet<Character> {
 	  * Necessary for cloning
 	  */
 	@Override
-	public List<Character> getSymbols() {
+	public Set<Character> getSymbols() {
 		return symbols;
 	}
 }

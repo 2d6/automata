@@ -32,7 +32,10 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		states = new HashMap<>();
 		startingState = new State(identifier, isAccepting);
 		states.put(identifier, startingState);
-
+		
+		if (transitionFunction == null) {
+			throw new IllegalArgumentException("Transition function may not be null");
+		}
 		this.transitionFunction = transitionFunction;
 	}
 
@@ -57,7 +60,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		// Copy the transition function, using references to the original
 		// symbols
 		this.transitionFunction = new SimpleTransitionFunction();
-		List<Character> symbols = originalDfa.transitionFunction.getSymbols();
+		Set<Character> symbols = originalDfa.transitionFunction.getSymbols();
 		this.transitionFunction.setSymbols(symbols);
 
 		// Create transitions for all State/symbol combinations which had

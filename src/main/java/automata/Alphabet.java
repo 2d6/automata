@@ -1,6 +1,6 @@
 package automata;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * An alphabet of symbols
@@ -12,15 +12,15 @@ public interface Alphabet<T> {
 	
 	/**
 	 * Adds a symbol to the alphabet.
-	 * @param alphabet Symbol to be added
+	 * @param symbol Symbol to be added
 	 */
 	public void add(T symbol);
 	
 	/**
-	 * Adds all symbols from a list to the alphabet.
-	 * @param symbols
+	 * Adds all symbols from a set to the alphabet.
+	 * @param symbols Set of symbols to be added
 	 */
-	public void addAll(List<T> symbols);
+	public void addAll(Set<T> symbols);
 	
 	/**
 	 * Determines whether a given symbol is contained in the alphabet
@@ -33,5 +33,5 @@ public interface Alphabet<T> {
 	 * Returns the symbols contained in the alphabet
 	 * @return
 	 */
-	public List<T> getSymbols();
+	public Set<T> getSymbols();
 }

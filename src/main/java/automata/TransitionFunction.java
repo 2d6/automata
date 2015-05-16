@@ -1,9 +1,6 @@
 package automata;
 
-import java.util.List;
 import java.util.Set;
-
-import automata.State;
 
 /**
  * A Transition function for arbitrary symbols
@@ -18,16 +15,16 @@ public interface TransitionFunction<T> {
 	 * This should only be possible to call once and must be called before
 	 * setting or getting the first transition.
 	 * 
-	 * @param alphabet
-	 *            An Alphabet of the valid symbols
+	 * @param symbols
+	 *            A Set of the valid symbols
 	 */
-	public void setSymbols(List<T> symbols);
+	public void setSymbols(Set<T> symbols);
 	
 	/**
 	 * Returns all symbols of the transition function
-	 * @return List of the symbols
+	 * @return Set of the symbols
 	 */
-	public List<T> getSymbols();
+	public Set<T> getSymbols();
 
 	/**
 	 * Adds a new transition to the transition function.

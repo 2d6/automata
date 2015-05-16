@@ -4,6 +4,8 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
@@ -22,7 +24,7 @@ public class CharAlphabetTest {
 	
 	@Test
 	public void listOfSymbolsMayBeAddedtoAlphabet() {
-		ArrayList<Character> symbols = new ArrayList<>();
+		Set<Character> symbols = new HashSet<>();
 		symbols.add('0');
 		symbols.add('1');
 		symbols.add('ü');

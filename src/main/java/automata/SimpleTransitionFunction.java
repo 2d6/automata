@@ -21,9 +21,9 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	 * 
 	 * @param alphabet
 	 */
-	public SimpleTransitionFunction(Alphabet<Character> alphabet) {
+	public SimpleTransitionFunction(Set<Character> symbols) {
 		this();
-		this.alphabet = alphabet;
+		this.setSymbols(symbols);
 	}
 
 	/**
@@ -33,6 +33,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	 */
 	public SimpleTransitionFunction() {
 		this.transitions = new ArrayList<>();
+		this.alphabet = new CharAlphabet();
 	}
 
 	/*
@@ -56,7 +57,7 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 		if (exists) {
 			throw new IllegalArgumentException(
 					"Transition was already defined within the transition function");
-		} else if (this.alphabet == null) {
+		} else if (this.alphabet.getSymbols().isEmpty()) {
 			throw new NullPointerException("Alphabet was not defined");
 		} else if (!alphabet.isValid(symbol)) {
 			throw new IllegalArgumentException(
@@ -92,19 +93,21 @@ public class SimpleTransitionFunction implements TransitionFunction<Character>, 
 	}
 
 	@Override
-	public void setSymbols(List<Character> symbols) {
-		if (this.alphabet == null && symbols != null) {
-			this.alphabet = new CharAlphabet(symbols);
-		} else if (this.alphabet != null) {
+	public void setSymbols(Set<Character> symbols) {
+		boolean alphabetIsEmpty = this.alphabet.getSymbols().isEmpty();
+		
+		if (alphabetIsEmpty && symbols != null) {
+			this.alphabet.addAll(symbols);
+		} else if (!alphabetIsEmpty) {
 			throw new IllegalArgumentException(
 					"An alphabet has already been defined");
 		} else {
-			throw new NullPointerException("The list of symbols must not be null");
+			throw new IllegalArgumentException("The list of symbols must not be null");
 		}
 	}
 	
 	@Override
-	public List<Character> getSymbols() {
+	public Set<Character> getSymbols() {
 		return this.alphabet.getSymbols();
 	}
 

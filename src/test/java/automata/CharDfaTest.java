@@ -1,6 +1,8 @@
 package automata;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -8,9 +10,22 @@ import org.testng.annotations.Test;
 
 public class CharDfaTest {
 	
+	private static final boolean ACCEPTING = true;
+	private static final boolean NOT_ACCEPTING = false;
+	
 	private static final State NULL_STATE = null;
-	private static final String IDENTIFIER_S1 = "S1";
-	private static final String IDENTIFIER_S2 = "S2";
+	private static final String S1 = "S1";
+	private static final String S2 = "S2";
+	private static final String S3 = "S3";
+	
+	/*
+	 * INVALID AUTOMATA
+	 */
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void charDfaWithNullTransitionFunctionMayNotBeCreated() {
+		new CharDfa(S1, ACCEPTING, null);
+	}
 	
 	/*
 	 * STATES
@@ -35,7 +50,7 @@ public class CharDfaTest {
 
 	@Test(dataProvider = "sampleStates")
 	public void statesMayBeAddedToCharDfa(String identifier, boolean isAccepting) {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(identifier, isAccepting);
 		State state = dfa.getState(identifier);
 		Assert.assertEquals(identifier, state.getIdentifier());
@@ -44,8 +59,8 @@ public class CharDfaTest {
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateStatesMayNotBeAddedToCharDfa() {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState("startingState", false);
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addState(S1, NOT_ACCEPTING);
 	}
 	
 	/*
@@ -55,8 +70,8 @@ public class CharDfaTest {
 	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
 	public void transitionsContainingNonexistantStatesAreForbidden(
 			String startingStateIdentifier, String secondStateIdentifier) {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState("secondState", false);
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addState(S2, NOT_ACCEPTING);
 		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
 	}
 	
@@ -66,40 +81,44 @@ public class CharDfaTest {
 	
 	@Test
 	public void charDfaEvaluatesCharacters() {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState("secondState", false);
-		dfa.addTransition("startingState", "secondState", '0');
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addState(S2, NOT_ACCEPTING);
+		dfa.addTransition(S1, S2, '0');
 		ArrayList<Character> symbolList = new ArrayList<>();
 		symbolList.add('0');
 		Assert.assertEquals(dfa.evaluate(symbolList),
-				dfa.getState("secondState"));
+				dfa.getState(S2));
 	}
 	
 	@Test
 	public void charDfaEvaluatesStrings() {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
-		dfa.addState("secondState", false);
-		dfa.addTransition("startingState", "secondState", '0');
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addState(S2, NOT_ACCEPTING);
+		dfa.addTransition(S1, S2, '0');
 		Assert.assertEquals(dfa.evaluate("110"),
-				dfa.getState("secondState"));
+				dfa.getState(S2));
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
-		CharDfa dfa = newBoolCharDfa("startingState", true);
+		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
 		String inputString = "102";
 		dfa.evaluate(inputString);
 	}
 	
+	/*
+	 * TRANSITIONS
+	 */
+	
 	@DataProvider(name = "sampleStates")
-	public static Object[][] identifiersAndStates() {
-		return new Object[][] { { IDENTIFIER_S1, true }, { IDENTIFIER_S2, false }, };
+	public static Object[][] getSampleStates() {
+		return new Object[][] { { S2, ACCEPTING }, { S3, NOT_ACCEPTING }, };
 	}
 
 	@DataProvider(name = "nonexistantStates")
 	public static Object[][] nonexistantStates() {
-		return new Object[][] { { NULL_STATE, "secondState" },
-				{ "startingState", NULL_STATE }, { NULL_STATE, NULL_STATE } };
+		return new Object[][] { { NULL_STATE, S2 },
+				{ S1, NULL_STATE }, { NULL_STATE, NULL_STATE } };
 	}
 	
 	/*
@@ -108,9 +127,9 @@ public class CharDfaTest {
 	
 	@Test(dataProvider = "testStrings")
 	public void copiedDfaEvaluatesSameAsOriginal(String testString) {
-		CharDfa original = newBoolCharDfa(IDENTIFIER_S1, true);
-		original.addState(IDENTIFIER_S2, false);
-		original.addTransition(IDENTIFIER_S1, IDENTIFIER_S2, '0');
+		CharDfa original = newBoolCharDfa(S1, ACCEPTING);
+		original.addState(S2, NOT_ACCEPTING);
+		original.addTransition(S1, S2, '0');
 		
 		CharDfa copy = original.copy();	
 		State originalFinalState = original.evaluate(testString);
@@ -131,11 +150,11 @@ public class CharDfaTest {
 	
 	@Test
 	public void copiedDfaStartingStatesAreNotIdenticalToOriginalStates() {
-		CharDfa original = newBoolCharDfa(IDENTIFIER_S1, true);
+		CharDfa original = newBoolCharDfa(S1, ACCEPTING);
 		
 		CharDfa copy = original.copy();	
 		
-		Assert.assertFalse(original.getState(IDENTIFIER_S1) == copy.getState(IDENTIFIER_S1));
+		Assert.assertFalse(original.getState(S1) == copy.getState(S1));
 	}
 
 	/*
@@ -143,7 +162,7 @@ public class CharDfaTest {
 	 */
 	
 	private CharDfa newBoolCharDfa(String identifier, boolean isAccepting) {
-		CharAlphabet alphabet = new CharAlphabet();
+		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
 		SimpleTransitionFunction transitionFunction = new SimpleTransitionFunction(
