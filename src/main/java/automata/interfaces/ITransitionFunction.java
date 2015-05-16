@@ -1,6 +1,8 @@
-package automata;
+package automata.interfaces;
 
 import java.util.Set;
+
+import automata.State;
 
 /**
  * A Transition function for arbitrary symbols
@@ -8,7 +10,7 @@ import java.util.Set;
  * @author 2d6
  *
  */
-public interface TransitionFunction<T> {
+public interface ITransitionFunction<T> {
 
 	/**
 	 * Defines the alphabet of the transition function, i.e. the valid symbols.

@@ -1,4 +1,4 @@
-package automata;
+package automata.interfaces;
 
 import java.util.Set;
 
@@ -8,7 +8,7 @@ import java.util.Set;
  *
  * @param <T>
  */
-public interface Alphabet<T> {
+public interface IAlphabet<T> {
 	
 	/**
 	 * Adds a symbol to the alphabet.

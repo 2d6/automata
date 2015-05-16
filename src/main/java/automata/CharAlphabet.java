@@ -3,13 +3,15 @@ package automata;
 import java.util.HashSet;
 import java.util.Set;
 
+import automata.interfaces.IAlphabet;
+
 /**
  * Implements a simple Character-based alphabet
  * 
  * @author 2d6
  *
  */
-public class CharAlphabet implements Alphabet<Character> {
+public class CharAlphabet implements IAlphabet<Character> {
 
 	private Set<Character> symbols;
 	

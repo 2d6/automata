@@ -5,19 +5,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import automata.interfaces.IAlphabet;
+import automata.interfaces.ITransitionFunction;
+
 /**
  * Implements a simple char-based transition function
  * 
  * @author 2d6
  *
  */
-public class SimpleTransitionFunction implements TransitionFunction<Character>, Cloneable {
+public class SimpleTransitionFunction implements ITransitionFunction<Character>, Cloneable {
 
 	private List<Transition<Character>> transitions;
-	private Alphabet<Character> alphabet;
+	private IAlphabet<Character> alphabet;
 
 	/**
-	 * Creates a new SimpleTransitionFunction with a given {@link Alphabet}.
+	 * Creates a new SimpleTransitionFunction with a given {@link IAlphabet}.
 	 * 
 	 * @param alphabet
 	 */

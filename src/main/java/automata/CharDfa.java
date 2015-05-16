@@ -6,17 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import automata.interfaces.IDeterministicFiniteAutomaton;
+import automata.interfaces.ITransitionFunction;
+
 /**
  * Implements a deterministic finite automaton. For further information, see
  * https://en.wikipedia.org/wiki/Deterministic_finite_automaton
  *
  * @author 2d6
  */
-public class CharDfa implements DeterministicFiniteAutomaton<Character> {
+public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 
 	protected HashMap<String, State> states;
 	protected State startingState;
-	protected TransitionFunction<Character> transitionFunction;
+	protected ITransitionFunction<Character> transitionFunction;
 
 	/**
 	 * Creates a new automaton with a starting state.
@@ -28,7 +31,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 	 *            state is accepting.
 	 */
 	public CharDfa(String identifier, boolean isAccepting,
-			TransitionFunction<Character> transitionFunction) {
+			ITransitionFunction<Character> transitionFunction) {
 		states = new HashMap<>();
 		startingState = new State(identifier, isAccepting);
 		states.put(identifier, startingState);

@@ -1,4 +1,7 @@
-package automata;
+package automata.interfaces;
+
+import automata.CharDfa;
+import automata.State;
 
 /**
  * A Deterministic Finite Automaton with an alphabet of type T
@@ -7,7 +10,7 @@ package automata;
  *
  * @param <T>
  */
-public interface DeterministicFiniteAutomaton<T> {
+public interface IDeterministicFiniteAutomaton<T> {
 
 	/**
 	 * @return The starting state of the automaton
@@ -75,7 +78,7 @@ public interface DeterministicFiniteAutomaton<T> {
 	 * 
 	 * @return The copied automaton
 	 */
-	public DeterministicFiniteAutomaton<T> copy();
+	public IDeterministicFiniteAutomaton<T> copy();
 
 	/**
 	 * Determines whether two automata are structurally identical, i.e. will
