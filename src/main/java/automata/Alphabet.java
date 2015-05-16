@@ -6,19 +6,19 @@ import java.util.Set;
 import automata.interfaces.IAlphabet;
 
 /**
- * Implements a simple Character-based alphabet
+ * Implements a simple T-based alphabet
  * 
  * @author 2d6
  *
  */
-public class CharAlphabet implements IAlphabet<Character> {
+public class Alphabet<T> implements IAlphabet<T> {
 
-	private Set<Character> symbols;
+	private Set<T> symbols;
 	
 	/**
 	 * Creates a new CharAlphabet
 	 */
-	public CharAlphabet() {
+	public Alphabet() {
 		symbols = new HashSet<>();
 	}
 
@@ -26,31 +26,31 @@ public class CharAlphabet implements IAlphabet<Character> {
 	 * Creates a new CharAlphabet with the given symbols
 	 * @param symbols Set of symbols in the alphabet
 	 */
-	public CharAlphabet(Set<Character> symbols) {
+	public Alphabet(Set<T> symbols) {
 		this();
 		addAll(symbols);
 	}
 	
 	@Override
-	public void addAll(Set<Character> symbols) {
+	public void addAll(Set<T> symbols) {
 		if (symbols == null) {
-			throw new NullPointerException("List of symbol characters may not be null");
+			throw new NullPointerException("List of symbol Ts may not be null");
 		}
-		for (Character symbol : symbols) {
+		for (T symbol : symbols) {
 			this.symbols.add(symbol);
 		}
 	}
 	
 	@Override
-	public void add(Character symbol) {
+	public void add(T symbol) {
 		if (symbol == null) {
-			throw new NullPointerException("Symbol character may not be null");
+			throw new NullPointerException("Symbol T may not be null");
 		}
 		symbols.add(symbol);
 	}
 
 	@Override
-	public boolean isValid(Character symbol) {
+	public boolean isValid(T symbol) {
 		return symbols.contains(symbol);
 	}
 	
@@ -58,7 +58,7 @@ public class CharAlphabet implements IAlphabet<Character> {
 	  * Necessary for cloning
 	  */
 	@Override
-	public Set<Character> getSymbols() {
+	public Set<T> getSymbols() {
 		return symbols;
 	}
 }

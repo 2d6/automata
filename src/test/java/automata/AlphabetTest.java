@@ -3,17 +3,16 @@ package automata;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.testng.annotations.Test;
 
-public class CharAlphabetTest {
+public class AlphabetTest {
 	
 	@Test
 	public void symbolsMayBeAddedToAlphabet() {
-		CharAlphabet charAlphabet = new CharAlphabet();
+		Alphabet<Character> charAlphabet = new Alphabet<>();
 		charAlphabet.add('0');
 		charAlphabet.add('1');
 		charAlphabet.add('ü');
@@ -28,7 +27,7 @@ public class CharAlphabetTest {
 		symbols.add('0');
 		symbols.add('1');
 		symbols.add('ü');
-		CharAlphabet charAlphabet = new CharAlphabet(symbols);
+		Alphabet<Character> charAlphabet = new Alphabet<>(symbols);
 		assertTrue(charAlphabet.isValid('1'));
 		assertTrue(charAlphabet.isValid('ü'));
 		assertFalse(charAlphabet.isValid('e'));
@@ -36,13 +35,13 @@ public class CharAlphabetTest {
 	
 	@Test(expectedExceptions = NullPointerException.class)
 	public void noEmptySymbolMayBeAddedtoAlphabet() {
-		CharAlphabet charAlphabet = new CharAlphabet();
+		Alphabet<Character> charAlphabet = new Alphabet<>();
 		charAlphabet.add(null);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
 	public void noEmptyListOfSymbolsMayBeAddedtoAlphabet() {
-		CharAlphabet charAlphabet = new CharAlphabet();
+		Alphabet<Character> charAlphabet = new Alphabet<>();
 		charAlphabet.addAll(null);
 	}
 }

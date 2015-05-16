@@ -36,7 +36,7 @@ public class SimpleTransitionFunction implements ITransitionFunction<Character>,
 	 */
 	public SimpleTransitionFunction() {
 		this.transitions = new ArrayList<>();
-		this.alphabet = new CharAlphabet();
+		this.alphabet = new Alphabet<>();
 	}
 
 	/*
