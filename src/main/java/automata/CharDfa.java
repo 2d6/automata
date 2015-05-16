@@ -74,32 +74,16 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see automata.DeterministicFiniteAutomaton#getStartingState()
-	 */
 	@Override
 	public State getStartingState() {
 		return startingState;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see automata.DeterministicFiniteAutomaton#getState(java.lang.String)
-	 */
 	@Override
 	public State getState(String identifier) {
 		return states.get(identifier);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see automata.DeterministicFiniteAutomaton#addState(java.lang.String,
-	 * boolean)
-	 */
 	@Override
 	public void addState(String identifier, boolean isAccepting) {
 		if (states.containsKey(identifier)) {
@@ -109,13 +93,6 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		states.put(identifier, new State(identifier, isAccepting));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * automata.DeterministicFiniteAutomaton#addTransition(java.lang.String,
-	 * java.lang.String, T)
-	 */
 	@Override
 	public void addTransition(String initialStateIdentifier,
 			String targetStateIdentifier, Character symbol) {
@@ -124,11 +101,6 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		transitionFunction.addTransition(initialState, targetState, symbol);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see automata.DeterministicFiniteAutomaton#evaluate(T[])
-	 */
 	@Override
 	public State evaluate(Iterable<Character> input) {
 		State currentState = this.startingState;
@@ -182,14 +154,7 @@ public class CharDfa implements DeterministicFiniteAutomaton<Character> {
 		return new CharDfa(this);
 	}
 
-	/**
-	 * Determines whether two automata are structurally identical, i.e. will
-	 * evaluate identical input to identical output
-	 * 
-	 * @param otherCharDfa
-	 *            CharDfa to compare to
-	 * @return True, if the CharDfa are structurally identical
-	 */
+	@Override
 	public boolean isStructurallyEqualTo(CharDfa otherCharDfa) {
 		List<State> visitedStates = new ArrayList<>();
 		List<State> visitedStatesOther = new ArrayList<>();
