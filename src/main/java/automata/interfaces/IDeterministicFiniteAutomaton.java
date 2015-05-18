@@ -1,6 +1,8 @@
 package automata.interfaces;
 
-import automata.CharDfa;
+import java.util.Set;
+
+import automata.DeterministicFiniteAutomaton;
 import automata.State;
 
 /**
@@ -88,6 +90,22 @@ public interface IDeterministicFiniteAutomaton<T> {
 	 *            CharDfa to compare to
 	 * @return True, if the CharDfa are structurally identical
 	 */
-	boolean isStructurallyEqualTo(CharDfa otherCharDfa);
+	boolean isStructurallyEqualTo(IDeterministicFiniteAutomaton<T> otherDfa);
+	
+	/**
+	 * Returns the next state of the automaton for a given current {@link State} and symbol combination.
+	 * @param currentState The current state of the automaton
+	 * @param symbol The symbol being evaluated
+	 * @return The next State
+	 */
+	public State getNextState(State currentState, T symbol);
+	
+	/**
+	 * Returns the valid symbols for a given {@link State}, i.e. those symbols for which a transition
+	 * has been defined
+	 * @param currentState The current state of the automaton
+	 * @return A Set of valid symbols
+	 */
+	public Set<T> getValidSymbols(State currentState);
 
 }

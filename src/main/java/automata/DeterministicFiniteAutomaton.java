@@ -15,11 +15,11 @@ import automata.interfaces.ITransitionFunction;
  *
  * @author 2d6
  */
-public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
+public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAutomaton<T> {
 
 	protected HashMap<String, State> states;
 	protected State startingState;
-	protected ITransitionFunction<Character> transitionFunction;
+	protected ITransitionFunction<T> transitionFunction;
 
 	/**
 	 * Creates a new automaton with a starting state.
@@ -30,8 +30,8 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 	 *            Acceptance status of the starting state. True if the starting
 	 *            state is accepting.
 	 */
-	public CharDfa(String identifier, boolean isAccepting,
-			ITransitionFunction<Character> transitionFunction) {
+	public DeterministicFiniteAutomaton(String identifier, boolean isAccepting,
+			ITransitionFunction<T> transitionFunction) {
 		states = new HashMap<>();
 		startingState = new State(identifier, isAccepting);
 		states.put(identifier, startingState);
@@ -43,13 +43,13 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 	}
 
 	/**
-	 * Copy-constructor; creates a new CharDfa with semantics identical to the
+	 * Copy-constructor; creates a new CharDfa<T> with semantics identical to the
 	 * supplied originalDfa
 	 * 
 	 * @param originalDfa
-	 *            CharDfa to be used as a blueprint for the new CharDfa
+	 *            CharDfa<T> to be used as a blueprint for the new CharDfa<T>
 	 */
-	private CharDfa(CharDfa originalDfa) {
+	private DeterministicFiniteAutomaton(DeterministicFiniteAutomaton<T> originalDfa) {
 		// Copy the states
 		this.states = new HashMap<>();
 		Collection<State> originalStates = originalDfa.states.values();
@@ -63,13 +63,13 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 		// Copy the transition function, using references to the original
 		// symbols
 		this.transitionFunction = new TransitionFunction<>();
-		Set<Character> symbols = originalDfa.transitionFunction.getSymbols();
+		Set<T> symbols = originalDfa.transitionFunction.getSymbols();
 		this.transitionFunction.setSymbols(symbols);
 
 		// Create transitions for all State/symbol combinations which had
 		// transitions in the original DFA
 		for (State originalState : originalStates) {
-			for (Character symbol : symbols) {
+			for (T symbol : symbols) {
 				State targetState = originalDfa.transitionFunction
 						.getNextState(originalState, symbol);
 				if (targetState != null) {
@@ -101,17 +101,17 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 
 	@Override
 	public void addTransition(String initialStateIdentifier,
-			String targetStateIdentifier, Character symbol) {
+			String targetStateIdentifier, T symbol) {
 		State initialState = getState(initialStateIdentifier);
 		State targetState = getState(targetStateIdentifier);
 		transitionFunction.addTransition(initialState, targetState, symbol);
 	}
 
 	@Override
-	public State evaluate(Iterable<Character> input) {
+	public State evaluate(Iterable<T> input) {
 		State currentState = this.startingState;
 		State nextState;
-		for (Character symbol : input) {
+		for (T symbol : input) {
 			nextState = evaluate(currentState, symbol);
 			currentState = (nextState == null) ? currentState : nextState;
 		}
@@ -129,31 +129,31 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 	 *            The symbol under evaluation
 	 * @return The state the automaton is in after evaluation
 	 */
-	protected State evaluate(State currentState, Character symbol) {
+	protected State evaluate(State currentState, T symbol) {
 		return transitionFunction.getNextState(currentState, symbol);
 	}
 
 	/**
-	 * Creates a new CharDfa semantically identical to the current one
+	 * Creates a new CharDfa<T> semantically identical to the current one
 	 * 
-	 * @return The new CharDfa
+	 * @return The new CharDfa<T>
 	 */
 	@Override
-	public CharDfa copy() {
-		return new CharDfa(this);
+	public DeterministicFiniteAutomaton<T> copy() {
+		return new DeterministicFiniteAutomaton<T>(this);
 	}
 
 	@Override
-	public boolean isStructurallyEqualTo(CharDfa otherCharDfa) {
+	public boolean isStructurallyEqualTo(IDeterministicFiniteAutomaton<T> otherCharDfa) {
 		List<State> visitedStates = new ArrayList<>();
 		List<State> visitedStatesOther = new ArrayList<>();
-		return CharDfa.stateSubGraphIsEqual(this, getStartingState(),
+		return stateSubGraphIsEqual(this, getStartingState(),
 				otherCharDfa, otherCharDfa.getStartingState(), visitedStates,
 				visitedStatesOther);
 	}
 
-	private static boolean stateSubGraphIsEqual(CharDfa dfaA, State currentStateA,
-			CharDfa dfaB, State currentStateB, List<State> visitedStatesA,
+	private boolean stateSubGraphIsEqual(IDeterministicFiniteAutomaton<T> dfaA, State currentStateA,
+			IDeterministicFiniteAutomaton<T> dfaB, State currentStateB, List<State> visitedStatesA,
 			List<State> visitedStatesB) {
 
 		if (currentStateA.isAccepting() != currentStateB.isAccepting()) {
@@ -171,8 +171,8 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 		visitedStatesA.add(currentStateA);
 		visitedStatesB.add(currentStateB);
 
-		Set<Character> validSymbolsA = dfaA.getValidSymbols(currentStateA);
-		Set<Character> validSymbolsB = dfaB.getValidSymbols(currentStateB);
+		Set<T> validSymbolsA = dfaA.getValidSymbols(currentStateA);
+		Set<T> validSymbolsB = dfaB.getValidSymbols(currentStateB);
 
 		if (validSymbolsA.equals(validSymbolsB)) {
 
@@ -180,7 +180,7 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 			 * Recursively check all subgraphs of the current State
 			 */
 
-			for (Character symbol : validSymbolsA) {
+			for (T symbol : validSymbolsA) {
 				State nextStateA = dfaA.getNextState(currentStateA, symbol);
 				State nextStateB = dfaB.getNextState(currentStateB, symbol);
 				if (!stateSubGraphIsEqual(dfaA, nextStateA, dfaB,
@@ -193,17 +193,13 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 		return false;
 	}
 	
-	/*
-	 * Wrapper for the homonymous method of the {@link TransitionFunction}
-	 */
-	private State getNextState(State currentState, Character symbol) {
+	@Override
+	public State getNextState(State currentState, T symbol) {
 		return this.transitionFunction.getNextState(currentState, symbol);
 	}
 
-	/*
-	 * Wrapper for the homonymous method of the {@link TransitionFunction}
-	 */
-	private Set<Character> getValidSymbols(State currentState) {
+	@Override
+	public Set<T> getValidSymbols(State currentState) {
 		return this.transitionFunction.getValidSymbols(currentState);
 	}
 	
