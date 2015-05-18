@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import automata.interfaces.ITransitionFunction;
 
-public class StringDfa extends DeterministicFiniteAutomaton {
+public class StringDfa extends DeterministicFiniteAutomaton<Character> {
 
 	public StringDfa(String identifier, boolean isAccepting,
 			ITransitionFunction<Character> transitionFunction) {

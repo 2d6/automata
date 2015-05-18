@@ -2,7 +2,6 @@ package automata.interfaces;
 
 import java.util.Set;
 
-import automata.DeterministicFiniteAutomaton;
 import automata.State;
 
 /**

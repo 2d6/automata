@@ -25,7 +25,7 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaWithNullTransitionFunctionMayNotBeCreated() {
-		new DeterministicFiniteAutomaton(S1, ACCEPTING, null);
+		new DeterministicFiniteAutomaton<Character>(S1, ACCEPTING, null);
 	}
 	
 	/*
@@ -34,7 +34,7 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test(dataProvider = "sampleStates")
 	public void charDfaHasStartingState(String identifier, boolean isAccepting) {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(identifier, isAccepting);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getStartingState();
 		Assert.assertEquals(identifier, startingState.getIdentifier());
 		Assert.assertEquals(isAccepting, startingState.isAccepting());
@@ -43,7 +43,7 @@ public class DeterministicFiniteAutomatonTest {
 	@Test(dataProvider = "sampleStates")
 	public void charDfaReturnsStatesByTheirIdentifier(String identifier,
 			boolean isAccepting) {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(identifier, isAccepting);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
 		State startingState = dfa.getState(identifier);
 		Assert.assertEquals(identifier, startingState.getIdentifier());
 		Assert.assertEquals(isAccepting, startingState.isAccepting());
@@ -51,7 +51,7 @@ public class DeterministicFiniteAutomatonTest {
 
 	@Test(dataProvider = "sampleStates")
 	public void statesMayBeAddedToCharDfa(String identifier, boolean isAccepting) {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(identifier, isAccepting);
 		State state = dfa.getState(identifier);
 		Assert.assertEquals(identifier, state.getIdentifier());
@@ -60,7 +60,7 @@ public class DeterministicFiniteAutomatonTest {
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateStatesMayNotBeAddedToCharDfa() {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S1, NOT_ACCEPTING);
 	}
 	
@@ -71,7 +71,7 @@ public class DeterministicFiniteAutomatonTest {
 	@Test(dataProvider = "nonexistantStates", expectedExceptions = NullPointerException.class)
 	public void transitionsContainingNonexistantStatesAreForbidden(
 			String startingStateIdentifier, String secondStateIdentifier) {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
 		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
 	}
@@ -82,7 +82,7 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test
 	public void charDfaEvaluatesCharacters() {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
 		dfa.addTransition(S1, S2, '0');
 		ArrayList<Character> symbolList = new ArrayList<>();
@@ -93,7 +93,7 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
-		DeterministicFiniteAutomaton dfa = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		String inputString = "102";
 		dfa.evaluate(stringToCharacterList(inputString));
 	}
@@ -119,11 +119,11 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test(dataProvider = "testStrings")
 	public void copiedDfaEvaluatesSameAsOriginal(String testString) {
-		DeterministicFiniteAutomaton original = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addTransition(S1, S2, '0');
 		
-		DeterministicFiniteAutomaton copy = original.copy();	
+		DeterministicFiniteAutomaton<Character> copy = original.copy();	
 		State originalFinalState = original.evaluate(stringToCharacterList(testString));
 		State copyFinalState = copy.evaluate(stringToCharacterList(testString));
 		
@@ -142,9 +142,9 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@Test
 	public void copiedDfaStartingStatesAreNotIdenticalToOriginalStates() {
-		DeterministicFiniteAutomaton original = newBoolCharDfa(S1, ACCEPTING);
+		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
 		
-		DeterministicFiniteAutomaton copy = original.copy();	
+		DeterministicFiniteAutomaton<Character> copy = original.copy();	
 		
 		Assert.assertFalse(original.getState(S1) == copy.getState(S1));
 	}
@@ -153,13 +153,13 @@ public class DeterministicFiniteAutomatonTest {
 	 * Helper Methods
 	 */
 	
-	private DeterministicFiniteAutomaton newBoolCharDfa(String identifier, boolean isAccepting) {
+	private DeterministicFiniteAutomaton<Character> newBoolCharDfa(String identifier, boolean isAccepting) {
 		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
 		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
 				alphabet);
-		return new DeterministicFiniteAutomaton(identifier, isAccepting, transitionFunction);
+		return new DeterministicFiniteAutomaton<Character>(identifier, isAccepting, transitionFunction);
 	}
 	
 	private List<Character> stringToCharacterList(String string) {
