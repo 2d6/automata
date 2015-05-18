@@ -173,38 +173,39 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 			CharDfa dfaB, State currentStateB, List<State> visitedStatesA,
 			List<State> visitedStatesB) {
 
-		if (currentStateA.isAccepting() == currentStateB.isAccepting()) {
+		if (currentStateA.isAccepting() != currentStateB.isAccepting()) {
+			return false;
+		} 
+		else if (visitedStatesA.contains(currentStateA) || visitedStatesB.contains(currentStateB)) {
+			return visitedStatesA.indexOf(currentStateA) == visitedStatesB.indexOf(currentStateB);
+		}
 
-			/* 
-			 * If the states have already been visited, check whether the are
-			* equal by their position in the visit history
-			*/
-			if (visitedStatesA.contains(currentStateA) || visitedStatesB.contains(currentStateB)) {
-				return visitedStatesA.indexOf(currentStateA) == visitedStatesB.indexOf(currentStateB);
-			}
-			
-			visitedStatesA.add(currentStateA);
-			visitedStatesB.add(currentStateB);
-			
-			Set<Character> validSymbolsA = dfaA.getValidSymbols(currentStateA);
-			Set<Character> validSymbolsB = dfaB.getValidSymbols(currentStateB);
+		/* 
+		 * If the states have already been visited, check whether the are
+		 * equal by their position in the visit history
+		 */
 
-			if (validSymbolsA.equals(validSymbolsB)) {
-				
-				/*
-				 * Recursively check all subgraphs of the current State
-				 */
-				boolean subGraphIsIdentical = true;
-				
-				for (Character symbol : validSymbolsA) {
-					State nextStateA = dfaA.getNextState(currentStateA, symbol);
-					State nextStateB = dfaB.getNextState(currentStateB, symbol);
-					subGraphIsIdentical = subGraphIsIdentical
-							& stateSubGraphIsEqual(dfaA, nextStateA, dfaB,
-									nextStateB, visitedStatesA, visitedStatesB);
+		visitedStatesA.add(currentStateA);
+		visitedStatesB.add(currentStateB);
+
+		Set<Character> validSymbolsA = dfaA.getValidSymbols(currentStateA);
+		Set<Character> validSymbolsB = dfaB.getValidSymbols(currentStateB);
+
+		if (validSymbolsA.equals(validSymbolsB)) {
+
+			/*
+			 * Recursively check all subgraphs of the current State
+			 */
+
+			for (Character symbol : validSymbolsA) {
+				State nextStateA = dfaA.getNextState(currentStateA, symbol);
+				State nextStateB = dfaB.getNextState(currentStateB, symbol);
+				if (!stateSubGraphIsEqual(dfaA, nextStateA, dfaB,
+								nextStateB, visitedStatesA, visitedStatesB)) {
+					return false;  
 				}
-				return subGraphIsIdentical;
 			}
+			return true;
 		}
 		return false;
 	}

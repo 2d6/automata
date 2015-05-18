@@ -48,19 +48,15 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	@Override
 	public void addTransition(State initialState, State targetState, T symbol) {
 
-		boolean exists = false;
 		for (Transition<T> existingTransition : transitions) {
 			if (existingTransition.getInitialState() == initialState
 					&& existingTransition.getSymbol() == symbol) {
-				exists = true;
-				break;
+				throw new IllegalArgumentException(
+						"Transition was already defined within the transition function");
 			}
 		}
 
-		if (exists) {
-			throw new IllegalArgumentException(
-					"Transition was already defined within the transition function");
-		} else if (this.alphabet.getSymbols().isEmpty()) {
+		if (this.alphabet.getSymbols().isEmpty()) {
 			throw new NullPointerException("Alphabet was not defined");
 		} else if (!alphabet.isValid(symbol)) {
 			throw new IllegalArgumentException(
@@ -97,16 +93,13 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 
 	@Override
 	public void setSymbols(Set<T> symbols) {
-		boolean alphabetIsEmpty = this.alphabet.getSymbols().isEmpty();
-		
-		if (alphabetIsEmpty && symbols != null) {
-			this.alphabet.addAll(symbols);
-		} else if (!alphabetIsEmpty) {
-			throw new IllegalArgumentException(
-					"An alphabet has already been defined");
-		} else {
+		if (!this.alphabet.getSymbols().isEmpty()) {
+			throw new IllegalArgumentException("An alphabet has already been defined");
+		} 
+		else if (symbols == null) {
 			throw new IllegalArgumentException("The list of symbols must not be null");
 		}
+		this.alphabet.addAll(symbols);
 	}
 	
 	@Override
