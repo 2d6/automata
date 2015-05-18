@@ -3,7 +3,7 @@ package automata;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EvenNumberOfZeros extends CharDfa {
+public class EvenNumberOfZeros extends StringDfa {
 
 	public EvenNumberOfZeros() {
 		super("S1", true, new TransitionFunction<Character>());

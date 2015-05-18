@@ -2,6 +2,7 @@ package automata;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.testng.Assert;
@@ -90,20 +91,11 @@ public class CharDfaTest {
 				dfa.getState(S2));
 	}
 	
-	@Test
-	public void charDfaEvaluatesStrings() {
-		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
-		dfa.addState(S2, NOT_ACCEPTING);
-		dfa.addTransition(S1, S2, '0');
-		Assert.assertEquals(dfa.evaluate("110"),
-				dfa.getState(S2));
-	}
-	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		CharDfa dfa = newBoolCharDfa(S1, ACCEPTING);
 		String inputString = "102";
-		dfa.evaluate(inputString);
+		dfa.evaluate(stringToCharacterList(inputString));
 	}
 	
 	/*
@@ -132,8 +124,8 @@ public class CharDfaTest {
 		original.addTransition(S1, S2, '0');
 		
 		CharDfa copy = original.copy();	
-		State originalFinalState = original.evaluate(testString);
-		State copyFinalState = copy.evaluate(testString);
+		State originalFinalState = original.evaluate(stringToCharacterList(testString));
+		State copyFinalState = copy.evaluate(stringToCharacterList(testString));
 		
 		Assert.assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
 	}
@@ -168,5 +160,14 @@ public class CharDfaTest {
 		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
 				alphabet);
 		return new CharDfa(identifier, isAccepting, transitionFunction);
+	}
+	
+	private List<Character> stringToCharacterList(String string) {
+		char[] charArray = string.toCharArray();
+		ArrayList<Character> characterList = new ArrayList<>();
+		for (char ch : charArray) {
+			characterList.add(ch);
+		}
+		return characterList;
 	}
 }

@@ -119,23 +119,6 @@ public class CharDfa implements IDeterministicFiniteAutomaton<Character> {
 	}
 
 	/**
-	 * Evaluates the characters in a String according to the internal logic of
-	 * the automaton.
-	 *
-	 * @param input
-	 *            String of characters to be evaluated
-	 * @return The state the automaton was in after evaluating the last
-	 *         character in the string
-	 */
-	public State evaluate(String input) {
-		ArrayList<Character> charList = new ArrayList<>();
-		for (char ch : input.toCharArray()) {
-			charList.add(ch);
-		}
-		return evaluate(charList);
-	}
-
-	/**
 	 * Evaluates a single symbol according to the logic of the automaton given
 	 * by its states and transition function. Returns the state the automaton
 	 * was in after evaluating the symbol.
