@@ -20,6 +20,9 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 	protected HashMap<String, State> states;
 	protected State startingState;
 	protected ITransitionFunction<T> transitionFunction;
+	
+	protected static final boolean NOT_ACCEPTING = false;
+	protected static final State ILLEGAL_SYMBOL_STATE = new State("Illegal symbol occurred", NOT_ACCEPTING);
 
 	/**
 	 * Creates a new automaton with a starting state.
@@ -113,21 +116,25 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 		State nextState;
 		for (T symbol : input) {
 			nextState = evaluate(currentState, symbol);
-			currentState = (nextState == null) ? currentState : nextState;
+			if (nextState == null) {
+				return new State(symbol.toString(), false);
+			}
+			currentState = nextState;
 		}
 		return currentState;
 	}
 
 	/**
 	 * Evaluates a single symbol according to the logic of the automaton given
-	 * by its states and transition function. Returns the state the automaton
-	 * was in after evaluating the symbol.
+	 * by its states and transition function. Returns the new state the automaton
+	 * is in after evaluating the symbol, or null if no transition has been defined.
 	 *
 	 * @param currentState
 	 *            The state the automaton is in before evaluation
 	 * @param symbol
 	 *            The symbol under evaluation
-	 * @return The state the automaton is in after evaluation
+	 * @return The state the automaton is in after evaluation, or null if no transition
+	 * has been defined.
 	 */
 	protected State evaluate(State currentState, T symbol) {
 		return transitionFunction.getNextState(currentState, symbol);

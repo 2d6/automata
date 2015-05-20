@@ -42,8 +42,7 @@ public interface ITransitionFunction<T> {
 
 	/**
 	 * Gets the output of the transition function. Should return null if no
-	 * transition has been defined for the current {@link State} and symbol or if the
-	 * alphabet does not contain the symbol
+	 * transition has been defined for the current {@link State} and symbol.
 	 * 
 	 * @param currentState
 	 *            The current state

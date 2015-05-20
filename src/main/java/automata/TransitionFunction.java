@@ -66,14 +66,8 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 		transitions.add(new Transition<>(initialState, targetState, symbol));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see automata.TransitionFunction#get(automata.State, char)
-	 */
 	@Override
 	public State getNextState(State currentState, T symbol) {
-		State state = null;
 
 		if (!alphabet.isValid(symbol)) {
 			throw new IllegalArgumentException(
@@ -83,12 +77,11 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 		for (Transition<T> transition : transitions) {
 			if (transition.getInitialState() == currentState
 					&& transition.getSymbol() == symbol) {
-				state = transition.getTargetState();
-				break;
+				return transition.getTargetState();
 			}
 		}
 
-		return state;
+		return null;
 	}
 
 	@Override

@@ -16,7 +16,9 @@ public class EvenNumberOfZeros extends StringDfa {
 		addState("S2", false);
 		
 		addTransition("S1", "S2", '0');
+		addTransition("S1", "S1", '1');
 		addTransition("S2", "S1", '0');
+		addTransition("S2", "S2", '1');
 	}
 
 }

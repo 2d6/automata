@@ -64,6 +64,11 @@ public class DeterministicFiniteAutomatonTest {
 		dfa.addState(S1, NOT_ACCEPTING);
 	}
 	
+	@DataProvider(name = "sampleStates")
+	public static Object[][] getSampleStates() {
+		return new Object[][] { { S2, ACCEPTING }, { S3, NOT_ACCEPTING }, };
+	}
+	
 	/*
 	 * TRANSITIONS
 	 */
@@ -76,6 +81,12 @@ public class DeterministicFiniteAutomatonTest {
 		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
 	}
 	
+	@DataProvider(name = "nonexistantStates")
+	public static Object[][] nonexistantStates() {
+		return new Object[][] { { NULL_STATE, S2 },
+				{ S1, NULL_STATE }, { NULL_STATE, NULL_STATE } };
+	}
+
 	/*
 	 * EVALUATION
 	 */
@@ -85,6 +96,10 @@ public class DeterministicFiniteAutomatonTest {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
 		dfa.addTransition(S1, S2, '0');
+		dfa.addTransition(S1, S1, '1');
+		dfa.addTransition(S2, S1, '0');
+		dfa.addTransition(S2, S2, '1');
+		
 		ArrayList<Character> symbolList = new ArrayList<>();
 		symbolList.add('0');
 		Assert.assertEquals(dfa.evaluate(symbolList),
@@ -94,23 +109,11 @@ public class DeterministicFiniteAutomatonTest {
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addTransition(S1, S1, '0');
+		dfa.addTransition(S1, S1, '1');
 		String inputString = "102";
+		
 		dfa.evaluate(stringToCharacterList(inputString));
-	}
-	
-	/*
-	 * TRANSITIONS
-	 */
-	
-	@DataProvider(name = "sampleStates")
-	public static Object[][] getSampleStates() {
-		return new Object[][] { { S2, ACCEPTING }, { S3, NOT_ACCEPTING }, };
-	}
-
-	@DataProvider(name = "nonexistantStates")
-	public static Object[][] nonexistantStates() {
-		return new Object[][] { { NULL_STATE, S2 },
-				{ S1, NULL_STATE }, { NULL_STATE, NULL_STATE } };
 	}
 	
 	/*
@@ -157,9 +160,13 @@ public class DeterministicFiniteAutomatonTest {
 		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
+		
 		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
-				alphabet);
-		return new DeterministicFiniteAutomaton<Character>(identifier, isAccepting, transitionFunction);
+				alphabet);	
+		
+		DeterministicFiniteAutomaton<Character> dfa = 
+				new DeterministicFiniteAutomaton<>(identifier, isAccepting, transitionFunction);	
+		return dfa;
 	}
 	
 	private List<Character> stringToCharacterList(String string) {

@@ -69,7 +69,8 @@ public interface IDeterministicFiniteAutomaton<T> {
 	 * @param input
 	 *            list of symbols to be evaluated
 	 * @return The state the automaton was in after evaluating the last symbol
-	 *         of the input.
+	 *         of the input, or a new non-accepting State object with the output
+	 *         of the symbol.toString() method as its identifier.
 	 */
 	public State evaluate(Iterable<T> input);
 

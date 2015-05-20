@@ -16,10 +16,11 @@ public class StringDfaTest {
 	private static final String S2 = "S2";
 	
 	@Test
-	public void charDfaEvaluatesStrings() {
+	public void stringDfaEvaluatesStrings() {
 		StringDfa dfa = newBoolStringDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
 		dfa.addTransition(S1, S2, '0');
+		dfa.addTransition(S1, S1, '1');
 		Assert.assertEquals(dfa.evaluate("110"),
 				dfa.getState(S2));
 	}
