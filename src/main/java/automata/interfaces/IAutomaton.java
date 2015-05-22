@@ -45,17 +45,4 @@ public interface IAutomaton<T> {
 	public void addTransition(String initialStateIdentifier,
 			String targetStateIdentifier, T symbol);
 	
-	/**
-	 * Evaluates a List of symbols according to the logic of the automaton given
-	 * by its states and transition function. Returns the state the automaton
-	 * was in after evaluating the last symbol of the input. Each evaluation
-	 * begins with the automaton in its starting state.
-	 * 
-	 * @param input
-	 *            list of symbols to be evaluated
-	 * @return The state the automaton was in after evaluating the last symbol
-	 *         of the input, or a new non-accepting State object with the output
-	 *         of the symbol.toString() method as its identifier.
-	 */
-	public State evaluate(Iterable<T> input);
 }
