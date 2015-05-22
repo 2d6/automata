@@ -144,7 +144,7 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 	 */
 	@Override
 	public DeterministicFiniteAutomaton<T> copy() {
-		return new DeterministicFiniteAutomaton<T>(this);
+		return new DeterministicFiniteAutomaton<>(this);
 	}
 
 	@Override
@@ -162,14 +162,14 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 		return this.transitionFunction.getValidSymbols(currentState);
 	}
 	
-	private class DfaStructureComparator {
+	protected class DfaStructureComparator {
 		private IDeterministicFiniteAutomaton<T> dfaA;
 		private List<State> visitedStatesA;
 		
 		private IDeterministicFiniteAutomaton<T> dfaB;
 		private List<State> visitedStatesB;
 		
-		public boolean structurallyEqual(
+		protected boolean structurallyEqual(
 				IDeterministicFiniteAutomaton<T> dfaA, 
 				IDeterministicFiniteAutomaton<T> dfaB) {
 			
