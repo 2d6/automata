@@ -66,13 +66,11 @@ public class NondeterministicFiniteAutomaton<T> extends
 			}
 
 			State copiedState = this.getState(stateIdentifier);
-			originalNfa.epsilonTransitionFunction
-					.getExpandedStates(originalState)
+			originalNfa.epsilonTransitionFunction.getExpandedStates(originalState)
 					.stream()
 					.map(state -> this.getState(state.getIdentifier()))
 					.filter(state -> !state.equals(copiedState))
-					.forEach(
-							state -> this.epsilonTransitionFunction
+					.forEach(state -> this.epsilonTransitionFunction
 							.addEpsilonTransition(copiedState, state));
 		}
 	}

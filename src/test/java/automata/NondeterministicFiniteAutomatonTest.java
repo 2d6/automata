@@ -140,11 +140,13 @@ public class NondeterministicFiniteAutomatonTest {
 	 * COPYING / CLONING
 	 */
 	
-	@Test(dataProvider = "testStrings", enabled = false)
+	@Test(dataProvider = "testStrings")
 	public void copiedNfaEvaluatesSameAsOriginal(String testString) {
-		NondeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
+		NondeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
-		original.addTransition(S1, S2, '0');
+		original.addState(S3, ACCEPTING);
+		original.addTransition(S2, S3, '0');
+		original.addEpsilonTransition(S1, S2);
 		
 		INondeterministicFiniteAutomaton<Character> copy = original.copy();	
 		Set<State> originalFinalStates = original.evaluate(stringToCharacterList(testString));
