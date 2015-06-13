@@ -1,28 +1,62 @@
 package automata;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 
 public class TransitionFunctionTest {
 	
+	private static final char OTHER_SYMBOL = '1';
+
+	private static final char SYMBOL = '0';
+
+	private TransitionFunction<Character> functionUnderTest;
+	
+	@Mock
+	private State initialState;
+	
+	@Mock
+	private State targetState;
+	
+	@Mock
+	private State anotherState;
+	
+	@BeforeMethod
+	public void init() {
+		MockitoAnnotations.initMocks(this);
+		functionUnderTest = newCharTransitionFunction(SYMBOL);
+	}
+	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void alphabetMayNotBeNull() {
 		new TransitionFunction<Character>(null);
 	}
 	
+	@Test
+	public void symbolsMayBeSetAndRetrieved() {
+		functionUnderTest = newCharTransitionFunction(SYMBOL, OTHER_SYMBOL);
+		Set<Character> expectedSymbols= createCharacterSet(SYMBOL, OTHER_SYMBOL);
+
+		Set<Character> validSymbols = functionUnderTest.getSymbols();
+		
+		assertEquals(validSymbols, expectedSymbols);
+	}
+
 	@Test(dataProvider = "testSymbols")
 	public void transitionsMayBeAddedAndRetrieved(Character symbol) {
-		TransitionFunction<Character> function = newSingleCharTransitionFunction(symbol);
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		function.addTransition(initialState, targetState, symbol);
-		assertEquals(function.getNextState(initialState, symbol), targetState);
+		functionUnderTest = newCharTransitionFunction(symbol);
+		functionUnderTest.addTransition(initialState, targetState, symbol);
+		assertEquals(functionUnderTest.getNextState(initialState, symbol), targetState);
 	}
 	
 	@DataProvider(name = "testSymbols")
@@ -34,52 +68,100 @@ public class TransitionFunctionTest {
 		};
 	}
 	
+	@Test
+	public void validSymbolsForStateMayBeRetrieved() {
+		functionUnderTest = newCharTransitionFunction(SYMBOL, OTHER_SYMBOL);
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+		functionUnderTest.addTransition(initialState, targetState, OTHER_SYMBOL);
+		functionUnderTest.addTransition(anotherState, targetState, SYMBOL);
+		Set<Character> expectedSymbols= createCharacterSet(SYMBOL, OTHER_SYMBOL);
+		
+		Set<Character> validSymbols = functionUnderTest.getValidSymbols(initialState);
+		
+		assertEquals(validSymbols, expectedSymbols);
+	}
+
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void duplicateTransitionsAreNotAllowed() {
-		Character symbol = '0';
-		TransitionFunction<Character> function = newSingleCharTransitionFunction(symbol);
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		function.addTransition(initialState, targetState, symbol);
-		function.addTransition(initialState, targetState, symbol);
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+	}
+	
+	@Test
+	public void multipleTransitionsWithDifferentSymbolsMayBeAdded() {
+		functionUnderTest = newCharTransitionFunction(SYMBOL, OTHER_SYMBOL);
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+		functionUnderTest.addTransition(initialState, anotherState, OTHER_SYMBOL);
+		
+		State state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
+		
+		assertEquals(state, anotherState);
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void transitionsWithSymbolsNotInAlphabetAreRejected() {
-		TransitionFunction<Character> function = new TransitionFunction<>();
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		Set<Character> symbols = new HashSet<>();
-		symbols.add('1');
-		function.setSymbols(symbols);
-		function.addTransition(initialState, targetState, '0');
+		functionUnderTest.addTransition(initialState, targetState, OTHER_SYMBOL);
 	}
-	
+
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void throwsIllegalArgumentExceptionIfSymbolsSetTwice() {
-		TransitionFunction<Character> function = newSingleCharTransitionFunction('x');
-		Set<Character> symbols = new HashSet<>();
-		function.setSymbols(symbols);
+		functionUnderTest.setSymbols(new HashSet<>());
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void throwsIllegalArgumentExceptionIfSymbolsAreNull() {
-		TransitionFunction<Character> function = new TransitionFunction<>();
-		function.setSymbols(null);
+		functionUnderTest = new TransitionFunction<>();
+		functionUnderTest.setSymbols(null);
 	}
 	
 	@Test(expectedExceptions = NullPointerException.class)
 	public void alphabetMustBeSetBeforeAddingTransitions() {
-		TransitionFunction<Character> function = new TransitionFunction<>();
-		State initialState = new State("initialState", true);
-		State targetState = new State("targetState", false);
-		function.addTransition(initialState, targetState, '0');
+		functionUnderTest = new TransitionFunction<>();
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
 	}
 	
-	private TransitionFunction<Character> newSingleCharTransitionFunction(Character symbol) {
-		Set<Character> symbols = new HashSet<>();
-		symbols.add(symbol);
-		return new TransitionFunction<>(symbols);
+	@Test
+	public void nonAcceptingDefaultStateIsReturnedIfNoTransitionsDefinedForState() {
+		State state = functionUnderTest.getNextState(initialState, SYMBOL);
+		
+		assertTrue(isDefaultState(state, SYMBOL));
+	}
+	
+	@Test
+	public void onlyTransitionsWithCurrentSymbolAreEvaluated() {
+		functionUnderTest = newCharTransitionFunction(SYMBOL, OTHER_SYMBOL);
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+		
+		State state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
+		
+		assertTrue(isDefaultState(state, OTHER_SYMBOL));
+	}
+	
+	@Test
+	public void onlyTransitionsForCurrentStateAreEvaluated() {
+		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
+		State state = functionUnderTest.getNextState(targetState, SYMBOL);
+		
+		assertTrue(isDefaultState(state, SYMBOL));
+	}
+	
+	
+	private boolean isDefaultState(State state, Character symbol) {
+		return state.getIdentifier().equals(new String(new char[]{symbol})) 
+				&& !state.isAccepting();
+	}
+	
+	private TransitionFunction<Character> newCharTransitionFunction(Character... symbols) {
+		return new TransitionFunction<>(createCharacterSet(symbols));
+	}
+	
+	private Set<Character> createCharacterSet(Character... symbols) {
+		Set<Character> symbolSet = new HashSet<>();
+		for (Character symbol : symbols) {
+			symbolSet.add(symbol);
+		}
+		return symbolSet;
 	}
 }
+
 

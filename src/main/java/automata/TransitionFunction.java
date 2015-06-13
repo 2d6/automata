@@ -49,8 +49,8 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	public void addTransition(State initialState, State targetState, T symbol) {
 
 		for (Transition<T> existingTransition : transitions) {
-			if (existingTransition.getInitialState() == initialState
-					&& existingTransition.getSymbol() == symbol) {
+			if (existingTransition.getInitialState().equals(initialState)
+					&& existingTransition.getSymbol().equals(symbol)) {
 				throw new IllegalArgumentException(
 						"Transition was already defined within the transition function");
 			}
@@ -68,20 +68,18 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 
 	@Override
 	public State getNextState(State currentState, T symbol) {
-
-		if (!alphabet.isValid(symbol)) {
-			throw new IllegalArgumentException(
-					"Symbol was not defined in the alphabet");
-		}
-
 		for (Transition<T> transition : transitions) {
-			if (transition.getInitialState() == currentState
-					&& transition.getSymbol() == symbol) {
+			if (transition.getInitialState().equals(currentState)
+					&& transition.getSymbol().equals(symbol)) {
 				return transition.getTargetState();
 			}
 		}
 
-		return null;
+		/*
+		 *  If no transition has been defined for this State, return a non-accepting default
+		 *  state without further transitions containing the evaluated symbol
+		 */
+		return new State(symbol.toString(), false);
 	}
 
 	@Override
