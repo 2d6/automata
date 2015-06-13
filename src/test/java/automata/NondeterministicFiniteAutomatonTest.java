@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -139,7 +140,6 @@ public class NondeterministicFiniteAutomatonTest {
 	 * COPYING / CLONING
 	 */
 	
-	//FIXME: Implement copying
 	@Test(dataProvider = "testStrings", enabled = false)
 	public void copiedNfaEvaluatesSameAsOriginal(String testString) {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
@@ -147,12 +147,12 @@ public class NondeterministicFiniteAutomatonTest {
 		original.addTransition(S1, S2, '0');
 		
 		INondeterministicFiniteAutomaton<Character> copy = original.copy();	
-		State originalFinalState = original.evaluate(stringToCharacterList(testString));
-		State copyFinalState = copy.evaluate(stringToCharacterList(testString));
+		Set<State> originalFinalStates = original.evaluate(stringToCharacterList(testString));
+		Set<State> copyFinalStates = copy.evaluate(stringToCharacterList(testString));
 		
-		Assert.assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
+		Assert.assertTrue(stateSetsContainSameIdentifiers(originalFinalStates, copyFinalStates));
 	}
-	
+
 	@DataProvider(name = "testStrings")
 	private Object[][] getStrings() {
 		return new Object[][] {
@@ -163,9 +163,8 @@ public class NondeterministicFiniteAutomatonTest {
 		};
 	}
 	
-	//FIXME: Implement copying
-	@Test(enabled = false)
-	public void copiedNfaStartingStatesAreNotIdenticalToOriginalStates() {
+	@Test
+	public void copiedNfaStartingStateIsNotIdenticalToOriginalState() {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
 		
 		NondeterministicFiniteAutomaton<Character> copy = original.copy();	
@@ -243,6 +242,17 @@ public class NondeterministicFiniteAutomatonTest {
 	
 	private boolean setContainsOnlyStatesWithGivenIdentifiers(Set<State> states, List<String> identifiers) {
 		return states.stream().allMatch(state -> identifiers.contains(state.getIdentifier()));
+	}
+	
+	private boolean stateSetsContainSameIdentifiers(
+			Set<State> originalStates, Set<State> copyStates) {
+		return getIdentifiers(copyStates).equals(getIdentifiers(originalStates));
+	}
+	
+	private Set<String> getIdentifiers(Set<State> states) {
+		return 	states.stream()
+				.map(state -> state.getIdentifier())
+				.collect(Collectors.toSet()); 
 	}
 	
 }

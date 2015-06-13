@@ -79,9 +79,8 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	/**
 	 * Creates a new {@link DeterministicFiniteAutomaton} semantically identical to the current one
 	 * 
-	 * @return The new CharDfa<T>
+	 * @return The new Dfa
 	 */
-	@Override
 	public DeterministicFiniteAutomaton<T> copy() {
 		return new DeterministicFiniteAutomaton<T>(this);
 	}
