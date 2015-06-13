@@ -15,11 +15,7 @@ import automata.interfaces.ITransitionFunction;
  *
  * @author 2d6
  */
-public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAutomaton<T> {
-
-	protected HashMap<String, State> states;
-	protected State startingState;
-	protected ITransitionFunction<T> transitionFunction;
+public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> implements IDeterministicFiniteAutomaton<T> {
 
 	/**
 	 * Creates a new automaton with a starting state.
@@ -43,7 +39,7 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 	}
 
 	/**
-	 * Copy-constructor; creates a new CharDfa<T> with semantics identical to the
+	 * Copy-constructor; creates a new {@link DeterministicFiniteAutomaton} with semantics identical to the
 	 * supplied originalDfa
 	 * 
 	 * @param originalDfa
@@ -72,73 +68,16 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 			for (T symbol : symbols) {
 				State targetState = originalDfa.transitionFunction
 						.getNextState(originalState, symbol);
-				if (targetState != null) {
+				if (originalStates.contains(targetState)) {
 					this.addTransition(originalState.getIdentifier(),
 							targetState.getIdentifier(), symbol);
 				}
 			}
 		}
 	}
-
-	@Override
-	public State getStartingState() {
-		return startingState;
-	}
-
-	@Override
-	public State getState(String identifier) {
-		return states.get(identifier);
-	}
-
-	@Override
-	public void addState(String identifier, boolean isAccepting) {
-		if (states.containsKey(identifier)) {
-			throw new IllegalArgumentException(
-					"The automaton already contained a state with the given identifier");
-		}
-		states.put(identifier, new State(identifier, isAccepting));
-	}
-
-	@Override
-	public void addTransition(String initialStateIdentifier,
-			String targetStateIdentifier, T symbol) {
-		State initialState = getState(initialStateIdentifier);
-		State targetState = getState(targetStateIdentifier);
-		transitionFunction.addTransition(initialState, targetState, symbol);
-	}
-
-	@Override
-	public State evaluate(Iterable<T> input) {
-		State currentState = this.startingState;
-		State nextState;
-		for (T symbol : input) {
-			nextState = evaluate(currentState, symbol);
-			if (nextState == null) {
-				return new State(symbol.toString(), false);
-			}
-			currentState = nextState;
-		}
-		return currentState;
-	}
-
+	
 	/**
-	 * Evaluates a single symbol according to the logic of the automaton given
-	 * by its states and transition function. Returns the new state the automaton
-	 * is in after evaluating the symbol, or null if no transition has been defined.
-	 *
-	 * @param currentState
-	 *            The state the automaton is in before evaluation
-	 * @param symbol
-	 *            The symbol under evaluation
-	 * @return The state the automaton is in after evaluation, or null if no transition
-	 * has been defined.
-	 */
-	protected State evaluate(State currentState, T symbol) {
-		return transitionFunction.getNextState(currentState, symbol);
-	}
-
-	/**
-	 * Creates a new CharDfa<T> semantically identical to the current one
+	 * Creates a new {@link DeterministicFiniteAutomaton} semantically identical to the current one
 	 * 
 	 * @return The new CharDfa<T>
 	 */
@@ -152,14 +91,36 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 		return new DfaStructureComparator().structurallyEqual(this, otherCharDfa);
 	}
 	
-	@Override
-	public State getNextState(State currentState, T symbol) {
-		return this.transitionFunction.getNextState(currentState, symbol);
+	public State evaluate(List<T> input) {
+		State currentState = this.startingState;
+		State nextState;
+		for (T symbol : input) {
+			if (!transitionFunction.getSymbols().contains(symbol)) {
+				throw new IllegalArgumentException("Encountered illegal symbol: " + symbol);
+			}
+			nextState = evaluate(currentState, symbol);
+			if (!states.values().contains(nextState)) {
+				return nextState;
+			}
+			currentState = nextState;
+		}
+		return currentState;
 	}
-
-	@Override
-	public Set<T> getValidSymbols(State currentState) {
-		return this.transitionFunction.getValidSymbols(currentState);
+	
+	/**
+	 * Evaluates a single symbol according to the logic of the automaton given
+	 * by its states and transition function. Returns the new state the automaton
+	 * is in after evaluating the symbol, or null if no transition has been defined.
+	 *
+	 * @param currentState
+	 *            The state the automaton is in before evaluation
+	 * @param symbol
+	 *            The symbol under evaluation
+	 * @return The state the automaton is in after evaluation, or null if no transition
+	 * has been defined.
+	 */
+	private State evaluate(State currentState, T symbol) {
+		return transitionFunction.getNextState(currentState, symbol);
 	}
 	
 	private class DfaStructureComparator {
@@ -220,7 +181,7 @@ public class DeterministicFiniteAutomaton<T> implements IDeterministicFiniteAuto
 			}
 			return false;
 		}
-		
+
 	}
 	
 }

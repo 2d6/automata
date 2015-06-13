@@ -1,5 +1,6 @@
 package automata.interfaces;
 
+import java.util.List;
 import java.util.Set;
 
 import automata.State;
@@ -72,7 +73,7 @@ public interface IDeterministicFiniteAutomaton<T> {
 	 *         of the input, or a new non-accepting State object with the output
 	 *         of the symbol.toString() method as its identifier.
 	 */
-	public State evaluate(Iterable<T> input);
+	public State evaluate(List<T> input);
 
 	/**
 	 * Create a semantically identical copy of the automaton. The copy should
