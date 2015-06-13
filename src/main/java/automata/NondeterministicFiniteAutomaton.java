@@ -33,14 +33,14 @@ public class NondeterministicFiniteAutomaton<T> extends
 
 	public NondeterministicFiniteAutomaton(
 			NondeterministicFiniteAutomaton<T> originalNfa) {
-		
+
 		// Copy the states
 		this.states = new HashMap<>();
 		Collection<State> originalStates = originalNfa.states.values();
-		for (State originalState : originalStates) {
-			this.addState(originalState.getIdentifier(),
-					originalState.isAccepting());
-		}
+		originalStates.stream().forEach(
+				state -> this.addState(state.getIdentifier(),
+						state.isAccepting()));
+		
 		this.startingState = this.getState(originalNfa.getStartingState()
 				.getIdentifier());
 
@@ -54,21 +54,25 @@ public class NondeterministicFiniteAutomaton<T> extends
 		// Create transitions for all State/symbol combinations which had
 		// transitions in the original NFA
 		for (State originalState : originalStates) {
+			String stateIdentifier = originalState.getIdentifier();
+			
 			for (T symbol : symbols) {
 				State targetState = originalNfa.transitionFunction
 						.getNextState(originalState, symbol);
 				if (originalStates.contains(targetState)) {
-					this.addTransition(originalState.getIdentifier(),
+					this.addTransition(stateIdentifier,
 							targetState.getIdentifier(), symbol);
 				}
 			}
-			
-			State copiedState = this.getState(originalState.getIdentifier());
+
+			State copiedState = this.getState(stateIdentifier);
 			originalNfa.epsilonTransitionFunction
-					.getExpandedStates(originalState).stream()
+					.getExpandedStates(originalState)
+					.stream()
 					.map(state -> this.getState(state.getIdentifier()))
 					.filter(state -> !state.equals(copiedState))
-					.forEach(state -> this.epsilonTransitionFunction
+					.forEach(
+							state -> this.epsilonTransitionFunction
 							.addEpsilonTransition(copiedState, state));
 		}
 	}
