@@ -20,6 +20,9 @@ public class EpsilonTransitionFunctionTest {
 	State targetState;
 	
 	@Mock
+	State anotherState;
+	
+	@Mock
 	EpsilonTransition epsTransition;
 	
 	Set<State> expectedStates;
@@ -56,7 +59,46 @@ public class EpsilonTransitionFunctionTest {
 	}
 	
 	@Test
-	public void multipleEpsilonTransitionsMayBeAdded() {
+	public void multipleEpsilonTransitionsMayBeAddedToSingleState() {
+		expectedStates.add(initialState);
+		expectedStates.add(targetState);
+		expectedStates.add(anotherState);
 		
+		transitionFunction.addEpsilonTransition(initialState, targetState);
+		transitionFunction.addEpsilonTransition(initialState, anotherState);
+		
+		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
+	}
+	
+	@Test
+	public void epsilonTransitionWithIdenticalStartingAndTargetStateMayBeAdded() {
+		expectedStates.add(initialState);
+		
+		transitionFunction.addEpsilonTransition(initialState, initialState);
+		
+		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
+	}
+	
+	@Test
+	public void epsilonTransitionLoopMayBeAdded() {
+		expectedStates.add(initialState);
+		expectedStates.add(targetState);
+		
+		transitionFunction.addEpsilonTransition(initialState, targetState);
+		transitionFunction.addEpsilonTransition(targetState, initialState);
+		
+		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
+	}
+	
+	@Test
+	public void epsilonTransitionChainMayBeAdded() {
+		expectedStates.add(initialState);
+		expectedStates.add(targetState);
+		expectedStates.add(anotherState);
+		
+		transitionFunction.addEpsilonTransition(initialState, targetState);
+		transitionFunction.addEpsilonTransition(targetState, anotherState);
+		
+		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
 	}
 }

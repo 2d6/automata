@@ -1,6 +1,8 @@
 package automata;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,12 +49,33 @@ public class EpsilonTransitionFunction<T> extends TransitionFunction<T>
 			throw new IllegalArgumentException("Initial State May not be null");
 		}
 		
-		Set<State> expandedStates =  epsilonTransitions.stream()
-				.filter(transition -> transition.getInitialState().equals(initialState))
-				.map(transition -> transition.getTargetState())
-				.collect(Collectors.toSet());
+		Set<State> expandedStates = new HashSet<>(Arrays.asList(initialState));
 		
-		expandedStates.add(initialState);
-		return expandedStates;
+		return getAllExpandedStates(expandedStates);
+	}
+	
+	/**
+	 * Recursively add all {@link State States} which are reachable via epsilon transitions 
+	 * from the States in the initial Set to a Set of States.
+	 * @param expandedStates The initial Set of states
+	 * @return A Set containing all States reachable via epsilon transitions
+	 */
+	private Set<State> getAllExpandedStates(Set<State> expandedStates) {
+		Set<State> allExpandedStates = new HashSet<>();
+		allExpandedStates.addAll(expandedStates);
+		
+		for (State state : expandedStates) {
+			allExpandedStates.addAll(epsilonTransitions.stream()
+					.filter(transition -> transition.getInitialState().equals(state))
+					.map(transition -> transition.getTargetState())
+					.collect(Collectors.toSet()));
+		}
+		
+		if (!expandedStates.containsAll(allExpandedStates)) {
+			allExpandedStates.addAll(getAllExpandedStates(allExpandedStates));
+		}
+		
+		return allExpandedStates;
+			
 	}
 }
