@@ -22,6 +22,12 @@ public class EpsilonTransition {
 	 * @param targetState
 	 */
 	public EpsilonTransition(State initialState, State targetState) {
+		if (initialState == null) {
+			throw new IllegalArgumentException("Initial State may not be null");
+		}
+		else if (targetState == null) {
+			throw new IllegalArgumentException("Target State may not be null");
+		}
 		this.initialState = initialState;
 		this.targetState = targetState;
 	}

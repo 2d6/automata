@@ -5,6 +5,7 @@ import static org.testng.Assert.assertEquals;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class EpsilonTransitionTest {
@@ -26,6 +27,20 @@ public class EpsilonTransitionTest {
 		
 		assertEquals(transition.getInitialState(), initialState);
 		assertEquals(transition.getTargetState(), targetState);
+	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "nullStates")
+	public void transitionThrowsIllegalArgumentExceptionIfStatesNull(State initialState, State targetState) {
+		new EpsilonTransition(initialState, targetState);
+	}
+	
+	@DataProvider(name = "nullStates")
+	private Object[][] getNullStates() {
+		return new Object[][] {
+				{null, null},
+				{initialState, null},
+				{null, targetState}
+		};
 	}
 	
 }
