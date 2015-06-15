@@ -16,6 +16,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IEpsilonTransitionFunction;
+import automata.interfaces.INondeterministicFiniteAutomaton;
 
 
 public class NondeterministicFiniteAutomatonTest {
