@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import automata.comparators.FiniteAutomatonComparator;
 import automata.interfaces.ITransitionFunction;
 
 public class AbstractFiniteAutomaton<T> {
@@ -100,6 +101,8 @@ public class AbstractFiniteAutomaton<T> {
 		return this.transitionFunction.getNextState(currentState, symbol);
 	}
 	
-	
+	public boolean isStructurallyEqualTo(AbstractFiniteAutomaton<T> otherDfa) {
+		return new FiniteAutomatonComparator<T>().structurallyEqual(this, otherDfa);
+	}
 
 }

@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import automata.AbstractFiniteAutomaton;
 import automata.State;
-import automata.interfaces.IDeterministicFiniteAutomaton;
 
 public class FiniteAutomatonComparator<T> {
 
-	private IDeterministicFiniteAutomaton<T> dfaA;
+	private AbstractFiniteAutomaton<T> dfaA;
 	private List<State> visitedStatesA;
 	
-	private IDeterministicFiniteAutomaton<T> dfaB;
+	private AbstractFiniteAutomaton<T> dfaB;
 	private List<State> visitedStatesB;
 	
 	public boolean structurallyEqual(
-			IDeterministicFiniteAutomaton<T> dfaA, 
-			IDeterministicFiniteAutomaton<T> dfaB) {
+			AbstractFiniteAutomaton<T> dfaA, 
+			AbstractFiniteAutomaton<T> dfaB) {
 		
 		this.dfaA = dfaA;
 		this.visitedStatesA = new ArrayList<>();

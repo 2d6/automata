@@ -3,7 +3,6 @@ package automata;
 import java.util.List;
 import java.util.Set;
 
-import automata.comparators.FiniteAutomatonComparator;
 import automata.interfaces.IDeterministicFiniteAutomaton;
 
 /**
@@ -47,10 +46,6 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 */
 	public DeterministicFiniteAutomaton<T> copy() {
 		return new DeterministicFiniteAutomaton<T>(this);
-	}
-
-	public boolean isStructurallyEqualTo(IDeterministicFiniteAutomaton<T> otherCharDfa) {
-		return new FiniteAutomatonComparator<T>().structurallyEqual(this, otherCharDfa);
 	}
 	
 	public State evaluate(List<T> input) {

@@ -12,7 +12,7 @@ import automata.State;
  *            The type of the symbols that comprise the language of the
  *            automaton
  */
-public interface INondeterministicFiniteAutomaton<T> {
+public interface INondeterministicFiniteAutomaton<T> extends IAbstractFiniteAutomaton<T>{
 
 	/**
 	 * Add an epsilon transitions with an initial and target {@link State}
