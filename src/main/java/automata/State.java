@@ -6,16 +6,16 @@ package automata;
  */
 public class State {
 	private final boolean isAccepting;
-	private final String identifier;
+	private final String id;
 	
 	/**
 	 * Creates a new State
-	 * @param identifier Identifier of the new state
+	 * @param id Identifier of the new state
 	 * @param isAccepting Acceptance status of the state. True if the state is accepting.
 	 */
-	public State(String identifier, boolean isAccepting) {
+	public State(String id, boolean isAccepting) {
 		this.isAccepting = isAccepting;
-		this.identifier = identifier;
+		this.id = id;
 	}
 	
 	public boolean isAccepting() {
@@ -23,7 +23,7 @@ public class State {
 	}
 	
 	public String getIdentifier() {
-		return this.identifier;
+		return this.id;
 	}	
 	
 }
