@@ -17,7 +17,7 @@ import automata.interfaces.ITransitionFunction;
 public class TransitionFunction<T> implements ITransitionFunction<T> {
 
 	private List<Transition<T>> transitions;
-	private IAlphabet<T> alphabet;
+	private Set<T> alphabet;
 
 	/**
 	 * Creates a new SimpleTransitionFunction with a given {@link IAlphabet}.
@@ -36,7 +36,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	 */
 	public TransitionFunction() {
 		this.transitions = new ArrayList<>();
-		this.alphabet = new Alphabet<>();
+		this.alphabet = new HashSet<>();
 	}
 
 	/*
@@ -56,9 +56,9 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 			}
 		}
 
-		if (this.alphabet.getSymbols().isEmpty()) {
+		if (this.getSymbols().isEmpty()) {
 			throw new NullPointerException("Alphabet was not defined");
-		} else if (!alphabet.isValid(symbol)) {
+		} else if (!alphabet.contains(symbol)) {
 			throw new IllegalArgumentException(
 					"Symbol was not defined in the alphabet");
 		}
@@ -84,7 +84,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 
 	@Override
 	public void setSymbols(Set<T> symbols) {
-		if (!this.alphabet.getSymbols().isEmpty()) {
+		if (!this.alphabet.isEmpty()) {
 			throw new IllegalArgumentException("An alphabet has already been defined");
 		} 
 		else if (symbols == null) {
@@ -95,7 +95,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	
 	@Override
 	public Set<T> getSymbols() {
-		return this.alphabet.getSymbols();
+		return this.alphabet;
 	}
 
 	@Override
