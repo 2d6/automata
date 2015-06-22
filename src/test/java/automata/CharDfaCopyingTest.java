@@ -43,8 +43,7 @@ public class CharDfaCopyingTest {
 	public void testAutomataWithDifferentAlphabetsAreStructurallyEqual() {
 		final DeterministicFiniteAutomaton<Character> a = newBoolCharDfa(S1, ACCEPTING);
 		final Set<Character> symbols = new HashSet<>();
-		final TransitionFunction<Character> transitionFunction = new TransitionFunction<>(symbols);
-		final DeterministicFiniteAutomaton<Character> b = new DeterministicFiniteAutomaton<Character>(T1, ACCEPTING, transitionFunction);
+		final DeterministicFiniteAutomaton<Character> b = new DeterministicFiniteAutomaton<Character>(T1, ACCEPTING, symbols);
 		assertStructurallyEqual(a, b);
 	}
 
@@ -209,8 +208,6 @@ public class CharDfaCopyingTest {
 		Set<Character> symbols = new HashSet<>();
 		symbols.add('0');
 		symbols.add('1');
-		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
-				symbols);
-		return new DeterministicFiniteAutomaton<Character>(identifier, isAccepting, transitionFunction);
+		return new DeterministicFiniteAutomaton<Character>(identifier, isAccepting, symbols);
 	}
 }

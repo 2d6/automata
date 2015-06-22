@@ -15,9 +15,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import automata.interfaces.IEpsilonTransitionFunction;
 import automata.interfaces.INondeterministicFiniteAutomaton;
-
 
 public class NondeterministicFiniteAutomatonTest {
 
@@ -216,6 +214,20 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, "0")));
 	}
+	
+	@Test
+	public void cyclesOfEpsilonTransitionsMayBeEvaluated2() {
+		NondeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, NOT_ACCEPTING);
+		original.addState(S2, NOT_ACCEPTING);
+		original.addState(S3, ACCEPTING);
+		original.addTransition(S1, S2, '0');
+		original.addEpsilonTransition(S2, S2);
+		original.addEpsilonTransition(S2, S3);
+
+		Set<State> states = original.evaluate(stringToCharacterList("0"));
+
+		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, S2)));
+	}
 
 	/*
 	 * Helper Methods
@@ -225,13 +237,8 @@ public class NondeterministicFiniteAutomatonTest {
 		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
-		
-		IEpsilonTransitionFunction<Character> transitionFunction = new EpsilonTransitionFunction<Character>(
-				alphabet);	
-		
-		NondeterministicFiniteAutomaton<Character> nfa = 
-				new NondeterministicFiniteAutomaton<Character>(identifier, isAccepting, transitionFunction);	
-		return nfa;
+
+		return new NondeterministicFiniteAutomaton<Character>(identifier, isAccepting, alphabet);	
 	}
 	
 	private List<Character> stringToCharacterList(String string) {

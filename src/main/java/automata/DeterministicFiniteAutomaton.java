@@ -1,13 +1,10 @@
 package automata;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 import automata.interfaces.IDeterministicFiniteAutomaton;
-import automata.interfaces.ITransitionFunction;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -25,17 +22,11 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 * @param isAccepting
 	 *            Acceptance status of the starting state. True if the starting
 	 *            state is accepting.
+	 * @param symbols The alphabet of the automaton
 	 */
 	public DeterministicFiniteAutomaton(String identifier, boolean isAccepting,
-			ITransitionFunction<T> transitionFunction) {
-		states = new HashMap<>();
-		startingState = new State(identifier, isAccepting);
-		states.put(identifier, startingState);
-		
-		if (transitionFunction == null) {
-			throw new IllegalArgumentException("Transition function may not be null");
-		}
-		this.transitionFunction = transitionFunction;
+			Set<T> symbols) {
+		super(identifier, isAccepting, symbols);
 	}
 
 	/**
@@ -46,34 +37,7 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 *            CharDfa<T> to be used as a blueprint for the new CharDfa<T>
 	 */
 	private DeterministicFiniteAutomaton(DeterministicFiniteAutomaton<T> originalDfa) {
-		// Copy the states
-		this.states = new HashMap<>();
-		Collection<State> originalStates = originalDfa.states.values();
-		for (State originalState : originalStates) {
-			this.addState(originalState.getIdentifier(),
-					originalState.isAccepting());
-		}
-		this.startingState = this.getState(originalDfa.getStartingState()
-				.getIdentifier());
-
-		// Copy the transition function, using references to the original
-		// symbols
-		this.transitionFunction = new TransitionFunction<>();
-		Set<T> symbols = originalDfa.transitionFunction.getSymbols();
-		this.transitionFunction.setSymbols(symbols);
-
-		// Create transitions for all State/symbol combinations which had
-		// transitions in the original DFA
-		for (State originalState : originalStates) {
-			for (T symbol : symbols) {
-				State targetState = originalDfa.transitionFunction
-						.getNextState(originalState, symbol);
-				if (originalStates.contains(targetState)) {
-					this.addTransition(originalState.getIdentifier(),
-							targetState.getIdentifier(), symbol);
-				}
-			}
-		}
+		super(originalDfa);
 	}
 	
 	/**
@@ -85,7 +49,6 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 		return new DeterministicFiniteAutomaton<T>(this);
 	}
 
-	@Override
 	public boolean isStructurallyEqualTo(IDeterministicFiniteAutomaton<T> otherCharDfa) {
 		return new DfaStructureComparator().structurallyEqual(this, otherCharDfa);
 	}

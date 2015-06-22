@@ -24,7 +24,7 @@ public class DeterministicFiniteAutomatonTest {
 	 */
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void charDfaWithNullTransitionFunctionMayNotBeCreated() {
+	public void charDfaWithNullAlphabetMayNotBeCreated() {
 		new DeterministicFiniteAutomaton<Character>(S1, ACCEPTING, null);
 	}
 	
@@ -161,12 +161,7 @@ public class DeterministicFiniteAutomatonTest {
 		alphabet.add('0');
 		alphabet.add('1');
 		
-		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
-				alphabet);	
-		
-		DeterministicFiniteAutomaton<Character> dfa = 
-				new DeterministicFiniteAutomaton<>(identifier, isAccepting, transitionFunction);	
-		return dfa;
+		return new DeterministicFiniteAutomaton<>(identifier, isAccepting, alphabet);	
 	}
 	
 	private List<Character> stringToCharacterList(String string) {

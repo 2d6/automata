@@ -1,14 +1,13 @@
 package automata;
 
 import java.util.ArrayList;
-
-import automata.interfaces.ITransitionFunction;
+import java.util.Set;
 
 public class StringDfa extends DeterministicFiniteAutomaton<Character> {
 
 	public StringDfa(String identifier, boolean isAccepting,
-			ITransitionFunction<Character> transitionFunction) {
-		super(identifier, isAccepting, transitionFunction);
+			Set<Character> symbols) {
+		super(identifier, isAccepting, symbols);
 	}
 	
 	/**

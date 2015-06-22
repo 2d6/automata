@@ -1,7 +1,6 @@
 package automata;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,53 +18,27 @@ public class NondeterministicFiniteAutomaton<T> extends
 
 	public NondeterministicFiniteAutomaton(String identifier,
 			boolean isAccepting,
-			IEpsilonTransitionFunction<T> transitionFunction) {
-		states = new HashMap<>();
-		startingState = new State(identifier, isAccepting);
-		states.put(identifier, startingState);
-
-		if (transitionFunction == null) {
-			throw new IllegalArgumentException(
-					"Transition function may not be null");
-		}
-		this.transitionFunction = transitionFunction;
-		this.epsilonTransitionFunction = transitionFunction;
+			Set<T> symbols) {
+		
+		super(identifier, isAccepting, symbols);
+		
+		this.epsilonTransitionFunction = new EpsilonTransitionFunction<T>(symbols); 
+		this.transitionFunction = this.epsilonTransitionFunction;
 	}
 
 	public NondeterministicFiniteAutomaton(
 			NondeterministicFiniteAutomaton<T> originalNfa) {
 
-		// Copy the states
-		this.states = new HashMap<>();
-		Collection<State> originalStates = originalNfa.states.values();
-		originalStates.stream().forEach(
-				state -> this.addState(state.getIdentifier(),
-						state.isAccepting()));
+		super(originalNfa);
 		
-		this.startingState = this.getState(originalNfa.getStartingState()
-				.getIdentifier());
+		Collection<State> originalStates = originalNfa.states.values();
+		this.epsilonTransitionFunction = originalNfa.epsilonTransitionFunction;
 
-		// Copy the transition function, using references to the original
-		// symbols
-		this.epsilonTransitionFunction = new EpsilonTransitionFunction<>();
-		this.transitionFunction = this.epsilonTransitionFunction;
-		Set<T> symbols = originalNfa.transitionFunction.getSymbols();
-		this.transitionFunction.setSymbols(symbols);
-
-		// Create transitions for all State/symbol combinations which had
-		// transitions in the original NFA
+		// Create epsilon transitions for all States which had
+		// epsilon transitions in the original NFA
 		for (State originalState : originalStates) {
 			String stateIdentifier = originalState.getIdentifier();
 			
-			for (T symbol : symbols) {
-				State targetState = originalNfa.transitionFunction
-						.getNextState(originalState, symbol);
-				if (originalStates.contains(targetState)) {
-					this.addTransition(stateIdentifier,
-							targetState.getIdentifier(), symbol);
-				}
-			}
-
 			State copiedState = this.getState(stateIdentifier);
 			originalNfa.epsilonTransitionFunction.getExpandedStates(originalState)
 					.stream()

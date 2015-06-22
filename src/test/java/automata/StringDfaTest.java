@@ -33,8 +33,6 @@ public class StringDfaTest {
 		Set<Character> alphabet = new HashSet<>();
 		alphabet.add('0');
 		alphabet.add('1');
-		TransitionFunction<Character> transitionFunction = new TransitionFunction<>(
-				alphabet);
-		return new StringDfa(identifier, isAccepting, transitionFunction);
+		return new StringDfa(identifier, isAccepting, alphabet);
 	}
 }

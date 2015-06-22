@@ -22,7 +22,7 @@ public interface INondeterministicFiniteAutomaton<T> {
 	 * @param targetStateIdentifier
 	 *            The identifier of the target State
 	 */
-	public abstract void addEpsilonTransition(String initialStateIdentifier,
+	public void addEpsilonTransition(String initialStateIdentifier,
 			String targetStateIdentifier);
 
 	/**
@@ -36,6 +36,6 @@ public interface INondeterministicFiniteAutomaton<T> {
 	 * @param input
 	 * @return
 	 */
-	public abstract Set<State> evaluate(List<T> input);
+	public Set<State> evaluate(List<T> input);
 
 }
