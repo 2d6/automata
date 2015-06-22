@@ -1,15 +1,19 @@
-package automata;
+package automata.comparators;
 
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class CharDfaCopyingTest {
+import automata.DeterministicFiniteAutomaton;
 
+
+public class FiniteAutomatonComparatorTest {
+	
 	private static final String T3 = "T3";
 	private static final String S3 = "S3";
 	private static final String S1 = "S1";
@@ -18,6 +22,13 @@ public class CharDfaCopyingTest {
 	private static final String T2 = "T2";
 	private static final boolean ACCEPTING = true;
 	private static final boolean NOT_ACCEPTING = false;
+	
+	private FiniteAutomatonComparator<Character> comparator;
+	
+	@BeforeMethod
+	public void init() {
+		comparator = new FiniteAutomatonComparator<>();
+	}
 
 	@Test
 	public void testIdenticalAutomatonIsStructurallyEqual() {
@@ -191,13 +202,13 @@ public class CharDfaCopyingTest {
 	}
 
 	private void assertStructurallyEqual(DeterministicFiniteAutomaton<Character> a, DeterministicFiniteAutomaton<Character> b) {
-		assertTrue(a.isStructurallyEqualTo(b));
-		assertTrue(b.isStructurallyEqualTo(a));
+		assertTrue(comparator.structurallyEqual(a, b));
+		assertTrue(comparator.structurallyEqual(b, a));
 	}
 
 	private void assertNotStructurallyEqual(DeterministicFiniteAutomaton<Character> a, DeterministicFiniteAutomaton<Character> b) {
-		assertFalse(a.isStructurallyEqualTo(b));
-		assertFalse(b.isStructurallyEqualTo(a));
+		assertFalse(comparator.structurallyEqual(a, b));
+		assertFalse(comparator.structurallyEqual(b, a));
 	}
 
 	/*
