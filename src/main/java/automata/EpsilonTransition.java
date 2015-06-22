@@ -32,4 +32,9 @@ public class EpsilonTransition {
 		this.targetState = targetState;
 	}
 	
+	@Override
+	public String toString() {
+		return initialState.toString() + " -> " + targetState.toString();
+	}
+	
 }

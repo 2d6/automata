@@ -7,25 +7,35 @@ import java.util.Set;
 import automata.AbstractFiniteAutomaton;
 import automata.State;
 
+/**
+ * Comparator for structural equality of two automata
+ * @param <T> type of the symbols of the automata to compare
+ */
 public class FiniteAutomatonComparator<T> {
 
-	private AbstractFiniteAutomaton<T> dfaA;
+	private AbstractFiniteAutomaton<T> automatonA;
 	private List<State> visitedStatesA;
 	
-	private AbstractFiniteAutomaton<T> dfaB;
+	private AbstractFiniteAutomaton<T> automatonB;
 	private List<State> visitedStatesB;
 	
+	/**
+	 * Determines whether two automata are structurally equal
+	 * @param automatonA the first automaton
+	 * @param automatonB the second automaton
+	 * @return true, if the automata are structurally equal
+	 */
 	public boolean structurallyEqual(
-			AbstractFiniteAutomaton<T> dfaA, 
-			AbstractFiniteAutomaton<T> dfaB) {
+			AbstractFiniteAutomaton<T> automatonA, 
+			AbstractFiniteAutomaton<T> automatonB) {
 		
-		this.dfaA = dfaA;
+		this.automatonA = automatonA;
 		this.visitedStatesA = new ArrayList<>();
 
-		this.dfaB = dfaB;
+		this.automatonB = automatonB;
 		this.visitedStatesB = new ArrayList<>();
 		
-		return this.stateSubGraphIsEqual(dfaA.getStartingState(), dfaB.getStartingState());
+		return this.stateSubGraphIsEqual(automatonA.getStartingState(), automatonB.getStartingState());
 	}
 	
 	private boolean stateSubGraphIsEqual(State currentStateA, State currentStateB) {
@@ -45,8 +55,8 @@ public class FiniteAutomatonComparator<T> {
 		visitedStatesA.add(currentStateA);
 		visitedStatesB.add(currentStateB);
 
-		Set<T> validSymbolsA = dfaA.getValidSymbols(currentStateA);
-		Set<T> validSymbolsB = dfaB.getValidSymbols(currentStateB);
+		Set<T> validSymbolsA = automatonA.getValidSymbols(currentStateA);
+		Set<T> validSymbolsB = automatonB.getValidSymbols(currentStateB);
 
 		if (validSymbolsA.equals(validSymbolsB)) {
 
@@ -56,8 +66,8 @@ public class FiniteAutomatonComparator<T> {
 			 */
 
 			for (T symbol : validSymbolsA) {
-				State nextStateA = dfaA.getNextState(currentStateA, symbol);
-				State nextStateB = dfaB.getNextState(currentStateB, symbol);
+				State nextStateA = automatonA.getNextState(currentStateA, symbol);
+				State nextStateB = automatonB.getNextState(currentStateB, symbol);
 				if (!stateSubGraphIsEqual(nextStateA, nextStateB)) {
 					return false;  
 				}

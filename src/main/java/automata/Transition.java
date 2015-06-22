@@ -44,6 +44,11 @@ public class Transition<T> {
 		this.initialState = initialState;
 		this.targetState = targetState;
 		this.symbol = symbol;
-	}	
+	}
+	
+	@Override
+	public String toString() {
+		return initialState.toString() + " -> " + symbol.toString() + " -> " + targetState.toString();
+	}
 
 }

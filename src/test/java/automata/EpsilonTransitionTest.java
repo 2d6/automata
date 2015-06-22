@@ -43,4 +43,11 @@ public class EpsilonTransitionTest {
 		};
 	}
 	
+	@Test
+	public void toStringYieldsStateStringsAndSymbol() {
+		EpsilonTransition transition = new EpsilonTransition(initialState, targetState);
+		
+		assertEquals(transition.toString(), initialState.toString() + " -> " + targetState.toString());
+	}
+	
 }

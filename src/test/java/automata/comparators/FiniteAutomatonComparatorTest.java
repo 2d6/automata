@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import automata.AbstractFiniteAutomaton;
 import automata.DeterministicFiniteAutomaton;
+import automata.NondeterministicFiniteAutomaton;
 
 
 public class FiniteAutomatonComparatorTest {
@@ -201,6 +202,24 @@ public class FiniteAutomatonComparatorTest {
 		
 		assertNotStructurallyEqual(a, b);
 	}
+	
+	/*
+	 * NFA
+	 */
+	
+	@Test
+	public void testAutomataWithEpsilonLoopAreNotEqual() {
+		final NondeterministicFiniteAutomaton<Character> a = newBoolCharNfa(S1, NOT_ACCEPTING);
+		a.addState(S2, NOT_ACCEPTING);
+		a.addEpsilonTransition(S1, S2);
+		a.addEpsilonTransition(S2, S1);
+		final NondeterministicFiniteAutomaton<Character> b = newBoolCharNfa(T1, NOT_ACCEPTING);
+		b.addState(T2, ACCEPTING);
+		b.addEpsilonTransition(T1, T2);
+		b.addEpsilonTransition(T2, T1);
+		
+		assertNotStructurallyEqual(a, b);
+	}
 
 	private void assertStructurallyEqual(AbstractFiniteAutomaton<Character> a, AbstractFiniteAutomaton<Character> b) {
 		assertTrue(comparator.structurallyEqual(a, b));
@@ -221,5 +240,12 @@ public class FiniteAutomatonComparatorTest {
 		symbols.add('0');
 		symbols.add('1');
 		return new DeterministicFiniteAutomaton<Character>(identifier, isAccepting, symbols);
+	}
+	
+	private NondeterministicFiniteAutomaton<Character> newBoolCharNfa(String identifier, boolean isAccepting) {
+		Set<Character> symbols = new HashSet<>();
+		symbols.add('0');
+		symbols.add('1');
+		return new NondeterministicFiniteAutomaton<Character>(identifier, isAccepting, symbols);
 	}
 }
