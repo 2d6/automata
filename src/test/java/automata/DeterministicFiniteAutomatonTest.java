@@ -12,11 +12,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.NullState;
 
 public class DeterministicFiniteAutomatonTest {
 	
 	private static final boolean ACCEPTING = true;
 	private static final boolean NOT_ACCEPTING = false;
+	private static final String NULL_STATE_ID = NullState.getInstance().getId();
 	
 	private static final IState NULL_STATE = null;
 	private static final String S1 = "S1";
@@ -163,7 +165,13 @@ public class DeterministicFiniteAutomatonTest {
 	@Test
 	public void graphVizForBasicAutomatonIsCorrect() {
 		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
-		String expected = "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];S1;}";
+		String expected = "digraph automaton "
+				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
+				+ "S1;\nnode [shape = circle];\n" 
+				+ "S1 -> " + NULL_STATE_ID 
+				+ " [ label = \"0\" ];\n"
+				+ "S1 -> " + NULL_STATE_ID 
+				+ " [ label = \"1\" ];\n}";
 		
 		assertEquals(original.toGraphViz(), expected);
 	}
@@ -173,7 +181,15 @@ public class DeterministicFiniteAutomatonTest {
 		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addTransition(S1, S2, '0');
-		String expected = "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];S1;\nnode [shape = circle];\nS1 -> S2 [ label = \"0\" ];\n}";
+		String expected = "digraph automaton "
+				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
+				+ "S1;\nnode [shape = circle];\n" 
+				+ "S1 -> S2 [ label = \"0\" ];\n"
+				+ "S1 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n"
+				+ "S2 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
+				+ "S2 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n}";
+		
+		System.out.println(expected);
 		
 		assertEquals(original.toGraphViz(), expected);
 	}
