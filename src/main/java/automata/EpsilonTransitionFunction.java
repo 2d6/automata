@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import automata.interfaces.IAlphabet;
 import automata.interfaces.IEpsilonTransitionFunction;
 import automata.interfaces.IState;
 
