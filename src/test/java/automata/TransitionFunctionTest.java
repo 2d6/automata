@@ -12,6 +12,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
+
 
 public class TransitionFunctionTest {
 	
@@ -22,13 +24,13 @@ public class TransitionFunctionTest {
 	private TransitionFunction<Character> functionUnderTest;
 	
 	@Mock
-	private State initialState;
+	private IState initialState;
 	
 	@Mock
-	private State targetState;
+	private IState targetState;
 	
 	@Mock
-	private State anotherState;
+	private IState anotherState;
 	
 	@BeforeMethod
 	public void init() {
@@ -92,7 +94,7 @@ public class TransitionFunctionTest {
 		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
 		functionUnderTest.addTransition(initialState, anotherState, OTHER_SYMBOL);
 		
-		State state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
+		IState state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
 		
 		assertEquals(state, anotherState);
 	}
@@ -121,7 +123,7 @@ public class TransitionFunctionTest {
 	
 	@Test
 	public void nonAcceptingDefaultStateIsReturnedIfNoTransitionsDefinedForState() {
-		State state = functionUnderTest.getNextState(initialState, SYMBOL);
+		IState state = functionUnderTest.getNextState(initialState, SYMBOL);
 		
 		assertTrue(isDefaultState(state, SYMBOL));
 	}
@@ -131,7 +133,7 @@ public class TransitionFunctionTest {
 		functionUnderTest = newCharTransitionFunction(SYMBOL, OTHER_SYMBOL);
 		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
 		
-		State state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
+		IState state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
 		
 		assertTrue(isDefaultState(state, OTHER_SYMBOL));
 	}
@@ -139,14 +141,14 @@ public class TransitionFunctionTest {
 	@Test
 	public void onlyTransitionsForCurrentStateAreEvaluated() {
 		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
-		State state = functionUnderTest.getNextState(targetState, SYMBOL);
+		IState state = functionUnderTest.getNextState(targetState, SYMBOL);
 		
 		assertTrue(isDefaultState(state, SYMBOL));
 	}
 	
 	
-	private boolean isDefaultState(State state, Character symbol) {
-		return state.getIdentifier().equals(new String(new char[]{symbol})) 
+	private boolean isDefaultState(IState state, Character symbol) {
+		return state.getId().equals(new String(new char[]{symbol})) 
 				&& !state.isAccepting();
 	}
 	

@@ -3,6 +3,7 @@ package automata;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
 import static org.testng.Assert.*;
 
 public class StateTest {
@@ -13,7 +14,7 @@ public class StateTest {
 
 	@Test
 	public void stateIsAcceptingMayBeSet() {
-		State state = new State("", ACCEPTING);
+		IState state = new State("", ACCEPTING);
 		assertTrue(state.isAccepting());
 		
 		state = new State("", NOT_ACCEPTING);
@@ -22,13 +23,13 @@ public class StateTest {
 	
 	@Test
 	public void stateIdentifierMayBeSet() {
-		State state = new State(ID, ACCEPTING);
-		assertEquals(ID, state.getIdentifier());
+		IState state = new State(ID, ACCEPTING);
+		assertEquals(ID, state.getId());
 	}
 	
 	@Test(dataProvider = "idAndAcceptance")
 	public void toStringYieldsIdAndAcceptanceState(String id, boolean isAccepting, String expected) {
-		State state = new State(ID, ACCEPTING);
+		IState state = new State(ID, ACCEPTING);
 		
 		assertEquals(state.toString(), "id (true)");
 	}

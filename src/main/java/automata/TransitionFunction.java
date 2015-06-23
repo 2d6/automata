@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import automata.interfaces.IAlphabet;
+import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
 
 /**
@@ -46,7 +47,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	 * char)
 	 */
 	@Override
-	public void addTransition(State initialState, State targetState, T symbol) {
+	public void addTransition(IState initialState, IState targetState, T symbol) {
 
 		for (Transition<T> existingTransition : transitions) {
 			if (existingTransition.getInitialState().equals(initialState)
@@ -67,7 +68,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	}
 
 	@Override
-	public State getNextState(State currentState, T symbol) {
+	public IState getNextState(IState currentState, T symbol) {
 		for (Transition<T> transition : transitions) {
 			if (transition.getInitialState().equals(currentState)
 					&& transition.getSymbol().equals(symbol)) {
@@ -99,7 +100,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	}
 
 	@Override
-	public Set<T> getValidSymbols(State currentState) {
+	public Set<T> getValidSymbols(IState currentState) {
 		Set<T> validSymbols = new HashSet<>();
 		
 		for (Transition<T> existingTransition : transitions) {

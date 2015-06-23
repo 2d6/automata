@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import automata.interfaces.IEpsilonTransitionFunction;
 import automata.interfaces.INondeterministicFiniteAutomaton;
+import automata.interfaces.IState;
 
 public class NondeterministicFiniteAutomaton<T> extends
 		AbstractFiniteAutomaton<T> implements
@@ -31,18 +32,18 @@ public class NondeterministicFiniteAutomaton<T> extends
 
 		super(originalNfa);
 		
-		Collection<State> originalStates = originalNfa.states.values();
+		Collection<IState> originalStates = originalNfa.states.values();
 		this.epsilonTransitionFunction = originalNfa.epsilonTransitionFunction;
 
 		// Create epsilon transitions for all States which had
 		// epsilon transitions in the original NFA
-		for (State originalState : originalStates) {
-			String stateIdentifier = originalState.getIdentifier();
+		for (IState originalState : originalStates) {
+			String stateIdentifier = originalState.getId();
 			
-			State copiedState = this.getState(stateIdentifier);
+			IState copiedState = this.getState(stateIdentifier);
 			originalNfa.epsilonTransitionFunction.getExpandedStates(originalState)
 					.stream()
-					.map(state -> this.getState(state.getIdentifier()))
+					.map(state -> this.getState(state.getId()))
 					.filter(state -> !state.equals(copiedState))
 					.forEach(state -> this.epsilonTransitionFunction
 							.addEpsilonTransition(copiedState, state));
@@ -52,15 +53,15 @@ public class NondeterministicFiniteAutomaton<T> extends
 	@Override
 	public void addEpsilonTransition(String initialStateIdentifier,
 			String targetStateIdentifier) {
-		State initialState = getState(initialStateIdentifier);
-		State targetState = getState(targetStateIdentifier);
+		IState initialState = getState(initialStateIdentifier);
+		IState targetState = getState(targetStateIdentifier);
 		epsilonTransitionFunction.addEpsilonTransition(initialState,
 				targetState);
 	}
 
 	@Override
-	public Set<State> evaluate(List<T> input) {
-		Set<State> states = new HashSet<>();
+	public Set<IState> evaluate(List<T> input) {
+		Set<IState> states = new HashSet<>();
 		states.addAll(epsilonTransitionFunction
 				.getExpandedStates(startingState));
 
@@ -73,7 +74,7 @@ public class NondeterministicFiniteAutomaton<T> extends
 
 			states = evaluate(states, symbol);
 			if (states.size() == 1) {
-				State state = new LinkedList<>(states).getFirst();
+				IState state = new LinkedList<>(states).getFirst();
 				if (!this.states.containsValue(state)) {
 					return states;
 				}
@@ -83,10 +84,10 @@ public class NondeterministicFiniteAutomaton<T> extends
 		return states;
 	}
 
-	private Set<State> evaluate(Set<State> currentStates, T symbol) {
-		Set<State> expandedStates = new HashSet<>();
+	private Set<IState> evaluate(Set<IState> currentStates, T symbol) {
+		Set<IState> expandedStates = new HashSet<>();
 
-		for (State state : currentStates) {
+		for (IState state : currentStates) {
 			expandedStates.addAll(epsilonTransitionFunction
 					.getExpandedStates(state));
 		}

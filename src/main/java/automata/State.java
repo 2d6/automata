@@ -1,10 +1,12 @@
 package automata;
 
+import automata.interfaces.IState;
+
 /**
  * A state in a deterministic finite automaton
  * @author 2d6
  */
-public class State {
+public class State implements IState {
 	private final boolean isAccepting;
 	private final String id;
 	
@@ -18,11 +20,19 @@ public class State {
 		this.id = id;
 	}
 	
+	/* (non-Javadoc)
+	 * @see automata.IState#isAccepting()
+	 */
+	@Override
 	public boolean isAccepting() {
 		return this.isAccepting;
 	}
 	
-	public String getIdentifier() {
+	/* (non-Javadoc)
+	 * @see automata.IState#getId()
+	 */
+	@Override
+	public String getId() {
 		return this.id;
 	}	
 	

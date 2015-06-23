@@ -27,7 +27,7 @@ public interface INondeterministicFiniteAutomaton<T> extends IAbstractFiniteAuto
 
 	/**
 	 * Evaluate a list of input symbols and return a {@link Set} of
-	 * {@link State States} the automaton was in after evaluating the last
+	 * {@link IState IStates} the automaton was in after evaluating the last
 	 * symbol. If the automaton at any point reached a State where no transition
 	 * had been defined for the incoming symbol, the Set contains a
 	 * non-accepting default state with the output of symbol.toString() as
@@ -36,6 +36,6 @@ public interface INondeterministicFiniteAutomaton<T> extends IAbstractFiniteAuto
 	 * @param input
 	 * @return
 	 */
-	public Set<State> evaluate(List<T> input);
+	public Set<IState> evaluate(List<T> input);
 
 }

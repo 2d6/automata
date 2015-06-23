@@ -2,8 +2,6 @@ package automata.interfaces;
 
 import java.util.List;
 
-import automata.State;
-
 
 /**
  * A Deterministic Finite Automaton with an alphabet of type T
@@ -26,7 +24,7 @@ public interface IDeterministicFiniteAutomaton<T> extends IAbstractFiniteAutomat
 	 *         of the input, or a new non-accepting State object with the output
 	 *         of the symbol.toString() method as its identifier.
 	 */
-	public abstract State evaluate(List<T> input);
+	public abstract IState evaluate(List<T> input);
 	
 	/**
 	 * Create a semantically identical copy of the automaton. The copy should

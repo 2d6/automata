@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import automata.interfaces.IAlphabet;
 import automata.interfaces.IEpsilonTransitionFunction;
+import automata.interfaces.IState;
 
 /**
  * Implements an {@link IEpsilonTransitionFunction epsilon transition function} with symbols
@@ -39,17 +40,17 @@ public class EpsilonTransitionFunction<T> extends TransitionFunction<T>
 	}
 
 	@Override
-	public void addEpsilonTransition(State initialState, State targetState) {
+	public void addEpsilonTransition(IState initialState, IState targetState) {
 		epsilonTransitions.add(new EpsilonTransition(initialState, targetState));
 	}
 
 	@Override
-	public Set<State> getExpandedStates(State initialState) {
+	public Set<IState> getExpandedStates(IState initialState) {
 		if (initialState == null) {
 			throw new IllegalArgumentException("Initial State May not be null");
 		}
 		
-		Set<State> expandedStates = new HashSet<>(Arrays.asList(initialState));
+		Set<IState> expandedStates = new HashSet<>(Arrays.asList(initialState));
 		
 		return getAllExpandedStates(expandedStates);
 	}
@@ -60,11 +61,11 @@ public class EpsilonTransitionFunction<T> extends TransitionFunction<T>
 	 * @param expandedStates The initial Set of states
 	 * @return A Set containing all States reachable via epsilon transitions
 	 */
-	private Set<State> getAllExpandedStates(Set<State> expandedStates) {
-		Set<State> allExpandedStates = new HashSet<>();
+	private Set<IState> getAllExpandedStates(Set<IState> expandedStates) {
+		Set<IState> allExpandedStates = new HashSet<>();
 		allExpandedStates.addAll(expandedStates);
 		
-		for (State state : expandedStates) {
+		for (IState state : expandedStates) {
 			allExpandedStates.addAll(epsilonTransitions.stream()
 					.filter(transition -> transition.getInitialState().equals(state))
 					.map(transition -> transition.getTargetState())

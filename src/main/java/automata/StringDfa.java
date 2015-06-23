@@ -3,6 +3,8 @@ package automata;
 import java.util.ArrayList;
 import java.util.Set;
 
+import automata.interfaces.IState;
+
 public class StringDfa extends DeterministicFiniteAutomaton<Character> {
 
 	public StringDfa(String identifier, boolean isAccepting,
@@ -19,7 +21,7 @@ public class StringDfa extends DeterministicFiniteAutomaton<Character> {
 	 * @return The state the automaton was in after evaluating the last
 	 *         character in the string
 	 */
-	public State evaluate(String input) {
+	public IState evaluate(String input) {
 		ArrayList<Character> charList = new ArrayList<>();
 		for (char ch : input.toCharArray()) {
 			charList.add(ch);

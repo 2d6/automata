@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import automata.interfaces.IDeterministicFiniteAutomaton;
+import automata.interfaces.IState;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -48,9 +49,9 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 		return new DeterministicFiniteAutomaton<T>(this);
 	}
 	
-	public State evaluate(List<T> input) {
-		State currentState = this.startingState;
-		State nextState;
+	public IState evaluate(List<T> input) {
+		IState currentState = this.startingState;
+		IState nextState;
 		for (T symbol : input) {
 			if (!transitionFunction.getSymbols().contains(symbol)) {
 				throw new IllegalArgumentException("Encountered illegal symbol: " + symbol);
@@ -76,7 +77,7 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 * @return The state the automaton is in after evaluation, or null if no transition
 	 * has been defined.
 	 */
-	private State evaluate(State currentState, T symbol) {
+	private IState evaluate(IState currentState, T symbol) {
 		return transitionFunction.getNextState(currentState, symbol);
 	}
 	

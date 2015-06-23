@@ -38,7 +38,7 @@ public interface ITransitionFunction<T> {
 	 * @param symbol
 	 *            The symbol triggering the transition
 	 */
-	public void addTransition(State initialState, State targetState, T symbol);
+	public void addTransition(IState initialState, IState targetState, T symbol);
 
 	/**
 	 * Gets the output of the transition function. Should return null if no
@@ -50,12 +50,12 @@ public interface ITransitionFunction<T> {
 	 *            The symbol being evaluated during the current state
 	 * @return The target state of transition
 	 */
-	public State getNextState(State currentState, T symbol);
+	public IState getNextState(IState currentState, T symbol);
 	
 	/**
 	 * Gets a {@link Set} of all symbols which trigger a transition for a given state
 	 * @param currentState The {@link State} for which the triggering symbols should be determined
 	 * @return A Set of triggering symbols
 	 */
-	public Set<T> getValidSymbols(State currentState);
+	public Set<T> getValidSymbols(IState currentState);
 }

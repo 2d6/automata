@@ -9,12 +9,14 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
+
 public class DeterministicFiniteAutomatonTest {
 	
 	private static final boolean ACCEPTING = true;
 	private static final boolean NOT_ACCEPTING = false;
 	
-	private static final State NULL_STATE = null;
+	private static final IState NULL_STATE = null;
 	private static final String S1 = "S1";
 	private static final String S2 = "S2";
 	private static final String S3 = "S3";
@@ -35,8 +37,8 @@ public class DeterministicFiniteAutomatonTest {
 	@Test(dataProvider = "sampleStates")
 	public void charDfaHasStartingState(String identifier, boolean isAccepting) {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
-		State startingState = dfa.getStartingState();
-		Assert.assertEquals(identifier, startingState.getIdentifier());
+		IState startingState = dfa.getStartingState();
+		Assert.assertEquals(identifier, startingState.getId());
 		Assert.assertEquals(isAccepting, startingState.isAccepting());
 	}
 
@@ -44,8 +46,8 @@ public class DeterministicFiniteAutomatonTest {
 	public void charDfaReturnsStatesByTheirIdentifier(String identifier,
 			boolean isAccepting) {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
-		State startingState = dfa.getState(identifier);
-		Assert.assertEquals(identifier, startingState.getIdentifier());
+		IState startingState = dfa.getState(identifier);
+		Assert.assertEquals(identifier, startingState.getId());
 		Assert.assertEquals(isAccepting, startingState.isAccepting());
 	}
 
@@ -53,8 +55,8 @@ public class DeterministicFiniteAutomatonTest {
 	public void statesMayBeAddedToCharDfa(String identifier, boolean isAccepting) {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(identifier, isAccepting);
-		State state = dfa.getState(identifier);
-		Assert.assertEquals(identifier, state.getIdentifier());
+		IState state = dfa.getState(identifier);
+		Assert.assertEquals(identifier, state.getId());
 		Assert.assertEquals(isAccepting, state.isAccepting());
 	}
 
@@ -127,10 +129,10 @@ public class DeterministicFiniteAutomatonTest {
 		original.addTransition(S1, S2, '0');
 		
 		DeterministicFiniteAutomaton<Character> copy = original.copy();	
-		State originalFinalState = original.evaluate(stringToCharacterList(testString));
-		State copyFinalState = copy.evaluate(stringToCharacterList(testString));
+		IState originalFinalState = original.evaluate(stringToCharacterList(testString));
+		IState copyFinalState = copy.evaluate(stringToCharacterList(testString));
 		
-		Assert.assertEquals(copyFinalState.getIdentifier(), originalFinalState.getIdentifier());
+		Assert.assertEquals(copyFinalState.getId(), originalFinalState.getId());
 	}
 	
 	@DataProvider(name = "testStrings")
