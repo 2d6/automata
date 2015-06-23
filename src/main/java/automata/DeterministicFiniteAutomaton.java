@@ -90,28 +90,33 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 * @return A string containing the representation
 	 */
 	public String toGraphViz() {
-		String preamble = "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\n";
-		String prefixAcceptingNodes = "node [shape = doublecircle];";
-		String prefixTransitions = "node [shape = circle];\n";
-		String suffix = "}";
+		StringBuilder graphVizString = new StringBuilder();
 		
-		String acceptingStates = states.values().stream()
-			.filter(state -> state.isAccepting())
-			.map(state -> state.getId())
-			.collect(Collectors.joining(" ")) + ";\n";
+		graphVizString.append("digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\n");
+		graphVizString.append("node [shape = doublecircle];");
 		
-		StringBuilder transitionString = new StringBuilder();
+		
+		graphVizString
+				.append(states.values().stream()
+					.filter(state -> state.isAccepting())
+					.map(state -> state.getId())
+					.collect(Collectors.joining(" ")))
+				.append(";\n")
+				.append("node [shape = circle];\n");
+		
 		
 		for (IState initialState : states.values()) {
 			for (T symbol : this.transitionFunction.getSymbols()) {
 				IState targetState = transitionFunction
 						.getNextState(initialState, symbol);
-				transitionString.append(initialState.getId() + " -> " + targetState.getId());
-				transitionString.append(" [ label = \"" + symbol.toString() + "\" ];\n");
+				graphVizString.append(initialState.getId() + " -> " + targetState.getId());
+				graphVizString.append(" [ label = \"" + symbol.toString() + "\" ];\n");
 			}
 		}
 		
-		return preamble + prefixAcceptingNodes + acceptingStates + prefixTransitions + transitionString.toString() + suffix;
+		graphVizString.append("}");
+		
+		return  graphVizString.toString();
 	}
 	
 }
