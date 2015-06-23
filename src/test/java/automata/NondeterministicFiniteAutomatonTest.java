@@ -17,6 +17,7 @@ import org.testng.annotations.Test;
 
 import automata.interfaces.INondeterministicFiniteAutomaton;
 import automata.interfaces.IState;
+import automata.states.NullState;
 
 public class NondeterministicFiniteAutomatonTest {
 
@@ -132,8 +133,7 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Assert.assertEquals(states.size(), 1);
 		IState state = new LinkedList<>(states).getFirst();
-		Assert.assertEquals(state.getId(), "1");
-		Assert.assertFalse(state.isAccepting());
+		Assert.assertTrue(NullState.isNullState(state));
 	}
 	
 	/*
@@ -188,7 +188,7 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
 		
-		assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, "0")));
+		assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, NullState.getInstance().getId())));
 	}
 	
 	@Test
@@ -213,7 +213,7 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
 		
-		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, "0")));
+		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, NullState.getInstance().getId())));
 	}
 	
 	@Test

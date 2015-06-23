@@ -12,9 +12,16 @@ public class NullState implements IState {
 	private static final NullState INSTANCE = new NullState();
 	private static final String NULL_STATE_ID = "NullState";
 	
+	/**
+	 * Private constructor necessary for Singleton pattern
+	 */
 	private NullState() {
 	}
 
+	/**
+	 * Returns a reference to the NullState instance
+	 * @return The reference
+	 */
 	public static NullState getInstance() {
 		return INSTANCE;
 	}
@@ -27,6 +34,10 @@ public class NullState implements IState {
 	@Override
 	public String getId() {
 		return NULL_STATE_ID;
+	}
+
+	public static boolean isNullState(IState state) {
+		return INSTANCE == state;
 	}
 
 

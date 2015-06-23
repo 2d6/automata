@@ -13,6 +13,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.NullState;
 
 
 public class TransitionFunctionTest {
@@ -122,10 +123,10 @@ public class TransitionFunctionTest {
 	}
 	
 	@Test
-	public void nonAcceptingDefaultStateIsReturnedIfNoTransitionsDefinedForState() {
+	public void nullStateIsReturnedIfNoTransitionsDefinedForState() {
 		IState state = functionUnderTest.getNextState(initialState, SYMBOL);
 		
-		assertTrue(isDefaultState(state, SYMBOL));
+		assertTrue(NullState.isNullState(state));
 	}
 	
 	@Test
@@ -135,7 +136,7 @@ public class TransitionFunctionTest {
 		
 		IState state = functionUnderTest.getNextState(initialState, OTHER_SYMBOL);
 		
-		assertTrue(isDefaultState(state, OTHER_SYMBOL));
+		assertTrue(NullState.isNullState(state));
 	}
 	
 	@Test
@@ -143,13 +144,7 @@ public class TransitionFunctionTest {
 		functionUnderTest.addTransition(initialState, targetState, SYMBOL);
 		IState state = functionUnderTest.getNextState(targetState, SYMBOL);
 		
-		assertTrue(isDefaultState(state, SYMBOL));
-	}
-	
-	
-	private boolean isDefaultState(IState state, Character symbol) {
-		return state.getId().equals(new String(new char[]{symbol})) 
-				&& !state.isAccepting();
+		assertTrue(NullState.isNullState(state));
 	}
 	
 	private TransitionFunction<Character> newCharTransitionFunction(Character... symbols) {

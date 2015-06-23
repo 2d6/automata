@@ -7,7 +7,7 @@ import java.util.Set;
 
 import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
-import automata.states.State;
+import automata.states.NullState;
 
 /**
  * Implements a simple char-based transition function
@@ -77,10 +77,9 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 		}
 
 		/*
-		 *  If no transition has been defined for this State, return a non-accepting default
-		 *  state without further transitions containing the evaluated symbol
+		 *  If no transition has been defined for this State, return the NullState
 		 */
-		return new State(symbol.toString(), false);
+		return NullState.getInstance();
 	}
 
 	@Override

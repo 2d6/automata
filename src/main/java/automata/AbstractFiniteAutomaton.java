@@ -7,6 +7,7 @@ import java.util.Set;
 import automata.comparators.FiniteAutomatonComparator;
 import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
+import automata.states.NullState;
 import automata.states.State;
 
 public class AbstractFiniteAutomaton<T> {
@@ -64,7 +65,7 @@ public class AbstractFiniteAutomaton<T> {
 			for (T symbol : symbols) {
 				IState targetState = otherAutomaton.transitionFunction
 						.getNextState(originalState, symbol);
-				if (originalStates.contains(targetState)) {
+				if (!NullState.isNullState(targetState)) {
 					this.addTransition(originalState.getId(),
 							targetState.getId(), symbol);
 				}

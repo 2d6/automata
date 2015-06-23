@@ -5,6 +5,7 @@ import java.util.Set;
 
 import automata.interfaces.IDeterministicFiniteAutomaton;
 import automata.interfaces.IState;
+import automata.states.NullState;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -57,8 +58,8 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 				throw new IllegalArgumentException("Encountered illegal symbol: " + symbol);
 			}
 			nextState = evaluate(currentState, symbol);
-			if (!states.values().contains(nextState)) {
-				return nextState;
+			if (NullState.isNullState(nextState)) {
+				return NullState.getInstance();
 			}
 			currentState = nextState;
 		}
