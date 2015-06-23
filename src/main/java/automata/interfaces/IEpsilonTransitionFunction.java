@@ -3,7 +3,7 @@ package automata.interfaces;
 import java.util.Set;
 
 import automata.EpsilonTransition;
-import automata.State;
+import automata.states.State;
 
 /**
  * A {@link ITransitionFunction transition function} which also allows for epsilon

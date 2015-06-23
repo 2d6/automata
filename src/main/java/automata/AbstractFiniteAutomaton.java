@@ -7,6 +7,7 @@ import java.util.Set;
 import automata.comparators.FiniteAutomatonComparator;
 import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
+import automata.states.State;
 
 public class AbstractFiniteAutomaton<T> {
 

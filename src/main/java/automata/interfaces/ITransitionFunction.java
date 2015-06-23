@@ -2,7 +2,7 @@ package automata.interfaces;
 
 import java.util.Set;
 
-import automata.State;
+import automata.states.State;
 
 /**
  * A Transition function for arbitrary symbols

@@ -7,6 +7,7 @@ import java.util.Set;
 
 import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
+import automata.states.State;
 
 /**
  * Implements a simple char-based transition function

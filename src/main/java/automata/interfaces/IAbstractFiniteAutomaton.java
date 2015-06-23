@@ -3,7 +3,7 @@ package automata.interfaces;
 import java.util.Set;
 
 import automata.AbstractFiniteAutomaton;
-import automata.State;
+import automata.states.State;
 
 public interface IAbstractFiniteAutomaton<T> {
 

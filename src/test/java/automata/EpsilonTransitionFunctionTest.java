@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.State;
 
 
 public class EpsilonTransitionFunctionTest {

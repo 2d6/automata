@@ -1,9 +1,10 @@
-package automata;
+package automata.states;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.State;
 import static org.testng.Assert.*;
 
 public class StateTest {

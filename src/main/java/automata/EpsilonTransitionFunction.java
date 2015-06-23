@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import automata.interfaces.IEpsilonTransitionFunction;
 import automata.interfaces.IState;
+import automata.states.State;
 
 /**
  * Implements an {@link IEpsilonTransitionFunction epsilon transition function} with symbols

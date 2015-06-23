@@ -3,7 +3,7 @@ package automata.interfaces;
 import java.util.List;
 import java.util.Set;
 
-import automata.State;
+import automata.states.State;
 
 /**
  * A nondeterministic finite automaton with epsilon transitions
