@@ -1,5 +1,7 @@
 package automata;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -150,6 +152,28 @@ public class DeterministicFiniteAutomatonTest {
 		DeterministicFiniteAutomaton<Character> copy = original.copy();	
 		
 		Assert.assertFalse(original.getState(S1) == copy.getState(S1));
+	}
+	
+	/*
+	 * GraphViz
+	 */
+	
+	@Test
+	public void graphVizForBasicAutomatonIsCorrect() {
+		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
+		String expected = "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];S1;}";
+		
+		assertEquals(original.toGraphViz(), expected);
+	}
+	
+	@Test
+	public void graphVizTransitionsImplementedCorrectly() {
+		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
+		original.addState(S2, NOT_ACCEPTING);
+		original.addTransition(S1, S2, '0');
+		String expected = "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];S1;\nnode [shape = circle];\nS1 -> S2 [ label = \"0\" ];\n}";
+		
+		assertEquals(original.toGraphViz(), expected);
 	}
 
 	/*
