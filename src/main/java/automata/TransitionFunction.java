@@ -48,6 +48,10 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	 */
 	@Override
 	public void addTransition(IState initialState, IState targetState, T symbol) {
+		
+		if (NullState.isNullState(initialState)) {
+			throw new IllegalArgumentException("NullState may not be used as initial state");
+		}
 
 		for (Transition<T> existingTransition : transitions) {
 			if (existingTransition.getInitialState().equals(initialState)

@@ -147,6 +147,11 @@ public class TransitionFunctionTest {
 		assertTrue(NullState.isNullState(state));
 	}
 	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void transitionFunctionThrowsIllegalArgExceptionOnTransitionFromNullState() {
+		functionUnderTest.addTransition(NullState.getInstance(), targetState, SYMBOL);
+	}
+	
 	private TransitionFunction<Character> newCharTransitionFunction(Character... symbols) {
 		return new TransitionFunction<>(createCharacterSet(symbols));
 	}

@@ -9,6 +9,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.NullState;
 import automata.states.State;
 
 
@@ -103,5 +104,10 @@ public class EpsilonTransitionFunctionTest {
 		transitionFunction.addEpsilonTransition(targetState, anotherState);
 		
 		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
+	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void transitionFunctionThrowsIllegalArgExceptionOnTransitionFromNullState() {
+		transitionFunction.addEpsilonTransition(NullState.getInstance(), targetState);
 	}
 }

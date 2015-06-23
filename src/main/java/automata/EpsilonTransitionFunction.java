@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import automata.interfaces.IEpsilonTransitionFunction;
 import automata.interfaces.IState;
+import automata.states.NullState;
 import automata.states.State;
 
 /**
@@ -41,6 +42,10 @@ public class EpsilonTransitionFunction<T> extends TransitionFunction<T>
 
 	@Override
 	public void addEpsilonTransition(IState initialState, IState targetState) {
+		if (NullState.isNullState(initialState)) {
+			throw new IllegalArgumentException("NullState may not be used as initial state");
+		}
+		
 		epsilonTransitions.add(new EpsilonTransition(initialState, targetState));
 	}
 
