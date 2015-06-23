@@ -3,14 +3,14 @@ package automata.interfaces;
 import java.util.Set;
 
 import automata.AbstractFiniteAutomaton;
-import automata.State;
+import automata.states.State;
 
 public interface IAbstractFiniteAutomaton<T> {
 
 	/**
 	 * @return The starting state of the automaton
 	 */
-	public abstract State getStartingState();
+	public abstract IState getStartingState();
 
 	/**
 	 * Returns the state corresponding to a given identifier, if the automaton
@@ -21,7 +21,7 @@ public interface IAbstractFiniteAutomaton<T> {
 	 * @return The state corresponding to the identifier, or null if it does not
 	 *         exist.
 	 */
-	public abstract State getState(String identifier);
+	public abstract IState getState(String identifier);
 
 	/**
 	 * Adds a state with the given identifier and acceptance state to the
@@ -71,7 +71,7 @@ public interface IAbstractFiniteAutomaton<T> {
 	 * @param symbol The symbol being evaluated
 	 * @return The next State
 	 */
-	public abstract State getNextState(State currentState, T symbol);
+	public abstract IState getNextState(IState currentState, T symbol);
 
 	/**
 	 * Returns the valid symbols for a given {@link State}, i.e. those symbols for which a transition
@@ -79,6 +79,6 @@ public interface IAbstractFiniteAutomaton<T> {
 	 * @param currentState The current state of the automaton
 	 * @return A Set of valid symbols
 	 */
-	public abstract Set<T> getValidSymbols(State currentState);
+	public abstract Set<T> getValidSymbols(IState currentState);
 
 }

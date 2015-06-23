@@ -1,19 +1,21 @@
 package automata;
 
+import automata.interfaces.IState;
+
 /**
  * An epsilon transition, i.e. a transition connecting an initial state to a target
  * state wit triggering symbol.
  */
 public class EpsilonTransition {
 	
-	private final State initialState;
-	private final State targetState;
+	private final IState initialState;
+	private final IState targetState;
 	
-	public State getInitialState() {
+	public IState getInitialState() {
 		return initialState;
 	}
 	
-	public State getTargetState() {
+	public IState getTargetState() {
 		return targetState;
 	}
 	
@@ -21,7 +23,7 @@ public class EpsilonTransition {
 	 * @param initialState
 	 * @param targetState
 	 */
-	public EpsilonTransition(State initialState, State targetState) {
+	public EpsilonTransition(IState initialState, IState targetState) {
 		if (initialState == null) {
 			throw new IllegalArgumentException("Initial State may not be null");
 		}

@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Set;
 
 import automata.comparators.FiniteAutomatonComparator;
+import automata.interfaces.IState;
 import automata.interfaces.ITransitionFunction;
+import automata.states.NullState;
+import automata.states.State;
 
 public class AbstractFiniteAutomaton<T> {
 
-	protected HashMap<String, State> states;
-	protected State startingState;
+	protected HashMap<String, IState> states;
+	protected IState startingState;
 	protected ITransitionFunction<T> transitionFunction;
 	
 	public AbstractFiniteAutomaton() {
@@ -42,13 +45,13 @@ public class AbstractFiniteAutomaton<T> {
 	public AbstractFiniteAutomaton(AbstractFiniteAutomaton<T> otherAutomaton) {
 		// Copy the states
 		this.states = new HashMap<>();
-		Collection<State> originalStates = otherAutomaton.states.values();
+		Collection<IState> originalStates = otherAutomaton.states.values();
 		originalStates.stream().forEach(
-				state -> this.addState(state.getIdentifier(),
+				state -> this.addState(state.getId(),
 						state.isAccepting()));	
 		
 		this.startingState = this.getState(otherAutomaton.getStartingState()
-				.getIdentifier());
+				.getId());
 
 		// Copy the transition function, using references to the original
 		// symbols
@@ -58,23 +61,23 @@ public class AbstractFiniteAutomaton<T> {
 
 		// Create transitions for all State/symbol combinations which had
 		// transitions in the original DFA
-		for (State originalState : originalStates) {
+		for (IState originalState : originalStates) {
 			for (T symbol : symbols) {
-				State targetState = otherAutomaton.transitionFunction
+				IState targetState = otherAutomaton.transitionFunction
 						.getNextState(originalState, symbol);
-				if (originalStates.contains(targetState)) {
-					this.addTransition(originalState.getIdentifier(),
-							targetState.getIdentifier(), symbol);
+				if (!NullState.isNullState(targetState)) {
+					this.addTransition(originalState.getId(),
+							targetState.getId(), symbol);
 				}
 			}
 		}
 	}
 
-	public State getStartingState() {
+	public IState getStartingState() {
 		return startingState;
 	}
 
-	public State getState(String identifier) {
+	public IState getState(String identifier) {
 		return states.get(identifier);
 	}
 
@@ -87,17 +90,17 @@ public class AbstractFiniteAutomaton<T> {
 	}
 
 	public void addTransition(String initialStateIdentifier, String targetStateIdentifier, T symbol) {
-		State initialState = getState(initialStateIdentifier);
-		State targetState = getState(targetStateIdentifier);
+		IState initialState = getState(initialStateIdentifier);
+		IState targetState = getState(targetStateIdentifier);
 		transitionFunction.addTransition(initialState, targetState, symbol);
 	}
 
-	public Set<T> getValidSymbols(State currentState) {
+	public Set<T> getValidSymbols(IState currentState) {
 		return this.transitionFunction.getValidSymbols(currentState);
 	}
 	
 
-	public State getNextState(State currentState, T symbol) {
+	public IState getNextState(IState currentState, T symbol) {
 		return this.transitionFunction.getNextState(currentState, symbol);
 	}
 	

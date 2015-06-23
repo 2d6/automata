@@ -8,13 +8,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
+
 public class EpsilonTransitionTest {
 
 	@Mock
-	State initialState;
+	IState initialState;
 	
 	@Mock
-	State targetState;
+	IState targetState;
 	
 	@BeforeMethod
 	public void init() {
@@ -30,7 +32,7 @@ public class EpsilonTransitionTest {
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class, dataProvider = "nullStates")
-	public void transitionThrowsIllegalArgumentExceptionIfStatesNull(State initialState, State targetState) {
+	public void transitionThrowsIllegalArgumentExceptionIfStatesNull(IState initialState, IState targetState) {
 		new EpsilonTransition(initialState, targetState);
 	}
 	

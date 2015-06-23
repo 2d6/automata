@@ -5,6 +5,9 @@ import static org.testng.Assert.assertEquals;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
+import automata.states.State;
+
 
 public class TransitionTest {
 	
@@ -15,8 +18,8 @@ public class TransitionTest {
 
 	@Test
 	public void transitionMayBeCreated() {
-		State initialState = new State(INITIAL_STATE, true);
-		State targetState = new State(TARGET_STATE, false);
+		IState initialState = new State(INITIAL_STATE, true);
+		IState targetState = new State(TARGET_STATE, false);
 		Character symbol = '1';
 		Transition<Character> transition = new Transition<>(initialState, targetState, symbol);
 		assertEquals(transition.getTargetState(), targetState);
@@ -25,7 +28,7 @@ public class TransitionTest {
 	}
 	
 	@Test(dataProvider = "nullStates", expectedExceptions = NullPointerException.class)
-	public void transitionDoesNotAcceptNullStates(State initialState, State targetState) {
+	public void transitionDoesNotAcceptNullStates(IState initialState, IState targetState) {
 		new Transition<>(initialState, targetState, '1');
 	}
 	
@@ -45,8 +48,8 @@ public class TransitionTest {
 	
 	@Test
 	public void toStringYieldsStateStringsAndSymbol() {
-		State initialState = new State(INITIAL_STATE, true);
-		State targetState = new State(TARGET_STATE, false);
+		IState initialState = new State(INITIAL_STATE, true);
+		IState targetState = new State(TARGET_STATE, false);
 		Character symbol = SYMBOL;
 		Transition<Character> transition = new Transition<>(initialState, targetState, symbol);
 		

@@ -1,5 +1,7 @@
 package automata;
 
+import automata.interfaces.IState;
+
 /**
  * A transition in a @see{TransitionFunction}. Connects an initial state to a
  * target state with the triggering symbol as a condition.
@@ -8,15 +10,15 @@ package automata;
  */
 public class Transition<T> {
 
-	private final State initialState;
-	private final State targetState;
+	private final IState initialState;
+	private final IState targetState;
 	private final T symbol;
 
-	public State getInitialState() {
+	public IState getInitialState() {
 		return initialState;
 	}
 
-	public State getTargetState() {
+	public IState getTargetState() {
 		return targetState;
 	}
 
@@ -30,7 +32,7 @@ public class Transition<T> {
 	 * @param targetState The target state of the transition
 	 * @param symbol The triggering symbol of the transition
 	 */
-	public Transition(State initialState, State targetState, T symbol) {
+	public Transition(IState initialState, IState targetState, T symbol) {
 		if (initialState == null) {
 			throw new NullPointerException("Initial state may not be null");
 		}

@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import automata.interfaces.IDeterministicFiniteAutomaton;
+import automata.interfaces.IState;
+import automata.states.NullState;
 
 /**
  * Implements a deterministic finite automaton. For further information, see
@@ -49,16 +51,16 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 		return new DeterministicFiniteAutomaton<T>(this);
 	}
 	
-	public State evaluate(List<T> input) {
-		State currentState = this.startingState;
-		State nextState;
+	public IState evaluate(List<T> input) {
+		IState currentState = this.startingState;
+		IState nextState;
 		for (T symbol : input) {
 			if (!transitionFunction.getSymbols().contains(symbol)) {
 				throw new IllegalArgumentException("Encountered illegal symbol: " + symbol);
 			}
 			nextState = evaluate(currentState, symbol);
-			if (!states.values().contains(nextState)) {
-				return nextState;
+			if (NullState.isNullState(nextState)) {
+				return NullState.getInstance();
 			}
 			currentState = nextState;
 		}
@@ -77,7 +79,7 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 * @return The state the automaton is in after evaluation, or null if no transition
 	 * has been defined.
 	 */
-	private State evaluate(State currentState, T symbol) {
+	private IState evaluate(IState currentState, T symbol) {
 		return transitionFunction.getNextState(currentState, symbol);
 	}
 
@@ -95,16 +97,16 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 		
 		String acceptingStates = states.values().stream()
 			.filter(state -> state.isAccepting())
-			.map(state -> state.getIdentifier())
+			.map(state -> state.getId())
 			.collect(Collectors.joining(" ")) + ";\n";
 		
 		StringBuilder transitionString = new StringBuilder();
 		
-		for (State initialState : states.values()) {
+		for (IState initialState : states.values()) {
 			for (T symbol : this.transitionFunction.getSymbols()) {
-				State targetState = transitionFunction
+				IState targetState = transitionFunction
 						.getNextState(initialState, symbol);
-				transitionString.append(initialState.getIdentifier() + " -> " + targetState.getIdentifier());
+				transitionString.append(initialState.getId() + " -> " + targetState.getId());
 				transitionString.append(" [ label = \"" + symbol.toString() + "\" ];\n");
 			}
 		}

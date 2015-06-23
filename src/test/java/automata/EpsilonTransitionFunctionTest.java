@@ -8,6 +8,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
+import automata.states.State;
+
 
 public class EpsilonTransitionFunctionTest {
 
@@ -38,7 +41,7 @@ public class EpsilonTransitionFunctionTest {
 	public void expandedStatesContainsInitialStateIfNoEpsilonTransitionsDefined() {
 		expectedStates.add(initialState);
 		
-		Set<State> expandedStates = transitionFunction.getExpandedStates(initialState);
+		Set<IState> expandedStates = transitionFunction.getExpandedStates(initialState);
 		
 		assert(expandedStates.containsAll(expectedStates));
 	}

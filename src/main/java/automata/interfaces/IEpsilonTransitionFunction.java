@@ -3,7 +3,7 @@ package automata.interfaces;
 import java.util.Set;
 
 import automata.EpsilonTransition;
-import automata.State;
+import automata.states.State;
 
 /**
  * A {@link ITransitionFunction transition function} which also allows for epsilon
@@ -16,7 +16,7 @@ public interface IEpsilonTransitionFunction<T> extends ITransitionFunction<T> {
 	 * @param initialState The initial {@link State} of the epsilon transition
 	 * @param targetState the target {@link State} of the epsilon transition
 	 */
-	public void addEpsilonTransition(State initialState, State targetState);
+	public void addEpsilonTransition(IState initialState, IState targetState);
 	
 	/**
 	 * Returns a Set of {@link State States} connected to the initial state 
@@ -24,6 +24,6 @@ public interface IEpsilonTransitionFunction<T> extends ITransitionFunction<T> {
 	 * @param initialState
 	 * @return
 	 */
-	public Set<State> getExpandedStates(State initialState);
+	public Set<IState> getExpandedStates(IState initialState);
 
 }

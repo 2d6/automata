@@ -3,6 +3,7 @@ package automata;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import automata.interfaces.IState;
 import static org.testng.Assert.*;
 
 public class EvenNumberOfZerosTest {
@@ -10,7 +11,7 @@ public class EvenNumberOfZerosTest {
 	@Test(dataProvider = "evenZeros")
 	public void evenNumberOfZerosInInputShouldEvaluateAccepting(String input) {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input);
+		IState finalState = automaton.evaluate(input);
 		assertTrue(finalState.isAccepting());
 	}
 	
@@ -27,7 +28,7 @@ public class EvenNumberOfZerosTest {
 	@Test(dataProvider = "unevenZeros")
 	public void unevenNumberOfZerosInInputShouldEvaluateNotAccepting(String input) {
 		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		State finalState = automaton.evaluate(input);
+		IState finalState = automaton.evaluate(input);
 		assertFalse(finalState.isAccepting());
 	}
 	

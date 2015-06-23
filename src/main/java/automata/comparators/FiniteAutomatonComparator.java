@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import automata.AbstractFiniteAutomaton;
-import automata.State;
+import automata.interfaces.IState;
 
 /**
  * Comparator for structural equality of two automata
@@ -14,10 +14,10 @@ import automata.State;
 public class FiniteAutomatonComparator<T> {
 
 	private AbstractFiniteAutomaton<T> automatonA;
-	private List<State> visitedStatesA;
+	private List<IState> visitedStatesA;
 	
 	private AbstractFiniteAutomaton<T> automatonB;
-	private List<State> visitedStatesB;
+	private List<IState> visitedStatesB;
 	
 	/**
 	 * Determines whether two automata are structurally equal
@@ -38,7 +38,7 @@ public class FiniteAutomatonComparator<T> {
 		return this.stateSubGraphIsEqual(automatonA.getStartingState(), automatonB.getStartingState());
 	}
 	
-	private boolean stateSubGraphIsEqual(State currentStateA, State currentStateB) {
+	private boolean stateSubGraphIsEqual(IState currentStateA, IState currentStateB) {
 
 		if (currentStateA.isAccepting() != currentStateB.isAccepting()) {
 			return false;
@@ -66,8 +66,8 @@ public class FiniteAutomatonComparator<T> {
 			 */
 
 			for (T symbol : validSymbolsA) {
-				State nextStateA = automatonA.getNextState(currentStateA, symbol);
-				State nextStateB = automatonB.getNextState(currentStateB, symbol);
+				IState nextStateA = automatonA.getNextState(currentStateA, symbol);
+				IState nextStateB = automatonB.getNextState(currentStateB, symbol);
 				if (!stateSubGraphIsEqual(nextStateA, nextStateB)) {
 					return false;  
 				}
