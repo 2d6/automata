@@ -15,6 +15,8 @@ public class NondeterministicFiniteAutomaton<T> extends
 		AbstractFiniteAutomaton<T> implements
 		INondeterministicFiniteAutomaton<T> {
 
+	private static final String EPSILON = "ε";
+	
 	private IEpsilonTransitionFunction<T> epsilonTransitionFunction;
 
 	public NondeterministicFiniteAutomaton(String identifier,
@@ -107,4 +109,45 @@ public class NondeterministicFiniteAutomaton<T> extends
 		return new NondeterministicFiniteAutomaton<T>(this);
 	}
 
+	@Override
+	public String toGraphViz() {
+		String graphVizTemplate = getGraphVizBaseTemplate();
+		
+		String acceptingStates = states.values().stream()
+					.filter(state -> state.isAccepting())
+					.map(state -> state.getId())
+					.collect(Collectors.joining(" "));
+		
+		String transitionTemplate = getGraphVizTransitionTemplate();
+		String transitions = "";
+		for (IState initialState : states.values()) {
+			transitions += transitionFunction.getSymbols().stream()
+					.map(symbol -> String.format(
+							transitionTemplate, 
+							initialState.getId(), 
+							transitionFunction.getNextState(initialState, symbol).getId(), 
+							symbol))
+					.collect(Collectors.joining());
+			transitions += epsilonTransitionFunction.getExpandedStates(initialState).stream()
+					.filter(state -> !state.getId().equals(initialState.getId()))
+					.map(state -> String.format(
+							transitionTemplate,
+							initialState.getId(),
+							state.getId(),
+							EPSILON))
+					.collect(Collectors.joining());
+		}	
+		
+		return  String.format(graphVizTemplate, acceptingStates, transitions);
+	}
+
 }
+
+
+
+
+
+
+
+
+

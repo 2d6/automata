@@ -1,5 +1,7 @@
 package automata;
 
+import static org.testng.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,16 +12,18 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
+import automata.states.NullState;
 
 public class DeterministicFiniteAutomatonTest {
 	
 	private static final boolean ACCEPTING = true;
 	private static final boolean NOT_ACCEPTING = false;
 	
-	private static final IState NULL_STATE = null;
+	private static final IState NONEXISTANT_STATE = null;
 	private static final String S1 = "S1";
 	private static final String S2 = "S2";
 	private static final String S3 = "S3";
+	private static final String NULL_STATE_ID = NullState.getInstance().getId();
 	
 	/*
 	 * INVALID AUTOMATA
@@ -85,8 +89,8 @@ public class DeterministicFiniteAutomatonTest {
 	
 	@DataProvider(name = "nonexistantStates")
 	public static Object[][] nonexistantStates() {
-		return new Object[][] { { NULL_STATE, S2 },
-				{ S1, NULL_STATE }, { NULL_STATE, NULL_STATE } };
+		return new Object[][] { { NONEXISTANT_STATE, S2 },
+				{ S1, NONEXISTANT_STATE }, { NONEXISTANT_STATE, NONEXISTANT_STATE } };
 	}
 
 	/*
@@ -152,6 +156,42 @@ public class DeterministicFiniteAutomatonTest {
 		DeterministicFiniteAutomaton<Character> copy = original.copy();	
 		
 		Assert.assertFalse(original.getState(S1) == copy.getState(S1));
+	}
+	
+	/*
+	 * GraphViz
+	 */
+	
+	@Test
+	public void graphVizForBasicAutomatonIsCorrect() {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
+		String expected = "digraph automaton "
+				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
+				+ "S1;\nnode [shape = circle];\n" 
+				+ "S1 -> " + NULL_STATE_ID 
+				+ " [ label = \"0\" ];\n"
+				+ "S1 -> " + NULL_STATE_ID 
+				+ " [ label = \"1\" ];\n}";
+		
+		assertEquals(dfa.toGraphViz(), expected);
+	}
+	
+	@Test
+	public void graphVizTransitionsImplementedCorrectly() {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.addState(S2, NOT_ACCEPTING);
+		dfa.addTransition(S1, S2, '0');
+		String expected = "digraph automaton "
+				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
+				+ "S1;\nnode [shape = circle];\n" 
+				+ "S1 -> S2 [ label = \"0\" ];\n"
+				+ "S1 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n"
+				+ "S2 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
+				+ "S2 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n}";
+		
+		System.out.println(expected);
+		
+		assertEquals(dfa.toGraphViz(), expected);
 	}
 
 	/*
