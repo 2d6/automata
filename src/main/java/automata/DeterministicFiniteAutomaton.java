@@ -2,7 +2,6 @@ package automata;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import automata.interfaces.IDeterministicFiniteAutomaton;
 import automata.interfaces.IState;
@@ -81,42 +80,6 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 	 */
 	private IState evaluate(IState currentState, T symbol) {
 		return transitionFunction.getNextState(currentState, symbol);
-	}
-
-	/**
-	 * Creates a representation of the automaton in the graphviz-Format, as documented on 
-	 * http://www.graphviz.org. The output of this method may be rendered using graphviz,
-	 * resulting in a graphical representation 
-	 * @return A string containing the representation
-	 */
-	public String toGraphViz() {
-		StringBuilder graphVizString = new StringBuilder();
-		
-		graphVizString.append("digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\n");
-		graphVizString.append("node [shape = doublecircle];");
-		
-		
-		graphVizString
-				.append(states.values().stream()
-					.filter(state -> state.isAccepting())
-					.map(state -> state.getId())
-					.collect(Collectors.joining(" ")))
-				.append(";\n")
-				.append("node [shape = circle];\n");
-		
-		
-		for (IState initialState : states.values()) {
-			for (T symbol : this.transitionFunction.getSymbols()) {
-				IState targetState = transitionFunction
-						.getNextState(initialState, symbol);
-				graphVizString.append(initialState.getId() + " -> " + targetState.getId());
-				graphVizString.append(" [ label = \"" + symbol.toString() + "\" ];\n");
-			}
-		}
-		
-		graphVizString.append("}");
-		
-		return  graphVizString.toString();
 	}
 	
 }
