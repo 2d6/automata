@@ -61,7 +61,7 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 			}
 		}
 
-		if (this.getSymbols().isEmpty()) {
+		if (alphabet.isEmpty()) {
 			throw new NullPointerException("Alphabet was not defined");
 		} else if (!alphabet.contains(symbol)) {
 			throw new IllegalArgumentException(
@@ -100,6 +100,11 @@ public class TransitionFunction<T> implements ITransitionFunction<T> {
 	@Override
 	public Set<T> getSymbols() {
 		return this.alphabet;
+	}
+
+	@Override
+	public boolean containsSymbol(T symbol) {
+		return alphabet.contains(symbol);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package automata;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 import java.util.HashSet;
@@ -52,6 +53,14 @@ public class TransitionFunctionTest {
 		Set<Character> validSymbols = functionUnderTest.getSymbols();
 		
 		assertEquals(validSymbols, expectedSymbols);
+	}
+	
+	@Test
+	public void symbolExistenceMayBeQueried() {
+		functionUnderTest = newCharTransitionFunction(SYMBOL);
+		
+		assertTrue(functionUnderTest.containsSymbol(SYMBOL));
+		assertFalse(functionUnderTest.containsSymbol(OTHER_SYMBOL));
 	}
 
 	@Test(dataProvider = "testSymbols")

@@ -54,7 +54,7 @@ public class DeterministicFiniteAutomaton<T> extends AbstractFiniteAutomaton<T> 
 		IState currentState = this.startingState;
 		IState nextState;
 		for (T symbol : input) {
-			if (!transitionFunction.getSymbols().contains(symbol)) {
+			if (!transitionFunction.containsSymbol(symbol)) {
 				throw new IllegalArgumentException("Encountered illegal symbol: " + symbol);
 			}
 			nextState = evaluate(currentState, symbol);

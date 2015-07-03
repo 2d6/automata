@@ -27,6 +27,12 @@ public interface ITransitionFunction<T> {
 	 * @return Set of the symbols
 	 */
 	public Set<T> getSymbols();
+	
+	/**
+	 * Determines whether the transition function contains a given symbol
+	 * @return True, if the symbol is a member of the transition function's alphabet
+	 */
+	public boolean containsSymbol(T symbol);
 
 	/**
 	 * Adds a new transition to the transition function.

@@ -25,8 +25,8 @@ public class NondeterministicFiniteAutomaton<T> extends
 		
 		super(identifier, isAccepting, symbols);
 		
-		this.epsilonTransitionFunction = new EpsilonTransitionFunction<T>(symbols); 
-		this.transitionFunction = this.epsilonTransitionFunction;
+		epsilonTransitionFunction = new EpsilonTransitionFunction<T>(symbols); 
+		transitionFunction = epsilonTransitionFunction;
 	}
 
 	public NondeterministicFiniteAutomaton(
@@ -42,12 +42,12 @@ public class NondeterministicFiniteAutomaton<T> extends
 		for (IState originalState : originalStates) {
 			String stateIdentifier = originalState.getId();
 			
-			IState copiedState = this.getState(stateIdentifier);
+			IState copiedState = getState(stateIdentifier);
 			originalNfa.epsilonTransitionFunction.getExpandedStates(originalState)
 					.stream()
-					.map(state -> this.getState(state.getId()))
+					.map(state -> getState(state.getId()))
 					.filter(state -> !state.equals(copiedState))
-					.forEach(state -> this.epsilonTransitionFunction
+					.forEach(state -> epsilonTransitionFunction
 							.addEpsilonTransition(copiedState, state));
 		}
 	}
@@ -63,27 +63,27 @@ public class NondeterministicFiniteAutomaton<T> extends
 
 	@Override
 	public Set<IState> evaluate(List<T> input) {
-		Set<IState> states = new HashSet<>();
-		states.addAll(epsilonTransitionFunction
+		Set<IState> nextStates = new HashSet<>();
+		nextStates.addAll(epsilonTransitionFunction
 				.getExpandedStates(startingState));
 
 		for (T symbol : input) {
 
-			if (!transitionFunction.getSymbols().contains(symbol)) {
+			if (!transitionFunction.containsSymbol(symbol)) {
 				throw new IllegalArgumentException(
 						"Illegal Symbol encountered: " + symbol);
 			}
 
-			states = evaluate(states, symbol);
-			if (states.size() == 1) {
-				IState state = new LinkedList<>(states).getFirst();
-				if (!this.states.containsValue(state)) {
-					return states;
+			nextStates = evaluate(nextStates, symbol);
+			if (nextStates.size() == 1) {
+				IState state = new LinkedList<>(nextStates).getFirst();
+				if (!states.containsValue(state)) {
+					return nextStates;
 				}
 			}
 		}
 
-		return states;
+		return nextStates;
 	}
 
 	private Set<IState> evaluate(Set<IState> currentStates, T symbol) {
