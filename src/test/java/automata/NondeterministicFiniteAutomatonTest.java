@@ -21,7 +21,6 @@ import automata.states.NullState;
 
 public class NondeterministicFiniteAutomatonTest {
 
-	private static final String EPSILON = "ε";
 	private static final boolean ACCEPTING = true;
 	private static final boolean NOT_ACCEPTING = false;
 	
@@ -29,7 +28,10 @@ public class NondeterministicFiniteAutomatonTest {
 	private static final String S1 = "S1";
 	private static final String S2 = "S2";
 	private static final String S3 = "S3";
-	private static final String NULL_STATE_ID = NullState.getInstance().getId();
+	
+	private static final Character ZERO = '0';
+	private static final Character ONE = '1';
+	private static final Set<Character> ALPHABET = new HashSet<>(Arrays.asList(ZERO, ONE));
 	
 	/*
 	 * INVALID AUTOMATA
@@ -90,7 +92,7 @@ public class NondeterministicFiniteAutomatonTest {
 			String startingStateIdentifier, String secondStateIdentifier) {
 		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
 		nfa.addState(S2, NOT_ACCEPTING);
-		nfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
+		nfa.addTransition(startingStateIdentifier, secondStateIdentifier, ZERO);
 	}
 	
 	@DataProvider(name = "nonexistantStates")
@@ -107,9 +109,9 @@ public class NondeterministicFiniteAutomatonTest {
 	public void nfaEvaluatesCharacters() {
 		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
 		nfa.addState(S2, NOT_ACCEPTING);
-		nfa.addTransition(S1, S2, '0');
+		nfa.addTransition(S1, S2, ZERO);
 		
-		Set<IState> states = nfa.evaluate(Arrays.asList('0'));
+		Set<IState> states = nfa.evaluate(Arrays.asList(ZERO));
 		
 		Assert.assertEquals(states.size(), 1);
 		IState state = new LinkedList<>(states).getFirst();
@@ -120,8 +122,8 @@ public class NondeterministicFiniteAutomatonTest {
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void nfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
-		nfa.addTransition(S1, S1, '0');
-		nfa.addTransition(S1, S1, '1');
+		nfa.addTransition(S1, S1, ZERO);
+		nfa.addTransition(S1, S1, ONE);
 		String inputString = "102";
 		
 		nfa.evaluate(stringToCharacterList(inputString));
@@ -147,7 +149,7 @@ public class NondeterministicFiniteAutomatonTest {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addState(S3, ACCEPTING);
-		original.addTransition(S2, S3, '0');
+		original.addTransition(S2, S3, ZERO);
 		original.addEpsilonTransition(S1, S2);
 		
 		INondeterministicFiniteAutomaton<Character> copy = original.copy();	
@@ -185,7 +187,7 @@ public class NondeterministicFiniteAutomatonTest {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addState(S3, ACCEPTING);
-		original.addTransition(S2, S3, '0');
+		original.addTransition(S2, S3, ZERO);
 		original.addEpsilonTransition(S1, S2);
 		
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
@@ -209,7 +211,7 @@ public class NondeterministicFiniteAutomatonTest {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addState(S3, ACCEPTING);
-		original.addTransition(S2, S3, '0');
+		original.addTransition(S2, S3, ZERO);
 		original.addEpsilonTransition(S1, S2);
 		original.addEpsilonTransition(S2, S1);
 		
@@ -223,7 +225,7 @@ public class NondeterministicFiniteAutomatonTest {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addState(S3, ACCEPTING);
-		original.addTransition(S1, S2, '0');
+		original.addTransition(S1, S2, ZERO);
 		original.addEpsilonTransition(S2, S2);
 		original.addEpsilonTransition(S2, S3);
 
@@ -232,59 +234,15 @@ public class NondeterministicFiniteAutomatonTest {
 		assertEquals(idSet(states), setOfStrings(S2, S3));
 	}
 	
-	/*
-	 * GraphViz
-	 */
-	
 	@Test
-	public void graphVizForBasicAutomatonIsCorrect() {
-		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> " + NULL_STATE_ID 
-				+ " [ label = \"0\" ];\n"
-				+ "S1 -> " + NULL_STATE_ID 
-				+ " [ label = \"1\" ];\n}";
+	public void nfaDeterminesExpandedStates() {
+		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
+		original.addState(S2, NOT_ACCEPTING);
+		original.addEpsilonTransition(S1, S2);
 		
-		assertEquals(nfa.toGraphViz(), expected);
-	}
-	
-	@Test
-	public void graphVizTransitionsImplementedCorrectly() {
-		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
-		nfa.addState(S2, NOT_ACCEPTING);
-		nfa.addTransition(S1, S2, '0');
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> S2 [ label = \"0\" ];\n"
-				+ "S1 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n}";
+		Set<IState> expandedStates = original.getExpandedStates(original.getState(S1));
 		
-		System.out.println(expected);
-		
-		assertEquals(nfa.toGraphViz(), expected);
-	}
-	
-	@Test
-	public void graphVizEpsilonTransitionsImplementedCorrectly() {
-		NondeterministicFiniteAutomaton<Character> nfa = newBoolCharNfa(S1, ACCEPTING);
-		nfa.addState(S2, NOT_ACCEPTING);
-		nfa.addEpsilonTransition(S1, S2);
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
-				+ "S1 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n"
-				+ "S1 -> S2 [ label = \"" + EPSILON + "\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n}";
-		
-		System.out.println(expected);
-		
-		assertEquals(nfa.toGraphViz(), expected);
+		assertEquals(idSet(expandedStates), setOfStrings(S1, S2));
 	}
 
 	/*
@@ -292,11 +250,7 @@ public class NondeterministicFiniteAutomatonTest {
 	 */
 	
 	private NondeterministicFiniteAutomaton<Character> newBoolCharNfa(String identifier, boolean isAccepting) {
-		Set<Character> alphabet = new HashSet<>();
-		alphabet.add('0');
-		alphabet.add('1');
-
-		return new NondeterministicFiniteAutomaton<Character>(identifier, isAccepting, alphabet);	
+		return new NondeterministicFiniteAutomaton<Character>(identifier, isAccepting, ALPHABET);	
 	}
 	
 	private List<Character> stringToCharacterList(String string) {

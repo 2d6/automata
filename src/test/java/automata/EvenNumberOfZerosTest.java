@@ -50,24 +50,4 @@ public class EvenNumberOfZerosTest {
 		automaton.evaluate("2");
 	}
 	
-	/*
-	 * GraphViz
-	 */
-	
-	@Test
-	public void graphVizImplementedCorrectly() {
-		EvenNumberOfZeros automaton = new EvenNumberOfZeros();
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> S2 [ label = \"0\" ];\n"
-				+ "S1 -> S1 [ label = \"1\" ];\n"
-				+ "S2 -> S1 [ label = \"0\" ];\n"
-				+ "S2 -> S2 [ label = \"1\" ];\n"
-				+ "}";
-		
-		System.out.println(expected);
-		
-		assertEquals(automaton.toGraphViz(), expected);
-	}
 }

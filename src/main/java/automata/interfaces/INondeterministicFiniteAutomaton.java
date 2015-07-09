@@ -3,6 +3,7 @@ package automata.interfaces;
 import java.util.List;
 import java.util.Set;
 
+import automata.EpsilonTransition;
 import automata.states.State;
 
 /**
@@ -37,5 +38,14 @@ public interface INondeterministicFiniteAutomaton<T> extends IAbstractFiniteAuto
 	 * @return
 	 */
 	public Set<IState> evaluate(List<T> input);
+	
+	/**
+	 * Returns the expanded {@link IState IStates} of a given {@link IState}, i.e. the
+	 * {@link Set} of IStates connected to the given IState via {@link EpsilonTransition
+	 * EpsilonTransitions}. 
+	 * @param state The IState
+	 * @return The Set of expanded IStates
+	 */
+	public Set<IState> getExpandedStates(IState state);
 
 }

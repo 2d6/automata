@@ -13,7 +13,7 @@ public interface IAbstractFiniteAutomaton<T> {
 	public abstract IState getStartingState();
 
 	/**
-	 * Returns the state corresponding to a given identifier, if the automaton
+	 * Returns the {@link IState} corresponding to a given identifier, if the automaton
 	 * contains such a state.
 	 * 
 	 * @param identifier
@@ -22,6 +22,13 @@ public interface IAbstractFiniteAutomaton<T> {
 	 *         exist.
 	 */
 	public abstract IState getState(String identifier);
+	
+	/**
+	 * Returns a {@link Set} of the {@link IState IStates} constituting this automaton.
+	 * 
+	 * @return A Set of {@link IState IStates}
+	 */
+	public abstract Set<IState> getStates();
 
 	/**
 	 * Adds a state with the given identifier and acceptance state to the
@@ -80,5 +87,11 @@ public interface IAbstractFiniteAutomaton<T> {
 	 * @return A Set of valid symbols
 	 */
 	public abstract Set<T> getValidSymbols(IState currentState);
+	
+	/**
+	 * Returns the all symbols of the automaton, i.e. the alphabet of the automaton
+	 * @return A Set of symbols
+	 */
+	public abstract Set<T> getAllSymbols();
 
 }

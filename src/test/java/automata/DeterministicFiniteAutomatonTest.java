@@ -1,8 +1,11 @@
 package automata;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +15,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
-import automata.states.NullState;
+import automata.states.State;
 
 public class DeterministicFiniteAutomatonTest {
 	
@@ -23,7 +26,12 @@ public class DeterministicFiniteAutomatonTest {
 	private static final String S1 = "S1";
 	private static final String S2 = "S2";
 	private static final String S3 = "S3";
-	private static final String NULL_STATE_ID = NullState.getInstance().getId();
+	private static final String ANOTHER_STATE = "another State";
+	
+	private static final Character ZERO = '0';
+	private static final Character ONE = '1';
+	private static final Character INVALID_CHARACTER = '2';
+	private static final Set<Character> ALPHABET = new HashSet<>(Arrays.asList(ZERO, ONE));
 	
 	/*
 	 * INVALID AUTOMATA
@@ -35,8 +43,51 @@ public class DeterministicFiniteAutomatonTest {
 	}
 	
 	/*
+	 * SYMBOLS
+	 */
+	
+	@Test
+	public void allSymbolsMayBeRetrieved() {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
+		
+		Set<Character> actualSymbols = dfa.getAllSymbols();
+		
+		assertEquals(actualSymbols, ALPHABET);
+	}
+	
+	@Test
+	public void changesToExposedSymbolsDoNotAlterAutomaton() {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
+		dfa.getAllSymbols().add(INVALID_CHARACTER);
+		
+		Set<Character> actualSymbols = dfa.getAllSymbols();
+		
+		assertEquals(actualSymbols, ALPHABET);
+	}
+	
+	/*
 	 * STATES
 	 */
+	
+	@Test(dataProvider = "sampleStates")
+	public void charDfaProvidesSetOfStates(String identifier, boolean isAccepting) {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
+		
+		Set<IState> stateSet = dfa.getStates();
+		
+		assertTrue(stateSet.contains(dfa.getState(identifier)));
+	}
+	
+	@Test(dataProvider = "sampleStates")
+	public void changesToSetOfStatesDoNotModifyAutomaton(String identifier, boolean isAccepting) {
+		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(identifier, isAccepting);
+		Set<IState> modifiedStateSet = dfa.getStates();
+		modifiedStateSet.add(new State(ANOTHER_STATE, isAccepting));
+		
+		Set<IState> newStateSet = dfa.getStates();
+		
+		assertNotEquals(newStateSet, modifiedStateSet);
+	}
 	
 	@Test(dataProvider = "sampleStates")
 	public void charDfaHasStartingState(String identifier, boolean isAccepting) {
@@ -84,7 +135,7 @@ public class DeterministicFiniteAutomatonTest {
 			String startingStateIdentifier, String secondStateIdentifier) {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
-		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, '0');
+		dfa.addTransition(startingStateIdentifier, secondStateIdentifier, ZERO);
 	}
 	
 	@DataProvider(name = "nonexistantStates")
@@ -101,13 +152,13 @@ public class DeterministicFiniteAutomatonTest {
 	public void charDfaEvaluatesCharacters() {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
 		dfa.addState(S2, NOT_ACCEPTING);
-		dfa.addTransition(S1, S2, '0');
-		dfa.addTransition(S1, S1, '1');
-		dfa.addTransition(S2, S1, '0');
-		dfa.addTransition(S2, S2, '1');
+		dfa.addTransition(S1, S2, ZERO);
+		dfa.addTransition(S1, S1, ONE);
+		dfa.addTransition(S2, S1, ZERO);
+		dfa.addTransition(S2, S2, ONE);
 		
 		ArrayList<Character> symbolList = new ArrayList<>();
-		symbolList.add('0');
+		symbolList.add(ZERO);
 		Assert.assertEquals(dfa.evaluate(symbolList),
 				dfa.getState(S2));
 	}
@@ -115,8 +166,8 @@ public class DeterministicFiniteAutomatonTest {
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void charDfaThrowsIllegalArgumentExceptionForinputContainingIllegalCharacters() {
 		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
-		dfa.addTransition(S1, S1, '0');
-		dfa.addTransition(S1, S1, '1');
+		dfa.addTransition(S1, S1, ZERO);
+		dfa.addTransition(S1, S1, ONE);
 		String inputString = "102";
 		
 		dfa.evaluate(stringToCharacterList(inputString));
@@ -130,7 +181,7 @@ public class DeterministicFiniteAutomatonTest {
 	public void copiedDfaEvaluatesSameAsOriginal(String testString) {
 		DeterministicFiniteAutomaton<Character> original = newBoolCharDfa(S1, ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
-		original.addTransition(S1, S2, '0');
+		original.addTransition(S1, S2, ZERO);
 		
 		DeterministicFiniteAutomaton<Character> copy = original.copy();	
 		IState originalFinalState = original.evaluate(stringToCharacterList(testString));
@@ -157,53 +208,13 @@ public class DeterministicFiniteAutomatonTest {
 		
 		Assert.assertFalse(original.getState(S1) == copy.getState(S1));
 	}
-	
-	/*
-	 * GraphViz
-	 */
-	
-	@Test
-	public void graphVizForBasicAutomatonIsCorrect() {
-		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> " + NULL_STATE_ID 
-				+ " [ label = \"0\" ];\n"
-				+ "S1 -> " + NULL_STATE_ID 
-				+ " [ label = \"1\" ];\n}";
-		
-		assertEquals(dfa.toGraphViz(), expected);
-	}
-	
-	@Test
-	public void graphVizTransitionsImplementedCorrectly() {
-		DeterministicFiniteAutomaton<Character> dfa = newBoolCharDfa(S1, ACCEPTING);
-		dfa.addState(S2, NOT_ACCEPTING);
-		dfa.addTransition(S1, S2, '0');
-		String expected = "digraph automaton "
-				+ "{\nrankdir=LR;\nsize=\"8,5\"\nnode [shape = doublecircle];"
-				+ "S1;\nnode [shape = circle];\n" 
-				+ "S1 -> S2 [ label = \"0\" ];\n"
-				+ "S1 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"0\" ];\n"
-				+ "S2 -> " + NULL_STATE_ID + " [ label = \"1\" ];\n}";
-		
-		System.out.println(expected);
-		
-		assertEquals(dfa.toGraphViz(), expected);
-	}
 
 	/*
 	 * Helper Methods
 	 */
 	
 	private DeterministicFiniteAutomaton<Character> newBoolCharDfa(String identifier, boolean isAccepting) {
-		Set<Character> alphabet = new HashSet<>();
-		alphabet.add('0');
-		alphabet.add('1');
-		
-		return new DeterministicFiniteAutomaton<>(identifier, isAccepting, alphabet);	
+		return new DeterministicFiniteAutomaton<>(identifier, isAccepting, ALPHABET);	
 	}
 	
 	private List<Character> stringToCharacterList(String string) {

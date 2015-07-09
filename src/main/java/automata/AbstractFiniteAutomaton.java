@@ -2,8 +2,8 @@ package automata;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import automata.comparators.FiniteAutomatonComparator;
 import automata.interfaces.IState;
@@ -81,6 +81,10 @@ public abstract class AbstractFiniteAutomaton<T> {
 	public IState getState(String identifier) {
 		return states.get(identifier);
 	}
+	
+	public Set<IState> getStates() {
+		return new HashSet<IState>(states.values());
+	}
 
 	public void addState(String identifier, boolean isAccepting) {
 		if (states.containsKey(identifier)) {
@@ -97,70 +101,19 @@ public abstract class AbstractFiniteAutomaton<T> {
 	}
 
 	public Set<T> getValidSymbols(IState currentState) {
-		return this.transitionFunction.getValidSymbols(currentState);
+		return transitionFunction.getValidSymbols(currentState);
 	}
 	
-
+	public Set<T> getAllSymbols() {
+		return new HashSet<>(transitionFunction.getSymbols());
+	}
+	
 	public IState getNextState(IState currentState, T symbol) {
-		return this.transitionFunction.getNextState(currentState, symbol);
+		return transitionFunction.getNextState(currentState, symbol);
 	}
 	
 	public boolean isStructurallyEqualTo(AbstractFiniteAutomaton<T> otherDfa) {
 		return new FiniteAutomatonComparator<T>().structurallyEqual(this, otherDfa);
-	}
-
-	/**
-	 * Creates a representation of the automaton in the graphviz-Format, as documented on 
-	 * http://www.graphviz.org. The output of this method may be rendered using graphviz,
-	 * resulting in a graphical representation 
-	 * @return A string containing the representation
-	 */
-	public String toGraphViz() {
-		String graphVizTemplate = getGraphVizBaseTemplate();
-		
-		String acceptingStates = states.values().stream()
-					.filter(state -> state.isAccepting())
-					.map(state -> state.getId())
-					.collect(Collectors.joining(" "));
-		
-		
-		String transitionTemplate = getGraphVizTransitionTemplate();
-		String transitions = "";
-		for (IState initialState : states.values()) {
-			transitions += transitionFunction.getSymbols().stream()
-					.map(symbol -> String.format(
-							transitionTemplate, 
-							initialState.getId(), 
-							transitionFunction.getNextState(initialState, symbol).getId(), 
-							symbol))
-					.collect(Collectors.joining());
-		}	
-		
-		return  String.format(graphVizTemplate, acceptingStates, transitions);
-	}
-	
-	/**
-	 * Create a template for a valid graphviz file, with %s placeholders for accepting states and
-	 * transitions, respectively. The template may be e.g. parsed with String.format(). 
-	 * @return The template
-	 */
-	protected String getGraphVizBaseTemplate() {
-		return "digraph automaton {\nrankdir=LR;\nsize=\"8,5\"\n"
-				+ "node [shape = doublecircle];"
-				+ "%s;\n"
-				+ "node [shape = circle];\n"
-				+ "%s"
-				+ "}";
-	}
-	
-	/**
-	 * Creates a template for the transition portion of a graphViz file, with the string placeholders
-	 * for initial state, target state and symbol from left to right. The template may be e.g. parsed with
-	 * String.format()
-	 * @return The template
-	 */
-	protected String getGraphVizTransitionTemplate() {
-		return "%s -> %s [ label = \"%s\" ];\n";
 	}
 
 }
