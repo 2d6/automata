@@ -10,32 +10,34 @@ import org.testng.annotations.Test;
 
 import automata.interfaces.IState;
 import automata.states.NullState;
-import automata.states.State;
 
 
 public class EpsilonTransitionFunctionTest {
 
-	EpsilonTransitionFunction<Object> transitionFunction;
+	private EpsilonTransitionFunction<Object> transitionFunction;
 	
 	@Mock
-	State initialState;
+	private IState initialState;
 	
 	@Mock
-	State targetState;
+	private IState targetState;
 	
 	@Mock
-	State anotherState;
+	private IState anotherState;
 	
 	@Mock
-	EpsilonTransition epsTransition;
+	private EpsilonTransition epsTransition;
 	
-	Set<State> expectedStates;
+	private Set<IState> expectedStates;
+	
+	private Set<IState> initialStates;
 	
 	@BeforeMethod
 	public void init() {
 		MockitoAnnotations.initMocks(this);
 		transitionFunction = new EpsilonTransitionFunction<>();
 		expectedStates = new HashSet<>();
+		initialStates = new HashSet<>();
 	}
 	
 	@Test
@@ -49,7 +51,7 @@ public class EpsilonTransitionFunctionTest {
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void expandedStatesThrowsIllegalArgExceptionIfInitialStateNull() {
-		transitionFunction.getExpandedStates(null);
+		transitionFunction.getExpandedStates((IState) null);
 	}
 	
 	@Test
@@ -104,6 +106,30 @@ public class EpsilonTransitionFunctionTest {
 		transitionFunction.addEpsilonTransition(targetState, anotherState);
 		
 		assert(transitionFunction.getExpandedStates(initialState).containsAll(expectedStates));
+	}
+	
+	@Test
+	public void expandedStatesOfSetMayBeDetermined() {
+		expectedStates.add(initialState);
+		expectedStates.add(targetState);
+		expectedStates.add(anotherState);
+		initialStates.add(initialState);
+		initialStates.add(anotherState);
+		
+		transitionFunction.addEpsilonTransition(initialState, targetState);
+		transitionFunction.addEpsilonTransition(anotherState, targetState);
+		
+		assert(transitionFunction.getExpandedStates(initialStates).containsAll(expectedStates));
+	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void expandedStatesThrowsIllegalArgExceptionIfSetNull() {
+		transitionFunction.getExpandedStates((Set<IState>) null);
+	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void expandedStatesThrowsIllegalArgExceptionIfSetEmpty() {
+		transitionFunction.getExpandedStates(new HashSet<IState>());
 	}
 	
 	@Test(expectedExceptions = IllegalArgumentException.class)

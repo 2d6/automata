@@ -52,32 +52,40 @@ public class EpsilonTransitionFunction<T> extends TransitionFunction<T>
 	@Override
 	public Set<IState> getExpandedStates(IState initialState) {
 		if (initialState == null) {
-			throw new IllegalArgumentException("Initial State May not be null");
+			throw new IllegalArgumentException("Initial State may not be null");
 		}
-		
-		Set<IState> expandedStates = new HashSet<>(Arrays.asList(initialState));
-		
-		return getAllExpandedStates(expandedStates);
+		return getAllExpandedStates(new HashSet<>(Arrays.asList(initialState)));
+	}
+	
+	@Override
+	public Set<IState> getExpandedStates(Set<IState> initialStates) {
+		if (initialStates == null) {
+			throw new IllegalArgumentException("Set of initial States may not be null");
+		}
+		if (initialStates.isEmpty()) {
+			throw new IllegalArgumentException("Set of initial States may not be empty");
+		}
+		return getAllExpandedStates(initialStates);
 	}
 	
 	/**
 	 * Recursively add all {@link State States} which are reachable via epsilon transitions 
 	 * from the States in the initial Set to a Set of States.
-	 * @param expandedStates The initial Set of states
+	 * @param initialStates The initial Set of states
 	 * @return A Set containing all States reachable via epsilon transitions
 	 */
-	private Set<IState> getAllExpandedStates(Set<IState> expandedStates) {
+	private Set<IState> getAllExpandedStates(Set<IState> initialStates) {
 		Set<IState> allExpandedStates = new HashSet<>();
-		allExpandedStates.addAll(expandedStates);
+		allExpandedStates.addAll(initialStates);
 		
-		for (IState state : expandedStates) {
+		for (IState state : initialStates) {
 			allExpandedStates.addAll(epsilonTransitions.stream()
 					.filter(transition -> transition.getInitialState().equals(state))
 					.map(transition -> transition.getTargetState())
 					.collect(Collectors.toSet()));
 		}
 		
-		if (!expandedStates.containsAll(allExpandedStates)) {
+		if (!initialStates.containsAll(allExpandedStates)) {
 			allExpandedStates.addAll(getAllExpandedStates(allExpandedStates));
 		}
 		

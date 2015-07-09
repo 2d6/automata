@@ -1,7 +1,6 @@
 package automata;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -191,7 +190,7 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
 		
-		assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, NullState.getInstance().getId())));
+		assertEquals(idSet(states), setOfStrings(S3, NullState.getInstance().getId()));
 	}
 	
 	@Test
@@ -202,7 +201,7 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Set<IState> states = original.evaluate(Collections.emptyList());
 		
-		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S1, S2)));
+		assertEquals(idSet(states), setOfStrings(S1, S2));
 	}
 	
 	@Test
@@ -216,11 +215,11 @@ public class NondeterministicFiniteAutomatonTest {
 		
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
 		
-		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, NullState.getInstance().getId())));
+		assertEquals(idSet(states), setOfStrings(S3, NullState.getInstance().getId()));
 	}
 	
 	@Test
-	public void cyclesOfEpsilonTransitionsMayBeEvaluated2() {
+	public void statesAreExpandedAfterEvaluation() {
 		NondeterministicFiniteAutomaton<Character> original = newBoolCharNfa(S1, NOT_ACCEPTING);
 		original.addState(S2, NOT_ACCEPTING);
 		original.addState(S3, ACCEPTING);
@@ -230,7 +229,7 @@ public class NondeterministicFiniteAutomatonTest {
 
 		Set<IState> states = original.evaluate(stringToCharacterList("0"));
 
-		Assert.assertTrue(setContainsOnlyStatesWithGivenIdentifiers(states, Arrays.asList(S3, S2)));
+		assertEquals(idSet(states), setOfStrings(S2, S3));
 	}
 	
 	/*
@@ -309,10 +308,6 @@ public class NondeterministicFiniteAutomatonTest {
 		return characterList;
 	}
 	
-	private boolean setContainsOnlyStatesWithGivenIdentifiers(Set<IState> states, List<String> identifiers) {
-		return states.stream().allMatch(state -> identifiers.contains(state.getId()));
-	}
-	
 	private boolean stateSetsContainSameIdentifiers(
 			Set<IState> originalStates, Set<IState> copyStates) {
 		return getIdentifiers(copyStates).equals(getIdentifiers(originalStates));
@@ -322,6 +317,14 @@ public class NondeterministicFiniteAutomatonTest {
 		return 	states.stream()
 				.map(state -> state.getId())
 				.collect(Collectors.toSet()); 
+	}
+	
+	private Set<String> idSet(Set<IState> states) {
+		return states.stream().map(state -> state.getId()).collect(Collectors.toSet());
+	}
+	
+	private Set<String> setOfStrings(String... strings) {
+		return new HashSet<>(Arrays.asList(strings));
 	}
 	
 }

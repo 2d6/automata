@@ -19,11 +19,19 @@ public interface IEpsilonTransitionFunction<T> extends ITransitionFunction<T> {
 	public void addEpsilonTransition(IState initialState, IState targetState);
 	
 	/**
-	 * Returns a Set of {@link State States} connected to the initial state 
+	 * Returns the Set of {@link State States} connected to the initial state 
 	 * via {@link EpsilonTransition epsilon transitions}.
 	 * @param initialState
-	 * @return
+	 * @return The Set of connected States
 	 */
 	public Set<IState> getExpandedStates(IState initialState);
+	
+	/**
+	 * Returns the Set of {@link State States} connected to a Set of States 
+	 * via {@link EpsilonTransition epsilon transitions}.
+	 * @param initialState
+	 * @return The Set of connected States
+	 */
+	public Set<IState> getExpandedStates(Set<IState> initialState);
 
 }

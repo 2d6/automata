@@ -64,8 +64,7 @@ public class NondeterministicFiniteAutomaton<T> extends
 	@Override
 	public Set<IState> evaluate(List<T> input) {
 		Set<IState> nextStates = new HashSet<>();
-		nextStates.addAll(epsilonTransitionFunction
-				.getExpandedStates(startingState));
+		nextStates.addAll(epsilonTransitionFunction.getExpandedStates(startingState));
 
 		for (T symbol : input) {
 
@@ -83,7 +82,7 @@ public class NondeterministicFiniteAutomaton<T> extends
 			}
 		}
 
-		return nextStates;
+		return epsilonTransitionFunction.getExpandedStates(nextStates);
 	}
 
 	private Set<IState> evaluate(Set<IState> currentStates, T symbol) {
@@ -142,12 +141,3 @@ public class NondeterministicFiniteAutomaton<T> extends
 	}
 
 }
-
-
-
-
-
-
-
-
-
